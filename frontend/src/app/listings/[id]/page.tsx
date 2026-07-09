@@ -303,11 +303,3 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   </>
   );
 }
-
-export async function generateStaticParams() {
-  return [
-    { id: "list-1" },
-    { id: "list-2" },
-    { id: "list-3" },
-  ];
-}
