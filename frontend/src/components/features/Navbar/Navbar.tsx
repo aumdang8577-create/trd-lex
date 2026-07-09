@@ -60,15 +60,19 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-trd-gradient rounded-lg flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-sm">T</span>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-105">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png"
+                alt="ตราสัญลักษณ์กรมธนารักษ์"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <span className="text-lg font-bold text-trd-primary">TRD</span>
-              <span className="text-lg font-bold text-trd-secondary">-LEX</span>
-              <p className="text-[10px] text-gray-400 -mt-1 leading-tight">
-                Lease Exchange
+              <span className="text-lg font-extrabold text-trd-primary">TRD</span>
+              <span className="text-lg font-extrabold text-trd-secondary">-LEX</span>
+              <p className="text-[9px] text-gray-400 -mt-1 font-semibold leading-tight">
+                ตลาดซื้อขายสิทธิ์ราชพัสดุ
               </p>
             </div>
           </Link>
