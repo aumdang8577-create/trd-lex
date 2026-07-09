@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card, { CardHeader, CardContent, CardFooter } from "@/components/ui/Card";
@@ -90,9 +91,9 @@ export default function LoginPage() {
 
         <CardFooter className="bg-gray-50 flex flex-col gap-2 items-center justify-center text-xs text-gray-400">
           <span>ความมั่นคงปลอดภัยระดับเดียวกับกรมธนารักษ์และกรมการปกครอง</span>
-          <a href="/register" className="text-trd-primary underline hover:text-trd-primary-light">
+          <Link href="/register" className="text-trd-primary underline hover:text-trd-primary-light">
             สมัครสมาชิกใหม่ / ตรวจสอบสิทธิ์สัญญาเช่าก่อนลงประกาศ
-          </a>
+          </Link>
         </CardFooter>
       </Card>
     </div>

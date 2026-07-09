@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card, { CardHeader, CardContent, CardFooter } from "@/components/ui/Card";
@@ -135,9 +136,9 @@ export default function RegisterPage() {
         </CardContent>
 
         <CardFooter className="bg-gray-50 flex items-center justify-center text-xs text-gray-400">
-          <a href="/login" className="text-trd-primary underline hover:text-trd-primary-light">
+          <Link href="/login" className="text-trd-primary underline hover:text-trd-primary-light">
             มีสิทธิ์ในระบบและบัญชีใช้งานอยู่แล้ว? เข้าสู่ระบบที่นี่
-          </a>
+          </Link>
         </CardFooter>
       </Card>
     </div>
