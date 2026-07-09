@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  thaid_id      String    @unique
+  first_name    String
+  last_name     String
+  phone_number  String?
+  role          Role      @default(USER)
+  listings      Listing[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model LeaseContract {
+  id                String    @id @default(uuid())
+  contract_number   String    @unique
+  lessee_thaid_id   String    
+  parcel_number     String    
+  location_lat      Float     
+  location_lng      Float     
+  province          String    
+  district          String    
+  sub_district      String    
+  land_area_sqw     Float     
+  is_active         Boolean   @default(true)
+  listings          Listing[] 
+}
+
+model Listing {
+  id                  String        @id @default(uuid())
+  sellerId            String        
+  seller              User          @relation(fields: [sellerId], references: [id])
+  contractId          String        
+  contract            LeaseContract @relation(fields: [contractId], references: [id])
+  asking_price        Float         
+  estimated_fee       Float         
+  description         String?       @db.Text
+  image_urls          String[]      
+  status              ListingStatus @default(ACTIVE)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([sellerId])
+  @@index([contractId])
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  HIDDEN
+}

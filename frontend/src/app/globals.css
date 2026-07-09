@@ -1,0 +1,100 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   TRD-LEX Design System
+   "Smart & Sustainable Treasury"
+   =========================== */
+
+@layer base {
+  :root {
+    --trd-primary: #00594C;
+    --trd-secondary: #D4AF37;
+    --trd-surface: #F8F9FA;
+    --trd-border: #E0E0E0;
+    --trd-text: #1A1A2E;
+    --trd-text-muted: #6B7280;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    color: var(--trd-text);
+    background-color: var(--trd-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  /* TRD Verified Badge */
+  .trd-verified-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
+    @apply bg-trd-primary text-white;
+    @apply shadow-sm;
+  }
+
+  /* Gold accent line — section divider */
+  .trd-gold-divider {
+    @apply w-16 h-1 rounded-full;
+    background: linear-gradient(90deg, #D4AF37, #E0C464);
+  }
+
+  /* Card base style */
+  .trd-card {
+    @apply bg-white rounded-xl shadow-card border border-trd-border/50;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:shadow-card-hover hover:-translate-y-1;
+  }
+
+  /* Section heading */
+  .trd-section-title {
+    @apply text-2xl font-bold text-trd-primary mb-2;
+  }
+
+  /* Form input */
+  .trd-input {
+    @apply w-full px-4 py-3 rounded-lg border border-trd-border bg-white;
+    @apply text-sm placeholder:text-gray-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary;
+    @apply transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  /* Truncate text to N lines */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
