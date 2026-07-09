@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 type UserRole = "GUEST" | "SELLER" | "INVESTOR";
@@ -59,7 +60,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-9 h-9 bg-trd-gradient rounded-lg flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-sm">T</span>
             </div>
@@ -70,7 +71,7 @@ export default function Navbar() {
                 Lease Exchange
               </p>
             </div>
-          </a>
+          </Link>
 
           {/* Role Demonstration Selector (For testing presentation modes) */}
           <div className="hidden lg:flex items-center gap-1 bg-gray-100 p-1.5 rounded-lg border border-trd-border/40 text-xs">
@@ -104,22 +105,22 @@ export default function Navbar() {
                   onMouseEnter={() => setIsMegaOpen(true)}
                   onMouseLeave={() => setIsMegaOpen(false)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm font-semibold text-gray-600 hover:text-trd-primary transition-colors flex items-center gap-1"
                   >
                     {link.label}
                     <span className="text-[10px] transition-transform duration-200 group-hover:rotate-180">▼</span>
-                  </a>
+                  </Link>
                 </div>
               ) : (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   className="text-sm font-semibold text-gray-600 hover:text-trd-primary transition-colors"
                 >
                   {link.label}
-                </a>
+                </Link>
               )
             )}
           </div>
@@ -196,9 +197,9 @@ export default function Navbar() {
                   { name: "ภาคอีสาน (ขอนแก่น & นครราชสีมา)", query: "query=ขอนแก่น" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <a href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
+                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -216,10 +217,10 @@ export default function Navbar() {
                   { name: "พื้นที่เชื่อมต่อฉะเชิงเทรา", query: "query=ฉะเชิงเทรา" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <a href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 flex items-center gap-1">
+                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 flex items-center gap-1">
                       <span>{item.name}</span>
                       <span className="text-[9px] bg-trd-secondary/15 text-trd-secondary-dark px-1.5 py-0.5 rounded font-bold">EEC</span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -237,9 +238,9 @@ export default function Navbar() {
                   { name: "พื้นที่ขนส่งสินค้าหนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <a href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
+                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -257,9 +258,9 @@ export default function Navbar() {
                   { name: "บางละมุง, ชลบุรี", query: "query=บางละมุง" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <a href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 font-medium">
+                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 font-medium">
                       ⭐ {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -289,13 +290,13 @@ export default function Navbar() {
             </div>
 
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className="block text-sm font-semibold text-gray-600 py-2 border-b border-gray-50"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
 
             <div className="pt-3 flex flex-col gap-2">

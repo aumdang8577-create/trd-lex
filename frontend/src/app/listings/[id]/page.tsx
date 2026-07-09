@@ -7,6 +7,7 @@ import Badge from "@/components/ui/Badge";
 import Card, { CardContent } from "@/components/ui/Card";
 import LeaseMap from "@/components/features/Map/LeaseMap";
 import Breadcrumb from "@/components/features/Breadcrumb";
+import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import type { Listing } from "@/types";
 
@@ -136,9 +137,9 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back link */}
-        <a href="/listings" className="inline-flex items-center gap-1.5 text-xs text-trd-primary font-medium hover:underline mb-6">
+        <Link href="/listings" className="inline-flex items-center gap-1.5 text-xs text-trd-primary font-medium hover:underline mb-6">
           ← ย้อนกลับไปหน้าค้นหา
-        </a>
+        </Link>
 
       {/* Main Image Banner Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 h-[350px] md:h-[450px]">
