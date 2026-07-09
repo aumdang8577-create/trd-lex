@@ -7,6 +7,12 @@
 
 ---
 
+## 💡 Executive Summary: นวัตกรรมเปลี่ยนภาระให้เป็นมูลค่า
+
+> "จุดเด่นที่สุดของ TRD-LEX ไม่ใช่แค่การเป็นเว็บไซต์ลงประกาศครับ แต่มันคือ **เครื่องมือเปลี่ยนภาระให้เป็นมูลค่า** ทุกครั้งที่มีการตกลงเปลี่ยนมือสิทธิผ่านแพลตฟอร์มนี้ ข้อมูลเชิงธุรกรรมจะถูกแปลงเป็น **Economic Indicators** แบบ Real-time บน Dashboard ทันที... คณะผู้บริหารจะมองเห็นตัวเลขของพื้นที่รกร้างที่ถูกพลิกฟื้นกลับมาสร้างรายได้ เห็นเม็ดเงินค่าธรรมเนียมที่ไหลเข้ากระเป๋ารัฐอย่างโปร่งใส และเห็นมูลค่าการลงทุนที่ลงไปหมุนเวียนในระดับภูมิภาค นี่คือนวัตกรรมที่พิสูจน์ให้เห็นว่า เทคโนโลยีดิจิทัลสามารถขับเคลื่อนเป้าหมายการจัดเก็บรายได้ และยกระดับการบริหารทรัพย์สินของแผ่นดินได้อย่างแท้จริง"
+
+---
+
 ## 🔧 Tech Stack
 
 | Layer | Technology |
@@ -137,10 +143,14 @@ docker compose up --build
 | `2123456789012` | สมหญิง รักดี | TRD-66-002 (ชลบุรี) |
 | `9123456789012` | แอดมิน ธนารักษ์ | (Admin) |
 
----
-
 ## 📄 License
 
 Internal project — Treasury Department of Thailand
-"# trd-lex" 
-"# trd_LEX" 
+
+---
+
+## 💡 Inspiration & References
+
+- **Design & Flow Inspiration**: [AntonioErdeljac/next13-airbnb-clone](https://github.com/AntonioErdeljac/next13-airbnb-clone) (หยิบยกโครงสร้างการลงประกาศแบบเป็นลำดับขั้นตอน Step-by-step Modal, ระบบตัวกรองค้นหาที่ดินแบบละเอียด และการเชื่อมต่อแผนที่เชิงพื้นที่แบบบูรณาการมาประยุกต์ใช้)
+- **Marketplace Logic & State Reference**: [sharetribe/sharetribe](https://github.com/sharetribe/sharetribe) (ศึกษาโครงสร้างโฟลว์ระบบ C2C Marketplace เช่น โครงสร้างการส่งคำขอโอนสิทธิ์ "Request to Transfer" และแนวทางการทำ State Management ของระบบกรองข้อมูล)
+- **Real Estate Templates**: [mohitchandel/real-estate-tremplate](https://github.com/mohitchandel/real-estate-tremplate) (แนวทางการออกแบบและสร้างโครงสร้างธีมหน้าเว็บประเภทอสังหาริมทรัพย์เพื่อความรวดเร็วในการจัดทำ Layout)

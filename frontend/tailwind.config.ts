@@ -27,7 +27,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"Noto Sans Thai"', "Sarabun", "sans-serif"],
+        sans: ["var(--font-sarabun)", "sans-serif"],
       },
       boxShadow: {
         card: "0 4px 6px -1px rgba(0, 89, 76, 0.1), 0 2px 4px -1px rgba(0, 89, 76, 0.06)",

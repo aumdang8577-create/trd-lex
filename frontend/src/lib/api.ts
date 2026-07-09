@@ -147,6 +147,18 @@ class ApiClient {
       body: JSON.stringify(data),
     });
   }
+
+  async getEconomicIndicators(): Promise<{
+    revived_land_sqw: number;
+    state_revenue_baht: number;
+    economic_circulation_baht: number;
+  }> {
+    return this.request<{
+      revived_land_sqw: number;
+      state_revenue_baht: number;
+      economic_circulation_baht: number;
+    }>("/dashboard/economic-indicators");
+  }
 }
 
 // Singleton instance
