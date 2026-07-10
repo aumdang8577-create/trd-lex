@@ -44,7 +44,7 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
     <form
       onSubmit={handleSubmit}
       className={`
-        bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-trd-border/50
+        bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100/80
         p-6 w-full max-w-5xl mx-auto
         grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end
         ${className}
