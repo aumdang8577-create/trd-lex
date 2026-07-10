@@ -1,5 +1,6 @@
 import os
 import pytest
+import pytest_asyncio
 import asyncio
 import subprocess
 import sys
@@ -29,6 +30,19 @@ def setup_db():
         "--force-reset"
     ], env=env, check=True)
 
+@pytest_asyncio.fixture(autouse=True)
+async def clean_db():
+    """
+    Clean database tables before each test to maintain isolation.
+    """
+    from app.core.database import db
+    if not db.is_connected():
+        await db.connect()
+    # Delete all data in reverse order of dependencies
+    await db.listing.delete_many()
+    await db.leasecontract.delete_many()
+    await db.user.delete_many()
+
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the session."""
@@ -37,7 +51,7 @@ def event_loop():
     yield loop
     loop.close()
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client():
     """Fixture to provide an HTTPX AsyncClient for FastAPI testing."""
     from app.main import app
