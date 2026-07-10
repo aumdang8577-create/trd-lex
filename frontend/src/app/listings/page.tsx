@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "@/components/features/SearchBar/SearchBar";
 import PropertyCard from "@/components/features/PropertyCard";
 import LeaseMap from "@/components/features/Map/LeaseMap";
 import type { Listing } from "@/types";
+import api from "@/lib/api";
 
 const initialListings: Listing[] = [
   {
@@ -94,30 +95,73 @@ const initialListings: Listing[] = [
 ];
 
 export default function ListingsPage() {
-  const [listings, setListings] = useState<Listing[]>(initialListings);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleSearch = (searchData: { province: string; district: string; minPrice: string; maxPrice: string; zoning: string }) => {
-    let filtered = [...initialListings];
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        setLoading(true);
+        // Simulate a slight delay to let the user admire the skeleton animation (500ms)
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const res = await api.getListings();
+        setListings(res.data);
+      } catch (err) {
+        console.error("Error fetching listings, using initial mock:", err);
+        setListings(initialListings);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchListings();
+  }, []);
 
-    if (searchData.province) {
-      filtered = filtered.filter((l) => l.contract.province === searchData.province);
-    }
-    if (searchData.district) {
-      filtered = filtered.filter((l) =>
-        l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
-      );
-    }
-    if (searchData.minPrice) {
-      filtered = filtered.filter((l) => l.asking_price >= parseFloat(searchData.minPrice));
-    }
-    if (searchData.maxPrice) {
-      filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
-    }
-    if (searchData.zoning) {
-      filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
-    }
+  const handleSearch = async (searchData: { province: string; district: string; minPrice: string; maxPrice: string; zoning: string }) => {
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      const res = await api.getListings({
+        province: searchData.province || undefined,
+        min_price: searchData.minPrice ? parseFloat(searchData.minPrice) : undefined,
+        max_price: searchData.maxPrice ? parseFloat(searchData.maxPrice) : undefined,
+      });
 
-    setListings(filtered);
+      let filtered = res.data;
+
+      if (searchData.district) {
+        filtered = filtered.filter((l) =>
+          l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
+        );
+      }
+      if (searchData.zoning) {
+        filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
+      }
+
+      setListings(filtered);
+    } catch (err) {
+      console.error("Search fetch failed, using local filter on initial mock:", err);
+      let filtered = [...initialListings];
+      if (searchData.province) {
+        filtered = filtered.filter((l) => l.contract.province === searchData.province);
+      }
+      if (searchData.district) {
+        filtered = filtered.filter((l) =>
+          l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
+        );
+      }
+      if (searchData.minPrice) {
+        filtered = filtered.filter((l) => l.asking_price >= parseFloat(searchData.minPrice));
+      }
+      if (searchData.maxPrice) {
+        filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
+      }
+      if (searchData.zoning) {
+        filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
+      }
+      setListings(filtered);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -144,7 +188,35 @@ export default function ListingsPage() {
             </h2>
           </div>
 
-          {listings.length > 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white rounded-2xl border border-trd-border overflow-hidden shadow-sm animate-pulse">
+                  {/* Image Skeleton */}
+                  <div className="h-48 bg-gray-200" />
+                  {/* Content Skeleton */}
+                  <div className="p-5 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div className="h-4 bg-gray-200 rounded w-1/3" />
+                      <div className="h-5 bg-gray-200 rounded-full w-1/4" />
+                    </div>
+                    
+                    <div className="h-6 bg-gray-200 rounded w-3/4" />
+                    
+                    <div className="space-y-2 pt-2">
+                      <div className="h-3 bg-gray-200 rounded w-5/6" />
+                      <div className="h-3 bg-gray-200 rounded w-4/5" />
+                    </div>
+
+                    <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      <div className="h-4 bg-gray-200 rounded w-1/4" />
+                      <div className="h-4 bg-gray-200 rounded w-1/4" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : listings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {listings.map((listing) => (
                 <PropertyCard
