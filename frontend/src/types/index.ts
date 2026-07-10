@@ -95,3 +95,19 @@ export interface UpdateListingRequest {
 export interface UpdateListingStatusRequest {
   status: ListingStatus;
 }
+
+export type TransferType = "GENERAL" | "FAMILY" | "CO_LESSEE";
+
+export interface FeeCalculationRequest {
+  annual_rent: number;
+  transfer_type: TransferType;
+  transfer_share?: number;
+  contract_number?: string;
+}
+
+export interface FeeCalculationResponse {
+  annual_rent: number;
+  base_fee: number;
+  discount_description: string;
+  final_fee: number;
+}

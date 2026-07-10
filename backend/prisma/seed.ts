@@ -201,6 +201,7 @@ async function main() {
       building_type: 'อาคารพาณิชย์',
       usable_area_sqm: 120.0,
       zoning: 'พื้นที่สีแดง (พาณิชยกรรม)',
+      annual_rent: 18000.0,
     },
   });
 
@@ -219,6 +220,7 @@ async function main() {
       building_type: 'บ้านพักอาศัย',
       usable_area_sqm: 180.0,
       zoning: 'พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)',
+      annual_rent: 24000.0,
     },
   });
 
@@ -237,6 +239,7 @@ async function main() {
       building_type: 'ที่ดินเปล่า',
       usable_area_sqm: 0.0,
       zoning: 'พื้นที่สีเขียว (เกษตรกรรม)',
+      annual_rent: 15000.0,
     },
   });
 
@@ -315,6 +318,7 @@ async function main() {
 
     // Infer building details based on lessee name
     const { buildingType, usableAreaSqm, zoning } = inferBuildingDetails(lesseeName, landAreaSqw);
+    const annualRent = Math.round(landAreaSqw * 120.0);
 
     // First ensure the User exists
     await prisma.user.upsert({
@@ -344,6 +348,7 @@ async function main() {
         building_type: buildingType,
         usable_area_sqm: usableAreaSqm,
         zoning: zoning,
+        annual_rent: annualRent,
       },
       create: {
         contract_number: contractNumber,
@@ -359,6 +364,7 @@ async function main() {
         building_type: buildingType,
         usable_area_sqm: usableAreaSqm,
         zoning: zoning,
+        annual_rent: annualRent,
       },
     });
 

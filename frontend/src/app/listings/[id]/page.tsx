@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -10,6 +10,7 @@ import Breadcrumb from "@/components/features/Breadcrumb";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import type { Listing } from "@/types";
+import api from "@/lib/api";
 
 const mockListings: Record<string, Listing> = {
   "list-1": {
@@ -28,6 +29,10 @@ const mockListings: Record<string, Listing> = {
       sub_district: "สามเสนใน",
       land_area_sqw: 120,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 250,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
+      annual_rent: 18000.0,
     },
     asking_price: 1500000,
     estimated_fee: 45000,
@@ -56,6 +61,10 @@ const mockListings: Record<string, Listing> = {
       sub_district: "หนองปรือ",
       land_area_sqw: 80,
       is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 140,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
+      annual_rent: 24000.0,
     },
     asking_price: 980000,
     estimated_fee: 29400,
@@ -83,6 +92,10 @@ const mockListings: Record<string, Listing> = {
       sub_district: "ศรีภูมิ",
       land_area_sqw: 150,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 350,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
+      annual_rent: 15000.0,
     },
     asking_price: 2400000,
     estimated_fee: 72000,
@@ -104,6 +117,31 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   const { id } = use(params);
   const listing = mockListings[id] || mockListings["list-1"];
   const [requestSuccess, setRequestSuccess] = useState(false);
+  const [calcType, setCalcType] = useState<"GENERAL" | "FAMILY" | "CO_LESSEE">("GENERAL");
+  const [calcShare, setCalcShare] = useState<number>(100);
+  const [calcResult, setCalcResult] = useState<{
+    annual_rent: number;
+    base_fee: number;
+    discount_description: string;
+    final_fee: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const calculateOfficialFee = async () => {
+      try {
+        const res = await api.calculateTransferFee({
+          annual_rent: listing.contract.annual_rent || 12000.0,
+          transfer_type: calcType,
+          transfer_share: calcType === "CO_LESSEE" ? calcShare : 100,
+          contract_number: listing.contract.contract_number
+        });
+        setCalcResult(res);
+      } catch (err) {
+        console.error("Error calculating official fee:", err);
+      }
+    };
+    calculateOfficialFee();
+  }, [calcType, calcShare, listing]);
 
   // Fee calculation
   const transferFee = listing.asking_price * 0.02;
@@ -274,6 +312,84 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                   <div className="flex justify-between border-t border-trd-border/50 pt-2 font-bold text-sm text-trd-primary">
                     <span>ยอดรวมประมาณการ</span>
                     <span className="text-trd-secondary-dark">{formatCurrency(totalFee)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Official Transfer Fee Calculator */}
+              <div className="border-t border-trd-border/50 pt-4 space-y-3">
+                <h4 className="text-xs font-bold text-trd-primary uppercase tracking-wide border-b border-trd-border/50 pb-2 flex items-center justify-between">
+                  <span>🧮 เครื่องคิดเลขประเมินค่าธรรมเนียม</span>
+                  <span className="text-[10px] bg-trd-primary/10 text-trd-primary px-1.5 py-0.5 rounded">
+                    ระเบียบราชการ
+                  </span>
+                </h4>
+                
+                <div className="space-y-2.5 text-xs">
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1 uppercase">
+                      ประเภทผู้รับโอน
+                    </label>
+                    <select
+                      value={calcType}
+                      title="เลือกประเภทผู้รับโอน"
+                      onChange={(e) => setCalcType(e.target.value as any)}
+                      className="w-full px-2.5 py-1.5 rounded border border-trd-border bg-white text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-trd-primary"
+                    >
+                      <option value="GENERAL">บุคคลทั่วไป (อัตราปกติ)</option>
+                      <option value="FAMILY">ครอบครัว/ทายาท/คู่สมรส (ลด 75%)</option>
+                      <option value="CO_LESSEE">ผู้เช่าร่วมกัน (ตามสัดส่วน)</option>
+                    </select>
+                  </div>
+
+                  {calcType === "CO_LESSEE" && (
+                    <div>
+                      <label className="block text-[10px] text-gray-400 font-semibold mb-1 uppercase flex justify-between">
+                        <span>สัดส่วนที่โอนสิทธิ์</span>
+                        <span className="text-trd-primary font-bold">{calcShare}%</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="100"
+                        value={calcShare}
+                        title="สัดส่วนการโอน"
+                        onChange={(e) => setCalcShare(parseFloat(e.target.value))}
+                        className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-trd-primary"
+                      />
+                    </div>
+                  )}
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-100 space-y-1.5 mt-2">
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-gray-500">ค่าเช่ารายปี:</span>
+                      <span className="font-semibold text-gray-700">
+                        {listing.contract.annual_rent ? `฿${new Intl.NumberFormat("th-TH").format(listing.contract.annual_rent)} / ปี` : "ไม่ระบุ"}
+                      </span>
+                    </div>
+                    {calcResult ? (
+                      <>
+                        <div className="flex justify-between text-[11px]">
+                          <span className="text-gray-500">ฐานค่าธรรมเนียม (6 เท่า):</span>
+                          <span className="font-semibold text-gray-700">
+                            ฿{new Intl.NumberFormat("th-TH").format(calcResult.base_fee)}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-status-valid font-medium bg-status-valid/5 px-2 py-0.5 rounded border border-status-valid/10 w-fit leading-relaxed">
+                          💡 {calcResult.discount_description}
+                        </div>
+                        <div className="flex justify-between items-baseline border-t border-gray-200/55 pt-1.5 font-bold text-xs">
+                          <span className="text-trd-primary">ค่าโอนสิทธิ์สุทธิ:</span>
+                          <span className="text-base text-trd-secondary-dark font-extrabold">
+                            ฿{new Intl.NumberFormat("th-TH").format(calcResult.final_fee)}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center text-[10px] text-gray-400 py-1">
+                        กำลังคำนวณ...
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

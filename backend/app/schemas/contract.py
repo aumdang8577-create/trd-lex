@@ -18,6 +18,7 @@ class ContractDataResponse(BaseModel):
     building_type: Optional[str] = None
     usable_area_sqm: Optional[float] = None
     zoning: Optional[str] = None
+    annual_rent: float
 
     class Config:
         from_attributes = True

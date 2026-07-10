@@ -13,6 +13,8 @@ import type {
   CreateListingRequest,
   UpdateListingRequest,
   UpdateListingStatusRequest,
+  FeeCalculationRequest,
+  FeeCalculationResponse,
 } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -158,6 +160,15 @@ class ApiClient {
       state_revenue_baht: number;
       economic_circulation_baht: number;
     }>("/dashboard/economic-indicators");
+  }
+
+  async calculateTransferFee(
+    data: FeeCalculationRequest
+  ): Promise<FeeCalculationResponse> {
+    return this.request<FeeCalculationResponse>("/calculator/transfer-fee", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 }
 

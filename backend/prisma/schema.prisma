@@ -43,6 +43,7 @@ model LeaseContract {
   building_type     String?   
   usable_area_sqm   Float?    
   zoning            String?   
+  annual_rent       Float     @default(12000.0)
   listings          Listing[] 
 }
 
@@ -68,4 +69,20 @@ enum ListingStatus {
   ACTIVE
   SOLD
   HIDDEN
+}
+
+enum TransferType {
+  GENERAL
+  FAMILY
+  CO_LESSEE
+}
+
+model FeeCalculationLog {
+  id                String       @id @default(uuid())
+  contract_number   String?      
+  annual_rent       Float        
+  transfer_type     TransferType 
+  transfer_share    Float?       
+  calculated_fee    Float        
+  createdAt         DateTime     @default(now())
 }
