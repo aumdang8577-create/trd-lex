@@ -29,8 +29,15 @@ async def test_login_success_new_citizen(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_login_invalid_id_format(client: AsyncClient):
-    # Test logging in with an invalid ID (e.g. non-digits)
+    # Test logging in with an invalid ID (non-digits)
     response = await client.post("/auth/login", json={"thaid_id": "1123456789abc"})
     assert response.status_code == 400
-    data = response.json()
-    assert data["detail"] == "เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลักเท่านั้น"
+    assert response.json()["detail"] == "เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลักเท่านั้น"
+
+    # Test logging in with an ID that is too short (12 digits)
+    response_short = await client.post("/auth/login", json={"thaid_id": "112345678901"})
+    assert response_short.status_code == 422
+
+    # Test logging in with an ID that is too long (14 digits)
+    response_long = await client.post("/auth/login", json={"thaid_id": "11234567890123"})
+    assert response_long.status_code == 422
