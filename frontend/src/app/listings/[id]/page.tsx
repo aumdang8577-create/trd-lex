@@ -137,7 +137,28 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
         });
         setCalcResult(res);
       } catch (err) {
-        console.error("Error calculating official fee:", err);
+        console.error("Error calculating official fee via API, using frontend fallback:", err);
+        // Fallback calculation logic matching the backend rules
+        const rent = listing.contract.annual_rent || 12000.0;
+        const base = rent * 6.0;
+        let final = base;
+        let desc = "คิดอัตราปกติ (6 เท่าของค่าเช่ารายปี)";
+
+        if (calcType === "FAMILY") {
+          final = base * 0.25;
+          desc = "ได้รับสิทธิลดหย่อนร้อยละ 75 (โอนให้ทายาท/คู่สมรส)";
+        } else if (calcType === "CO_LESSEE") {
+          const ratio = calcShare / 100.0;
+          final = base * ratio;
+          desc = `คิดตามสัดส่วนสิทธิที่โอน (${calcShare}%) ระหว่างผู้เช่าร่วม`;
+        }
+
+        setCalcResult({
+          annual_rent: rent,
+          base_fee: base,
+          discount_description: desc,
+          final_fee: final
+        });
       }
     };
     calculateOfficialFee();
