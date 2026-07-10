@@ -6,20 +6,25 @@ import subprocess
 import sys
 import httpx
 
-# Force the DATABASE_URL to point to the test database
-os.environ["DATABASE_URL"] = "postgresql://postgres:postgres@localhost:5432/trd_lex_test?schema=public"
+# Force the DATABASE_URL to point to the test database (allow environment override)
+os.environ["DATABASE_URL"] = os.environ.get(
+    "TEST_DATABASE_URL",
+    "postgresql://postgres:postgres@localhost:5432/trd_lex_test?schema=public"
+)
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
     print("\n[conftest] Resetting and pushing test database schema...")
     env = os.environ.copy()
-    env["DATABASE_URL"] = "postgresql://postgres:postgres@localhost:5432/trd_lex_test?schema=public"
+    env["DATABASE_URL"] = os.environ["DATABASE_URL"]
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     schema_path = os.path.join(base_dir, "prisma", "schema.prisma")
     
-    # Add virtual env's Scripts directory to PATH so prisma-client-py can be spawned
+    # Add virtual env's Scripts/bin directory to PATH so prisma-client-py can be spawned
     scripts_dir = os.path.join(base_dir, ".venv", "Scripts")
+    if not os.path.exists(scripts_dir):
+        scripts_dir = os.path.join(base_dir, ".venv", "bin")
     env["PATH"] = scripts_dir + os.pathsep + env.get("PATH", "")
     
     # Run prisma db push with force-reset and accept-data-loss
