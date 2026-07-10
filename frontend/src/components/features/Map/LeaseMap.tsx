@@ -18,8 +18,8 @@ interface LeaseMapProps {
  */
 export default function LeaseMap({
   listings = [],
-  center = [13.7563, 100.5018], // Bangkok
-  zoom = 10,
+  center = [17.4138, 102.7872], // Upper Northeast (Udon Thani, Khon Kaen, Nong Khai)
+  zoom = 8,
   className = "",
 }: LeaseMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);

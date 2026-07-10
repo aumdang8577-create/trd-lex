@@ -81,9 +81,17 @@ export default function PropertyCard({ listing }: PropertyCardProps) {
               <span className="font-mono text-gray-600">{lat}, {lng}</span>
             </div>
 
-            {/* Land Area */}
-            <div className="text-xs text-gray-500 mb-3">
-              พื้นที่ขนาด {listing.contract?.land_area_sqw} ตร.ว.
+            {/* Land & Building Area */}
+            <div className="text-xs text-gray-500 mb-3 space-y-1">
+              <div>📐 ขนาดที่ดิน: {listing.contract?.land_area_sqw} ตร.ว.</div>
+              {listing.contract?.building_type && (
+                <div className="flex flex-wrap items-center gap-1.5 mt-1 bg-trd-primary/10 text-trd-primary text-[10px] font-semibold px-2 py-0.5 rounded w-fit">
+                  <span>🏢 {listing.contract.building_type}</span>
+                  {listing.contract.usable_area_sqm && listing.contract.usable_area_sqm > 0 ? (
+                    <span>• {listing.contract.usable_area_sqm} ตร.ม.</span>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             {/* Description */}

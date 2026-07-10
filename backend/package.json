@@ -1,0 +1,21 @@
+{
+  "name": "trd-lex-backend-prisma",
+  "version": "1.0.0",
+  "description": "Prisma TypeScript seed runner",
+  "main": "index.js",
+  "scripts": {
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "prisma": "^5.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

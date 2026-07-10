@@ -195,14 +195,17 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           </div>
 
           {/* Quick Specs Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
             {[
               { label: "ขนาดที่ดิน", val: `${listing.contract.land_area_sqw} ตร.ว.`, icon: "📐" },
+              { label: "ประเภทอาคาร", val: listing.contract.building_type || "ที่ดินเปล่า", icon: "🏢" },
+              { label: "พื้นที่ใช้สอย", val: listing.contract.usable_area_sqm && listing.contract.usable_area_sqm > 0 ? `${listing.contract.usable_area_sqm} ตร.ม.` : "ไม่มี (ที่ดินเปล่า)", icon: "🏗️" },
+              { label: "ผังเมือง (Zoning)", val: listing.contract.zoning || "ไม่ระบุ", icon: "🎨" },
               { label: "จังหวัด", val: listing.contract.province, icon: "📍" },
               { label: "ระวางที่ดิน", val: listing.contract.parcel_number, icon: "🗺️" },
               { label: "สถานะสัญญา", val: "ปกติ (Active)", icon: "🛡️" },
             ].map((spec) => (
-              <div key={spec.label} className="bg-gray-50/80 border border-trd-border/50 rounded-xl p-4 flex flex-col items-center text-center">
+              <div key={spec.label} className="bg-gray-50/80 border border-trd-border/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
                 <span className="text-2xl mb-1">{spec.icon}</span>
                 <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">{spec.label}</span>
                 <span className="text-sm font-bold text-trd-primary mt-0.5">{spec.val}</span>

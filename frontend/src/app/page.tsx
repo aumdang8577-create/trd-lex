@@ -26,6 +26,9 @@ const mockListings: Listing[] = [
       sub_district: "สามเสนใน",
       land_area_sqw: 120,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 250,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
     },
     asking_price: 1500000,
     estimated_fee: 45000,
@@ -51,6 +54,9 @@ const mockListings: Listing[] = [
       sub_district: "หนองปรือ",
       land_area_sqw: 80,
       is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 140,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
     },
     asking_price: 980000,
     estimated_fee: 29400,
@@ -76,6 +82,9 @@ const mockListings: Listing[] = [
       sub_district: "ศรีภูมิ",
       land_area_sqw: 150,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 350,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
     },
     asking_price: 2400000,
     estimated_fee: 72000,
@@ -179,6 +188,9 @@ export default function HomePage() {
               landArea={listing.contract.land_area_sqw}
               imageUrl={listing.image_urls[0] || ""}
               isVerified={listing.status === "ACTIVE"}
+              buildingType={listing.contract.building_type}
+              usableAreaSqm={listing.contract.usable_area_sqm}
+              zoning={listing.contract.zoning}
             />
           ))}
         </div>

@@ -23,6 +23,9 @@ const initialListings: Listing[] = [
       sub_district: "สามเสนใน",
       land_area_sqw: 120,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 250,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
     },
     asking_price: 1500000,
     estimated_fee: 45000,
@@ -48,6 +51,9 @@ const initialListings: Listing[] = [
       sub_district: "หนองปรือ",
       land_area_sqw: 80,
       is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 140,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
     },
     asking_price: 980000,
     estimated_fee: 29400,
@@ -73,6 +79,9 @@ const initialListings: Listing[] = [
       sub_district: "ศรีภูมิ",
       land_area_sqw: 150,
       is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 350,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
     },
     asking_price: 2400000,
     estimated_fee: 72000,
@@ -87,7 +96,7 @@ const initialListings: Listing[] = [
 export default function ListingsPage() {
   const [listings, setListings] = useState<Listing[]>(initialListings);
 
-  const handleSearch = (searchData: { province: string; district: string; minPrice: string; maxPrice: string }) => {
+  const handleSearch = (searchData: { province: string; district: string; minPrice: string; maxPrice: string; zoning: string }) => {
     let filtered = [...initialListings];
 
     if (searchData.province) {
@@ -103,6 +112,9 @@ export default function ListingsPage() {
     }
     if (searchData.maxPrice) {
       filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
+    }
+    if (searchData.zoning) {
+      filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
     }
 
     setListings(filtered);
@@ -144,6 +156,9 @@ export default function ListingsPage() {
                   landArea={listing.contract.land_area_sqw}
                   imageUrl={listing.image_urls[0] || ""}
                   isVerified={listing.status === "ACTIVE"}
+                  buildingType={listing.contract.building_type}
+                  usableAreaSqm={listing.contract.usable_area_sqm}
+                  zoning={listing.contract.zoning}
                 />
               ))}
             </div>

@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-py"
 }
 
+generator client_js {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -36,6 +40,9 @@ model LeaseContract {
   sub_district      String    
   land_area_sqw     Float     
   is_active         Boolean   @default(true)
+  building_type     String?   
+  usable_area_sqm   Float?    
+  zoning            String?   
   listings          Listing[] 
 }
 

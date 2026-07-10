@@ -15,6 +15,9 @@ class ContractDataResponse(BaseModel):
     sub_district: str
     land_area_sqw: float
     is_active: bool
+    building_type: Optional[str] = None
+    usable_area_sqm: Optional[float] = None
+    zoning: Optional[str] = None
 
     class Config:
         from_attributes = True

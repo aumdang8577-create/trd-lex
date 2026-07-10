@@ -26,6 +26,9 @@ export interface LeaseContract {
   sub_district: string;
   land_area_sqw: number;
   is_active: boolean;
+  building_type?: string | null;
+  usable_area_sqm?: number | null;
+  zoning?: string | null;
 }
 
 export interface Listing {

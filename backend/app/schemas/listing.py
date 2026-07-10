@@ -22,6 +22,9 @@ class ListingContractResponse(BaseModel):
     district: str
     sub_district: str
     land_area_sqw: float
+    building_type: Optional[str] = None
+    usable_area_sqm: Optional[float] = None
+    zoning: Optional[str] = None
 
     class Config:
         from_attributes = True
