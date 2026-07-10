@@ -27,7 +27,7 @@ export default function PropertyCard({
   zoning,
 }: PropertyCardProps) {
   return (
-    <div className="group relative bg-white rounded-xl border border-trd-border overflow-hidden shadow-card hover:shadow-lg transition-shadow duration-300 flex flex-col">
+    <div className="group relative bg-white rounded-xl border border-trd-border overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col">
       
       {/* รูปภาพและ Badge แสดงสถานะ */}
       <div className="relative h-48 w-full overflow-hidden">
@@ -35,7 +35,7 @@ export default function PropertyCard({
           src={imageUrl} 
           alt={`ที่ราชพัสดุ ${district} ${province}`} 
           fill 
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover transform transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {isVerified && (
@@ -98,7 +98,7 @@ export default function PropertyCard({
           
           <a
             href={`/listings/${id}`}
-            className="bg-trd-primary hover:bg-opacity-90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors"
+            className="bg-trd-primary hover:bg-trd-primary-light hover:shadow-md hover:scale-[1.03] active:scale-[0.98] text-white text-sm font-medium py-2 px-4 rounded-lg transition-all duration-200"
           >
             ดูรายละเอียด
           </a>
