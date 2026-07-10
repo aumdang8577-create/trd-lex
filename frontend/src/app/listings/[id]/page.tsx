@@ -246,7 +246,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
             <div className="bg-trd-primary text-white p-6">
               <span className="text-xs text-white/70 block mb-1">ราคาเสนอโอนสิทธิ์</span>
               <h2 className="text-3xl font-extrabold text-trd-secondary">
-                ฿{formatCurrency(listing.asking_price)}
+                {formatCurrency(listing.asking_price)}
               </h2>
             </div>
             
@@ -260,20 +260,20 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-gray-500">1. ค่าธรรมเนียมการโอน (2.0%)</span>
-                    <span className="font-semibold text-gray-800">฿{formatCurrency(transferFee)}</span>
+                    <span className="font-semibold text-gray-800">{formatCurrency(transferFee)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">2. อากรแสตมป์ (0.5%)</span>
-                    <span className="font-semibold text-gray-800">฿{formatCurrency(stampDuty)}</span>
+                    <span className="font-semibold text-gray-800">{formatCurrency(stampDuty)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">3. ค่าดำเนินการโอนกรรมสิทธิ์ (0.5%)</span>
-                    <span className="font-semibold text-gray-800">฿{formatCurrency(adminFee)}</span>
+                    <span className="font-semibold text-gray-800">{formatCurrency(adminFee)}</span>
                   </div>
                   
                   <div className="flex justify-between border-t border-trd-border/50 pt-2 font-bold text-sm text-trd-primary">
                     <span>ยอดรวมประมาณการ</span>
-                    <span className="text-trd-secondary-dark">฿{formatCurrency(totalFee)}</span>
+                    <span className="text-trd-secondary-dark">{formatCurrency(totalFee)}</span>
                   </div>
                 </div>
               </div>

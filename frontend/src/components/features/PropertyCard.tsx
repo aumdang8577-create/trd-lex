@@ -92,7 +92,7 @@ export default function PropertyCard({
           <div>
             <p className="text-xs text-gray-400 mb-1">ค่าตอบแทนการโอนสิทธิ</p>
             <p className="text-xl font-bold text-trd-secondary">
-              ฿{formatCurrency(price)}
+              {formatCurrency(price)}
             </p>
           </div>
           
