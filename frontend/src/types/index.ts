@@ -29,6 +29,7 @@ export interface LeaseContract {
   building_type?: string | null;
   usable_area_sqm?: number | null;
   zoning?: string | null;
+  annual_rent?: number;
 }
 
 export interface Listing {
@@ -99,10 +100,21 @@ export interface UpdateListingStatusRequest {
 export type TransferType = "GENERAL" | "FAMILY" | "CO_LESSEE";
 
 export interface FeeCalculationRequest {
-  annual_rent: number;
+  annual_rent?: number;
   transfer_type: TransferType;
   transfer_share?: number;
   contract_number?: string;
+
+  // Advanced calculation fields
+  lease_purpose?: string;
+  region_type?: string;
+  location_class?: string;
+  land_area_sqw?: number;
+  appraisal_land_sqw?: number;
+  building_type?: string;
+  usable_area_sqm?: number;
+  appraisal_bld_sqm?: number;
+  building_depreciation?: number;
 }
 
 export interface FeeCalculationResponse {
@@ -110,4 +122,13 @@ export interface FeeCalculationResponse {
   base_fee: number;
   discount_description: string;
   final_fee: number;
+  calculated_arrangement_fee?: number;
+  calculation_details?: {
+    method?: string;
+    land_value?: number;
+    building_value?: number;
+    total_asset_value?: number;
+    rate_per_sqw_month?: number;
+    exceeding_value?: number;
+  };
 }

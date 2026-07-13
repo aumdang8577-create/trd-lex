@@ -117,29 +117,76 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   const { id } = use(params);
   const listing = mockListings[id] || mockListings["list-1"];
   const [requestSuccess, setRequestSuccess] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [calcType, setCalcType] = useState<"GENERAL" | "FAMILY" | "CO_LESSEE">("GENERAL");
   const [calcShare, setCalcShare] = useState<number>(100);
-  const [calcResult, setCalcResult] = useState<{
-    annual_rent: number;
-    base_fee: number;
-    discount_description: string;
-    final_fee: number;
-  } | null>(null);
+  const [calcResult, setCalcResult] = useState<any>(null);
+
+  // Advanced calculator states
+  const [isDetailedCalc, setIsDetailedCalc] = useState(false);
+  const [calcPurpose, setCalcPurpose] = useState<"RESIDENTIAL" | "AGRICULTURE" | "COMMERCIAL">("RESIDENTIAL");
+  const [calcRegion, setCalcRegion] = useState<"BKK" | "PROVINCIAL">("PROVINCIAL");
+  const [calcClass, setCalcClass] = useState<"CLASS_1" | "CLASS_2" | "CLASS_3">("CLASS_1");
+  const [calcAppraisal, setCalcAppraisal] = useState<number>(20000);
+  const [calcLandArea, setCalcLandArea] = useState<number>(listing.contract.land_area_sqw);
+  const [calcBuildingType, setCalcBuildingType] = useState<string>("ที่ดินเปล่า");
+  const [calcUsableArea, setCalcUsableArea] = useState<number>(0);
+  const [calcBldAppraisal, setCalcBldAppraisal] = useState<number>(8000);
+  const [calcDepreciation, setCalcDepreciation] = useState<number>(0);
+
+  useEffect(() => {
+    if (listing) {
+      setCalcRegion(listing.contract.province === "กรุงเทพมหานคร" ? "BKK" : "PROVINCIAL");
+      setCalcLandArea(listing.contract.land_area_sqw);
+      setCalcBuildingType(listing.contract.building_type || "ที่ดินเปล่า");
+      setCalcUsableArea(listing.contract.usable_area_sqm || 0);
+    }
+  }, [listing]);
 
   useEffect(() => {
     const calculateOfficialFee = async () => {
       try {
-        const res = await api.calculateTransferFee({
-          annual_rent: listing.contract.annual_rent || 12000.0,
+        let reqData: any = {
           transfer_type: calcType,
           transfer_share: calcType === "CO_LESSEE" ? calcShare : 100,
           contract_number: listing.contract.contract_number
-        });
+        };
+
+        if (isDetailedCalc) {
+          reqData = {
+            ...reqData,
+            lease_purpose: calcPurpose,
+            region_type: calcRegion,
+            location_class: calcClass,
+            land_area_sqw: isNaN(calcLandArea) ? 0 : calcLandArea,
+            appraisal_land_sqw: isNaN(calcAppraisal) ? 0 : calcAppraisal,
+            building_type: calcBuildingType,
+            usable_area_sqm: calcBuildingType !== "ที่ดินเปล่า" ? (isNaN(calcUsableArea) ? 0 : calcUsableArea) : 0,
+            appraisal_bld_sqm: calcBuildingType !== "ที่ดินเปล่า" ? (isNaN(calcBldAppraisal) ? 0 : calcBldAppraisal) : 0,
+            building_depreciation: calcBuildingType !== "ที่ดินเปล่า" ? (isNaN(calcDepreciation) ? 0 : calcDepreciation) : 0,
+          };
+        } else {
+          reqData.annual_rent = listing.contract.annual_rent || 12000.0;
+        }
+
+        const res = await api.calculateTransferFee(reqData);
         setCalcResult(res);
       } catch (err) {
         console.error("Error calculating official fee via API, using frontend fallback:", err);
         // Fallback calculation logic matching the backend rules
-        const rent = listing.contract.annual_rent || 12000.0;
+        let rent = listing.contract.annual_rent || 12000.0;
+        if (isDetailedCalc) {
+          if (calcPurpose === "AGRICULTURE") {
+            rent = Math.max(200, (calcLandArea / 400.0) * 200.0);
+          } else if (calcPurpose === "COMMERCIAL") {
+            rent = (calcLandArea * calcAppraisal) * 0.03;
+          } else {
+            // Residential
+            const rate = calcRegion === "BKK" ? 10.0 : 4.5;
+            rent = calcLandArea * rate * 12.0;
+          }
+        }
+        
         const base = rent * 6.0;
         let final = base;
         let desc = "คิดอัตราปกติ (6 เท่าของค่าเช่ารายปี)";
@@ -157,12 +204,32 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           annual_rent: rent,
           base_fee: base,
           discount_description: desc,
-          final_fee: final
+          final_fee: final,
+          calculated_arrangement_fee: rent * 2.0
         });
       }
     };
-    calculateOfficialFee();
-  }, [calcType, calcShare, listing]);
+
+    const timer = setTimeout(() => {
+      calculateOfficialFee();
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [
+    calcType,
+    calcShare,
+    listing,
+    isDetailedCalc,
+    calcPurpose,
+    calcRegion,
+    calcClass,
+    calcAppraisal,
+    calcLandArea,
+    calcBuildingType,
+    calcUsableArea,
+    calcBldAppraisal,
+    calcDepreciation
+  ]);
 
   // Fee calculation
   const transferFee = listing.asking_price * 0.02;
@@ -230,6 +297,29 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           )}
           <div className="relative flex-1 w-full rounded-2xl overflow-hidden shadow-sm">
             <LeaseMap listings={[listing]} center={[listing.contract.location_lat, listing.contract.location_lng]} zoom={14} className="!h-full !rounded-none !border-none" />
+          </div>
+        </div>
+      </div>
+
+      {/* Warning Banner (Disclaimer) */}
+      <div className="bg-yellow-50 border-l-4 border-trd-gold p-4 my-6 rounded-md shadow-sm">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-trd-gold" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-yellow-800">
+              ข้อควรทราบก่อนการเจรจาโอนสิทธิ
+            </h3>
+            <div className="mt-2 text-xs text-yellow-700 leading-relaxed">
+              <p>
+                TRD-LEX เป็นเพียงแพลตฟอร์มกลางในการแสดงข้อมูลทำเลศักยภาพเท่านั้น 
+                <strong> การทำธุรกรรมเพื่อเปลี่ยนแปลงชื่อผู้เช่าในสัญญาอย่างสมบูรณ์ จะต้องดำเนินการ ณ สำนักงานธนารักษ์พื้นที่ที่รับผิดชอบเท่านั้น</strong> 
+                โปรดระวังการโอนเงินหรือทำธุรกรรมผ่านบุคคลที่สาม
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -347,6 +437,129 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                 </h4>
                 
                 <div className="space-y-2.5 text-xs">
+                  {/* Detailed Switch */}
+                  <div className="flex items-center justify-between bg-trd-primary/5 px-2.5 py-2 rounded-lg border border-trd-primary/10">
+                    <span className="text-[10px] font-semibold text-trd-primary">เปิดเครื่องคำนวณขั้นสูง (ระเบียบราชการ)</span>
+                    <input
+                      type="checkbox"
+                      checked={isDetailedCalc}
+                      title="คำนวณแบบละเอียด"
+                      onChange={(e) => setIsDetailedCalc(e.target.checked)}
+                      className="w-3.5 h-3.5 text-trd-primary border-gray-300 rounded focus:ring-trd-primary accent-trd-primary cursor-pointer"
+                    />
+                  </div>
+
+                  {isDetailedCalc && (
+                    <div className="space-y-2 border border-dashed border-trd-border/60 p-2.5 rounded-lg bg-gray-50/50">
+                      <div>
+                        <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">วัตถุประสงค์การเช่า</label>
+                        <select
+                          value={calcPurpose}
+                          onChange={(e: any) => setCalcPurpose(e.target.value)}
+                          className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                        >
+                          <option value="RESIDENTIAL">เพื่ออยู่อาศัย (เอกสาร 1)</option>
+                          <option value="AGRICULTURE">เพื่อประกอบเกษตรกรรม (เอกสาร 2)</option>
+                          <option value="COMMERCIAL">เพื่อการพาณิชยกรรม (เอกสาร 3)</option>
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <div>
+                          <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ภูมิภาค</label>
+                          <select
+                            value={calcRegion}
+                            onChange={(e: any) => setCalcRegion(e.target.value)}
+                            className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                          >
+                            <option value="BKK">กรุงเทพมหานคร (ก)</option>
+                            <option value="PROVINCIAL">จังหวัดอื่น (ข)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ระดับทำเล</label>
+                          <select
+                            value={calcClass}
+                            onChange={(e: any) => setCalcClass(e.target.value)}
+                            className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                          >
+                            <option value="CLASS_1">ทำเลชั้น 1</option>
+                            <option value="CLASS_2">ทำเลชั้น 2</option>
+                            <option value="CLASS_3">ทำเลชั้น 3</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <div>
+                          <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">เนื้อที่ดิน (ตร.ว.)</label>
+                          <input
+                            type="number"
+                            value={calcLandArea}
+                            onChange={(e) => setCalcLandArea(Number(e.target.value))}
+                            className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ป.ม. ที่ดิน (บาท/ตร.ว.)</label>
+                          <input
+                            type="number"
+                            value={calcAppraisal}
+                            onChange={(e) => setCalcAppraisal(Number(e.target.value))}
+                            className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ประเภทอาคาร</label>
+                        <select
+                          value={calcBuildingType}
+                          onChange={(e: any) => setCalcBuildingType(e.target.value)}
+                          className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
+                        >
+                          <option value="ที่ดินเปล่า">ที่ดินเปล่า</option>
+                          <option value="บ้านพักอาศัย">บ้านพักอาศัย</option>
+                          <option value="อาคารพาณิชย์">อาคารพาณิชย์</option>
+                          <option value="โรงงาน/คลังสินค้า">โรงงาน/คลังสินค้า</option>
+                          <option value="BOT">โครงการ B.O.T</option>
+                        </select>
+                      </div>
+
+                      {calcBuildingType !== "ที่ดินเปล่า" && (
+                        <div className="grid grid-cols-3 gap-1 border-t border-trd-border/30 pt-1.5 mt-1.5">
+                          <div>
+                            <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">พท.ใช้สอย(ตรม.)</label>
+                            <input
+                              type="number"
+                              value={calcUsableArea}
+                              onChange={(e) => setCalcUsableArea(Number(e.target.value))}
+                              className="w-full px-1 py-0.5 rounded border border-trd-border bg-white text-[10px] text-gray-700"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">ป.ม.อาคาร(/ตรม)</label>
+                            <input
+                              type="number"
+                              value={calcBldAppraisal}
+                              onChange={(e) => setCalcBldAppraisal(Number(e.target.value))}
+                              className="w-full px-1 py-0.5 rounded border border-trd-border bg-white text-[10px] text-gray-700"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">ค่าเสื่อมสะสม(%)</label>
+                            <input
+                              type="number"
+                              value={calcDepreciation}
+                              onChange={(e) => setCalcDepreciation(Number(e.target.value))}
+                              className="w-full px-1 py-0.5 rounded border border-trd-border bg-white text-[10px] text-gray-700"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-[10px] text-gray-400 font-semibold mb-1 uppercase">
                       ประเภทผู้รับโอน
@@ -383,11 +596,21 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
 
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-100 space-y-1.5 mt-2">
                     <div className="flex justify-between text-[11px]">
-                      <span className="text-gray-500">ค่าเช่ารายปี:</span>
+                      <span className="text-gray-500">
+                        {isDetailedCalc ? "ประมาณการค่าเช่ารายปี:" : "ค่าเช่ารายปีสัญญา:"}
+                      </span>
                       <span className="font-semibold text-gray-700">
-                        {listing.contract.annual_rent ? `฿${new Intl.NumberFormat("th-TH").format(listing.contract.annual_rent)} / ปี` : "ไม่ระบุ"}
+                        {calcResult ? `฿${new Intl.NumberFormat("th-TH").format(calcResult.annual_rent)} / ปี` : "กำลังคำนวณ..."}
                       </span>
                     </div>
+                    {calcResult?.calculated_arrangement_fee !== undefined && (
+                      <div className="flex justify-between text-[11px] border-b border-gray-200/40 pb-1">
+                        <span className="text-gray-500">ค่าธรรมเนียมจัดให้เช่า:</span>
+                        <span className="font-semibold text-gray-700">
+                          ฿{new Intl.NumberFormat("th-TH").format(calcResult.calculated_arrangement_fee)}
+                        </span>
+                      </div>
+                    )}
                     {calcResult ? (
                       <>
                         <div className="flex justify-between text-[11px]">
@@ -396,6 +619,11 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                             ฿{new Intl.NumberFormat("th-TH").format(calcResult.base_fee)}
                           </span>
                         </div>
+                        {calcResult.calculation_details?.method && (
+                          <div className="text-[9px] text-gray-400 font-medium">
+                            วิธีประเมิน: {calcResult.calculation_details.method}
+                          </div>
+                        )}
                         <div className="text-[10px] text-status-valid font-medium bg-status-valid/5 px-2 py-0.5 rounded border border-status-valid/10 w-fit leading-relaxed">
                           💡 {calcResult.discount_description}
                         </div>
@@ -417,16 +645,18 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
 
               {/* Action Buttons */}
               <div className="space-y-3 pt-2">
-                {requestSuccess && (
-                  <div className="bg-status-valid/10 border border-status-valid/20 text-status-valid text-xs rounded-lg p-3 text-center">
-                    ส่งคำขอสิทธิ์การโอน (Request to Transfer) สำเร็จ!
+                {showContact && (
+                  <div className="bg-status-valid/10 border border-status-valid/20 text-status-valid text-xs rounded-lg p-3 text-center space-y-1">
+                    <p className="font-semibold text-gray-700">ข้อมูลติดต่อผู้เช่าเดิม:</p>
+                    <p className="font-bold text-base text-trd-primary">📞 {listing.seller.phone_number || "081-234-5678"}</p>
+                    <p className="text-[10px] text-gray-500">โปรดโทรติดต่อเพื่อทำการเจรจาโอนสิทธิ์นอกระบบ</p>
                   </div>
                 )}
-                <Button variant="primary" className="w-full py-3 text-sm font-semibold" onClick={handleRequestTransfer} disabled={requestSuccess}>
-                  ส่งคำขอโอนสิทธิ์ (Request to Transfer)
+                <Button variant="primary" className="w-full py-3 text-sm font-semibold" onClick={() => setShowContact(!showContact)}>
+                  {showContact ? "ซ่อนข้อมูลติดต่อ" : "แสดงความสนใจ (Contact Lessee)"}
                 </Button>
-                <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500">
-                  📄 ดาวน์โหลดเอกสารเงื่อนไขสิทธิ์
+                <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500" onClick={() => window.open("/คู่มือการโอนสิทธิ.pdf", "_blank")}>
+                  📄 ดาวน์โหลดคู่มือการโอนสิทธิ
                 </Button>
               </div>
 

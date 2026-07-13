@@ -236,6 +236,47 @@ export default function CreateListingModal({
               <p><strong className="text-gray-500">ราคาเสนอขายสิทธิ์:</strong> ฿{parseFloat(askingPrice).toLocaleString()} บาท</p>
               <p><strong className="text-gray-500">รูปภาพประกอบ:</strong> {imageUrls.filter(u => u.trim() !== "").length} รูป</p>
             </div>
+
+            {/* Transparent Fees Breakdown */}
+            <div className="border border-trd-border/50 rounded-xl overflow-hidden text-xs">
+              <div className="bg-trd-primary/5 px-4 py-2 border-b border-trd-border/50 font-semibold text-trd-primary">
+                💰 สรุปประมาณการค่าใช้จ่ายและค่าธรรมเนียม
+              </div>
+              <div className="p-4 space-y-3 bg-white">
+                <div className="space-y-1.5 border-b border-gray-100 pb-2">
+                  <div className="flex justify-between font-medium text-gray-700">
+                    <span>1. ประมาณการธุรกรรมตลาดรอง (C2C)</span>
+                    <span className="text-trd-secondary-dark font-bold">฿{(parseFloat(askingPrice) * 0.03 || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="pl-3 text-[10px] text-gray-400 space-y-0.5">
+                    <div className="flex justify-between">
+                      <span>• ค่าธรรมเนียมการโอนตลาดรอง (2.0%):</span>
+                      <span>฿{(parseFloat(askingPrice) * 0.02 || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>• อากรแสตมป์ (0.5%):</span>
+                      <span>฿{(parseFloat(askingPrice) * 0.005 || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>• ค่าดำเนินการ (0.5%):</span>
+                      <span>฿{(parseFloat(askingPrice) * 0.005 || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between font-medium text-gray-700">
+                  <div>
+                    <span>2. ค่าโอนสิทธิ์ราชการ (ระเบียบธนารักษ์)</span>
+                    <span className="block text-[9px] text-gray-400 font-normal">(6 เท่าของค่าเช่ารายปีปกติ)</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-trd-primary font-bold">฿{((contractData?.annual_rent || 12000.0) * 6.0).toLocaleString()}</span>
+                    <span className="block text-[9px] text-gray-400 font-normal">ค่าเช่ารายปี: ฿{(contractData?.annual_rent || 12000.0).toLocaleString()} / ปี</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <p className="text-[10px] text-gray-400">การกดยืนยันหมายถึงคุณยินดีที่จะเผยแพร่ประกาศนี้สู่ตลาดรองอย่างเป็นทางการ</p>
             {error && <p className="text-xs text-status-invalid">⚠️ {error}</p>}
             <div className="flex justify-between pt-4">
