@@ -147,6 +147,71 @@ function parseCSV(content: string): string[][] {
   return result;
 }
 
+function calculateRentTS(
+  purpose: string,
+  region: string,
+  locClass: string,
+  landArea: number,
+  appraisalLand: number,
+  buildingType: string,
+  usableArea: number
+): number {
+  let landVal = landArea * appraisalLand;
+  let bldVal = buildingType !== 'ที่ดินเปล่า' && usableArea ? usableArea * 8000.0 * 0.9 : 0.0;
+  let assetVal = landVal + bldVal;
+
+  if (purpose === 'RESIDENTIAL') {
+    if (region === 'BKK') {
+      if (appraisalLand <= 300000) {
+        let rate = 10.0;
+        if (locClass === 'CLASS_2') rate = 6.0;
+        if (locClass === 'CLASS_3') rate = 3.50;
+        return Math.round(Math.max(0.50 * landArea, rate * landArea) * 12.0);
+      } else {
+        return Math.round(assetVal * 0.01);
+      }
+    } else {
+      if (appraisalLand <= 100000) {
+        let rate = 4.5;
+        if (locClass === 'CLASS_2') rate = 2.0;
+        if (locClass === 'CLASS_3') rate = 1.25;
+        return Math.round(Math.max(0.25 * landArea, rate * landArea) * 12.0);
+      } else {
+        return Math.round(assetVal * 0.01);
+      }
+    }
+  } else if (purpose === 'AGRICULTURE') {
+    let areaRai = landArea / 400.0;
+    if (appraisalLand * 400.0 <= 8000000) {
+      if (areaRai <= 15) {
+        return Math.round(Math.max(200.0, areaRai * 200.0));
+      } else {
+        let base = 3000.0;
+        let exceedingSqw = landArea - 6000.0;
+        return Math.round(base + exceedingSqw * appraisalLand * 0.002);
+      }
+    } else {
+      return Math.round(landVal * 0.002);
+    }
+  } else {
+    if (buildingType === 'BOT') {
+      return Math.round(assetVal * 0.02);
+    } else if (buildingType !== 'ที่ดินเปล่า') {
+      return Math.round(assetVal * 0.03);
+    } else {
+      let flatRate = region === 'BKK' ? 670.0 : 470.0;
+      let minMonthly = region === 'BKK' ? 4000.0 : 2800.0;
+      if (landArea <= 12) {
+        return Math.round(Math.max(minMonthly, landArea * flatRate) * 12.0);
+      } else {
+        let base = Math.max(minMonthly, 12 * flatRate) * 12.0;
+        let exceedingSqw = landArea - 12.0;
+        return Math.round(base + exceedingSqw * appraisalLand * 0.03);
+      }
+    }
+  }
+}
+
 async function main() {
   console.log('Cleaning database...');
   // Clean up data in reverse order of relationships
@@ -202,6 +267,16 @@ async function main() {
       usable_area_sqm: 120.0,
       zoning: 'พื้นที่สีแดง (พาณิชยกรรม)',
       annual_rent: 18000.0,
+      region_type: 'BKK',
+      location_class: 'CLASS_1',
+      purpose: 'COMMERCIAL',
+      tenant_category: 'NEW_TENANT',
+      appraisal_land_sqw: 25000.0,
+      appraisal_bld_sqm: 8000.0,
+      building_depreciation: 0.0,
+      calculated_annual_rent: 18000.0,
+      calculated_arrange_fee: 36000.0,
+      lease_years: 3,
     },
   });
 
@@ -221,6 +296,16 @@ async function main() {
       usable_area_sqm: 180.0,
       zoning: 'พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)',
       annual_rent: 24000.0,
+      region_type: 'PROVINCIAL',
+      location_class: 'CLASS_2',
+      purpose: 'RESIDENTIAL',
+      tenant_category: 'NEW_TENANT',
+      appraisal_land_sqw: 2000.0,
+      appraisal_bld_sqm: 6000.0,
+      building_depreciation: 10.0,
+      calculated_annual_rent: 24000.0,
+      calculated_arrange_fee: 48000.0,
+      lease_years: 3,
     },
   });
 
@@ -240,6 +325,14 @@ async function main() {
       usable_area_sqm: 0.0,
       zoning: 'พื้นที่สีเขียว (เกษตรกรรม)',
       annual_rent: 15000.0,
+      region_type: 'PROVINCIAL',
+      location_class: 'CLASS_3',
+      purpose: 'AGRICULTURE',
+      tenant_category: 'OLD_TENANT',
+      appraisal_land_sqw: 1200.0,
+      calculated_annual_rent: 15000.0,
+      calculated_arrange_fee: 30000.0,
+      lease_years: 3,
     },
   });
 
@@ -267,6 +360,7 @@ async function main() {
       status: ListingStatus.ACTIVE,
     },
   });
+
 
   // Reading the CSV file
   const csvPath = 'C:\\TRD_lex\\datatest.csv';
@@ -318,7 +412,36 @@ async function main() {
 
     // Infer building details based on lessee name
     const { buildingType, usableAreaSqm, zoning } = inferBuildingDetails(lesseeName, landAreaSqw);
-    const annualRent = Math.round(landAreaSqw * 120.0);
+    
+    // Detailed pricing mapping
+    const regionType = province === 'กรุงเทพมหานคร' ? 'BKK' : 'PROVINCIAL';
+    const locationClass = landAreaSqw > 150.0 ? 'CLASS_1' : (landAreaSqw > 60.0 ? 'CLASS_2' : 'CLASS_3');
+    
+    let purpose = 'RESIDENTIAL';
+    if (buildingType === 'โรงงาน/คลังสินค้า' || buildingType === 'อาคารพาณิชย์') {
+      purpose = 'COMMERCIAL';
+    } else if (buildingType === 'ที่ดินเปล่า' && landAreaSqw > 300) {
+      purpose = 'AGRICULTURE';
+    }
+
+    const tenantCategory = 'NEW_TENANT';
+    const appraisalLandSqw = regionType === 'BKK' ? 35000.0 : 4000.0;
+    const appraisalBldSqm = buildingType !== 'ที่ดินเปล่า' ? 8000.0 : null;
+    const buildingDepreciation = buildingType !== 'ที่ดินเปล่า' ? 10.0 : null;
+
+    const calculatedRent = calculateRentTS(
+      purpose,
+      regionType,
+      locationClass,
+      landAreaSqw,
+      appraisalLandSqw,
+      buildingType,
+      usableAreaSqm
+    );
+
+    const calculatedArrangeFee = purpose === 'COMMERCIAL' 
+      ? Math.round((landAreaSqw * appraisalLandSqw + (usableAreaSqm * 8000 * 0.9)) * 0.01 * 3)
+      : Math.round(calculatedRent * 2.0);
 
     // First ensure the User exists
     await prisma.user.upsert({
@@ -348,7 +471,17 @@ async function main() {
         building_type: buildingType,
         usable_area_sqm: usableAreaSqm,
         zoning: zoning,
-        annual_rent: annualRent,
+        annual_rent: calculatedRent,
+        region_type: regionType as any,
+        location_class: locationClass as any,
+        purpose: purpose as any,
+        tenant_category: tenantCategory as any,
+        appraisal_land_sqw: appraisalLandSqw,
+        appraisal_bld_sqm: appraisalBldSqm,
+        building_depreciation: buildingDepreciation,
+        calculated_annual_rent: calculatedRent,
+        calculated_arrange_fee: calculatedArrangeFee,
+        lease_years: 3,
       },
       create: {
         contract_number: contractNumber,
@@ -364,7 +497,17 @@ async function main() {
         building_type: buildingType,
         usable_area_sqm: usableAreaSqm,
         zoning: zoning,
-        annual_rent: annualRent,
+        annual_rent: calculatedRent,
+        region_type: regionType as any,
+        location_class: locationClass as any,
+        purpose: purpose as any,
+        tenant_category: tenantCategory as any,
+        appraisal_land_sqw: appraisalLandSqw,
+        appraisal_bld_sqm: appraisalBldSqm,
+        building_depreciation: buildingDepreciation,
+        calculated_annual_rent: calculatedRent,
+        calculated_arrange_fee: calculatedArrangeFee,
+        lease_years: 3,
       },
     });
 

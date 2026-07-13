@@ -27,6 +27,17 @@ class ListingContractResponse(BaseModel):
     zoning: Optional[str] = None
     annual_rent: float
 
+    # New Treasury properties
+    region_type: Optional[str] = None
+    location_class: Optional[str] = None
+    purpose: Optional[str] = None
+    tenant_category: Optional[str] = None
+    appraisal_land_sqw: Optional[float] = None
+    appraisal_bld_sqm: Optional[float] = None
+    building_depreciation: Optional[float] = None
+    calculated_annual_rent: Optional[float] = None
+    calculated_arrange_fee: Optional[float] = None
+
     class Config:
         from_attributes = True
 

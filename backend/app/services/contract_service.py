@@ -29,6 +29,48 @@ class ContractService:
                 message="สัญญานี้ไม่ได้ลงทะเบียนภายใต้เลขบัตรประชาชนของคุณ"
             )
             
+        # คำนวณค่าเช่ารายปีและค่าจัดให้เช่าตามระเบียบหลวงแบบไดนามิก และอัปเดตลงฐานข้อมูลผ่าน Prisma ORM
+        from app.core.calculations import (
+            calculate_annual_rent,
+            calculate_arrangement_fee,
+            LeasePurpose,
+            RegionType,
+            LocationClass
+        )
+        
+        try:
+            annual_rent, calc_details = calculate_annual_rent(
+                purpose=LeasePurpose(str(contract.purpose)),
+                region=RegionType(str(contract.region_type)),
+                location_class=LocationClass(str(contract.location_class)),
+                land_area_sqw=contract.land_area_sqw,
+                appraisal_land_sqw=contract.appraisal_land_sqw,
+                building_type=contract.building_type,
+                usable_area_sqm=contract.usable_area_sqm,
+                appraisal_bld_sqm=contract.appraisal_bld_sqm,
+                building_depreciation=contract.building_depreciation
+            )
+            
+            arrangement_fee = calculate_arrangement_fee(
+                annual_rent=annual_rent,
+                purpose=LeasePurpose(contract.purpose),
+                total_asset_value=calc_details.get("total_asset_value", 0.0),
+                lease_years=contract.lease_years or 3
+            )
+            
+            # อัปเดตข้อมูลผลลัพธ์การคำนวณผ่าน Prisma ORM
+            contract = await db.leasecontract.update(
+                where={"id": contract.id},
+                data={
+                    "calculated_annual_rent": annual_rent,
+                    "calculated_arrange_fee": arrangement_fee,
+                    "annual_rent": annual_rent  # อัปเดตค่าเช่าหลักเพื่อให้สัมพันธ์กับส่วนอื่น
+                }
+            )
+        except Exception as e:
+            # Fallback หากเกิดข้อผิดพลาดด้านความเข้ากันได้
+            print(f"Error auto-calculating contract rent: {e}")
+            
         # Map to response schema
         contract_data = ContractDataResponse.model_validate(contract)
         

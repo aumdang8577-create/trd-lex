@@ -29,22 +29,40 @@ enum Role {
 }
 
 model LeaseContract {
-  id                String    @id @default(uuid())
-  contract_number   String    @unique
-  lessee_thaid_id   String    
-  parcel_number     String    
-  location_lat      Float     
-  location_lng      Float     
-  province          String    
-  district          String    
-  sub_district      String    
-  land_area_sqw     Float     
-  is_active         Boolean   @default(true)
-  building_type     String?   
-  usable_area_sqm   Float?    
-  zoning            String?   
-  annual_rent       Float     @default(12000.0)
-  listings          Listing[] 
+  id                    String              @id @default(uuid())
+  contract_number       String              @unique
+  lessee_thaid_id       String    
+  parcel_number         String    
+  location_lat          Float     
+  location_lng          Float     
+  province              String    
+  district              String    
+  sub_district          String    
+  land_area_sqw         Float     
+  is_active             Boolean             @default(true)
+  building_type         String?   
+  usable_area_sqm       Float?    
+  zoning                String?   
+  annual_rent           Float               @default(12000.0)
+  
+  // Treasury Pricing properties
+  region_type           RegionType          @default(PROVINCIAL)
+  location_class        LocationClass       @default(CLASS_3)
+  purpose               LeasePurpose        @default(RESIDENTIAL)
+  tenant_category       TenantCategory      @default(NEW_TENANT)
+  appraisal_land_sqw    Float               @default(1000.0)
+  appraisal_bld_sqm     Float?    
+  building_depreciation Float?    
+  
+  // Calculations outputs
+  start_date            DateTime?
+  end_date              DateTime?
+  lease_years           Int?                @default(3)
+  calculated_annual_rent Float?
+  calculated_arrange_fee Float?
+  next_rent_review_date DateTime?
+  
+  listings              Listing[] 
 }
 
 model Listing {
@@ -86,3 +104,60 @@ model FeeCalculationLog {
   calculated_fee    Float        
   createdAt         DateTime     @default(now())
 }
+
+enum RegionType {
+  BKK
+  PROVINCIAL
+}
+
+enum LocationClass {
+  CLASS_1
+  CLASS_2
+  CLASS_3
+}
+
+enum TenantCategory {
+  NEW_TENANT
+  OLD_TENANT
+}
+
+enum LeasePurpose {
+  RESIDENTIAL
+  AGRICULTURE
+  COMMERCIAL
+  LUMP_SUM
+  WELFARE_BUSINESS
+  STATE_ENTERPRISE
+  NON_PROFIT
+}
+
+enum AssetType {
+  LAND
+  BUILDING
+  LAND_AND_BUILDING
+  BOT
+}
+
+model RentRateConfig {
+  id                  Int          @id @default(autoincrement())
+  table_name          String       // เช่น "บัญชี ก", "บัญชี ข"
+  purpose             LeasePurpose
+  region_type         RegionType
+  location_class      LocationClass
+  min_appraisal_val   Float     
+  max_appraisal_val   Float     
+  rate_per_sqw_month  Float?    
+  rate_per_sqm_month  Float?    
+  min_rent_per_month  Float?    
+  percentage_rate     Float?    
+}
+
+model MiscellaneousFeeConfig {
+  id                  Int          @id @default(autoincrement())
+  fee_type            String       // เช่น "SURVEY_FEE"
+  condition_min_value Float     
+  condition_max_value Float     
+  fee_amount          Float     
+  max_cap_amount      Float?    
+}
+
