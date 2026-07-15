@@ -6,6 +6,10 @@ import subprocess
 import sys
 import httpx
 
+# Disable all proxies for localhost/internal communication during tests
+os.environ["NO_PROXY"] = "*"
+os.environ["no_proxy"] = "*"
+
 # Force the DATABASE_URL to point to the test database (allow environment override)
 os.environ["DATABASE_URL"] = os.environ.get(
     "TEST_DATABASE_URL",

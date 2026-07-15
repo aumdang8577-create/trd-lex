@@ -60,7 +60,7 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       API_VERSION: ${API_VERSION:-v1}
     ports:
-      - "8000:8000"
+      - "8002:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -77,7 +77,7 @@ services:
     container_name: trd_lex_frontend
     restart: always
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8002
     ports:
       - "3000:3000"
     depends_on:

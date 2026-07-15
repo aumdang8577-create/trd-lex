@@ -15,6 +15,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // ป้องกันปัญหาตัวแปรเสริมล้มเหลวในระบบคลาวด์บิวด์
   },
+  output: "standalone", // สร้างเวอร์ชัน Standalone สำหรับการรันใน Docker
 };
 
 export default nextConfig;
