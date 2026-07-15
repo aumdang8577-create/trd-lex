@@ -11,6 +11,7 @@ import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import type { Listing } from "@/types";
 import api from "@/lib/api";
+import TransferGuideModal from "@/components/features/TransferGuideModal";
 
 const mockListings: Record<string, Listing> = {
   "list-1": {
@@ -21,12 +22,12 @@ const mockListings: Record<string, Listing> = {
     contract: {
       id: "contract-1",
       contract_number: "TRD-66-001",
-      parcel_number: "1024/65",
-      location_lat: 13.7712,
-      location_lng: 100.5401,
-      province: "กรุงเทพมหานคร",
-      district: "พญาไท",
-      sub_district: "สามเสนใน",
+      parcel_number: "อด.1234",
+      location_lat: 17.4138,
+      location_lng: 102.7872,
+      province: "อุดรธานี",
+      district: "เมืองอุดรธานี",
+      sub_district: "หมากแข้ง",
       land_area_sqw: 120,
       is_active: true,
       building_type: "อาคารพาณิชย์",
@@ -36,7 +37,7 @@ const mockListings: Record<string, Listing> = {
     },
     asking_price: 1500000,
     estimated_fee: 45000,
-    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองพญาไท ใกล้รถไฟฟ้า เหมาะทำร้านกาแฟหรือโชว์รูมสินค้าขนาดเล็ก เดินทางสะดวกติดถนนใหญ่สภาพแวดล้อมดีเยี่ยม",
+    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองเมืองอุดรธานี ใกล้เซ็นทรัลอุดรธานี เหมาะทำร้านค้าหรือสำนักงานขนาดเล็ก เดินทางสะดวกติดถนนใหญ่สภาพแวดล้อมดีเยี่ยม",
     image_urls: [
       "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80"
@@ -53,12 +54,12 @@ const mockListings: Record<string, Listing> = {
     contract: {
       id: "contract-2",
       contract_number: "TRD-66-002",
-      parcel_number: "589/12",
-      location_lat: 12.9235,
-      location_lng: 100.8824,
-      province: "ชลบุรี",
-      district: "บางละมุง",
-      sub_district: "หนองปรือ",
+      parcel_number: "ขก.5678",
+      location_lat: 16.4322,
+      location_lng: 102.8236,
+      province: "ขอนแก่น",
+      district: "เมืองขอนแก่น",
+      sub_district: "ในเมือง",
       land_area_sqw: 80,
       is_active: true,
       building_type: "บ้านพักอาศัย",
@@ -68,7 +69,7 @@ const mockListings: Record<string, Listing> = {
     },
     asking_price: 980000,
     estimated_fee: 29400,
-    description: "แปลงที่ดินราชพัสดุพัทยาใต้ ทำเลพักอาศัย เงียบสงบ ใกล้สิ่งอำนวยความสะดวกมากมาย เหมาะสำหรับสร้างบ้านเดี่ยวหรือบ้านพักตากอากาศส่วนตัว",
+    description: "แปลงที่ดินราชพัสดุในเมืองขอนแก่น ทำเลพักอาศัย เงียบสงบ ใกล้วัดหนองแวงและบึงแก่นนคร เดินทางสะดวกมีสาธารณูปโภคครบครัน เหมาะสำหรับสร้างบ้านเดี่ยวหรือบ้านพักตากอากาศส่วนตัว",
     image_urls: [
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
     ],
@@ -84,13 +85,13 @@ const mockListings: Record<string, Listing> = {
     contract: {
       id: "contract-3",
       contract_number: "TRD-66-003",
-      parcel_number: "220/8",
-      location_lat: 18.7883,
-      location_lng: 98.9853,
-      province: "เชียงใหม่",
-      district: "เมืองเชียงใหม่",
-      sub_district: "ศรีภูมิ",
-      land_area_sqw: 150,
+      parcel_number: "นค.1507",
+      location_lat: 17.87762258070912,
+      location_lng: 102.7435163606957,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 3677.44,
       is_active: true,
       building_type: "อาคารพาณิชย์",
       usable_area_sqm: 350,
@@ -99,13 +100,75 @@ const mockListings: Record<string, Listing> = {
     },
     asking_price: 2400000,
     estimated_fee: 72000,
-    description: "สิทธิ์การเช่าระยะยาวสำหรับทำธุรกิจเกสท์เฮ้าส์หรือร้านอาหารในเขตคูเมืองเก่าเชียงใหม่ ดึงดูดนักท่องเที่ยวต่างชาติได้ดีเยี่ยม แปลงมุมหน้ากว้างสวยงาม",
+    description: "สิทธิ์การเช่าระยะยาวใกล้ริมแม่น้ำโขง เมืองหนองคาย เหมาะสำหรับทำร้านอาหารหรือโฮมสเตย์รองรับนักท่องเที่ยวริมโขงและตลาดท่าเสด็จ แปลงมุมหน้ากว้างสวยงาม",
     image_urls: [
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80"
     ],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
     updatedAt: "2026-07-09T00:00:00Z",
+  },
+  "list-4": {
+    id: "list-4",
+    sellerId: "seller-2",
+    seller: { id: "seller-2", thaid_id: "456", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
+    contractId: "contract-4",
+    contract: {
+      id: "contract-4",
+      contract_number: "TRD-66-004",
+      parcel_number: "นค.1509",
+      location_lat: 17.87523837156668,
+      location_lng: 102.7425037912517,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 6263.67,
+      is_active: true,
+      building_type: null,
+      usable_area_sqm: 0,
+      zoning: "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)",
+      annual_rent: 18000.0,
+    },
+    asking_price: 3800000,
+    estimated_fee: 114000,
+    description: "แปลงที่ดินขนาดใหญ่ใจกลางเมืองหนองคาย เหมาะสำหรับพัฒนาโครงการอาคารพาณิชย์หรือคอนโดมิเนียมรองรับเขตเศรษฐกิจพิเศษ ที่ดินเปล่าสภาพดีพร้อมพัฒนา",
+    image_urls: [
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
+    ],
+    status: "ACTIVE",
+    createdAt: "2026-07-10T00:00:00Z",
+    updatedAt: "2026-07-10T00:00:00Z",
+  },
+  "list-5": {
+    id: "list-5",
+    sellerId: "seller-1",
+    seller: { id: "seller-1", thaid_id: "123", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
+    contractId: "contract-5",
+    contract: {
+      id: "contract-5",
+      contract_number: "TRD-66-005",
+      parcel_number: "นค.1496",
+      location_lat: 17.8792408132012,
+      location_lng: 102.7489926859958,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 1030.53,
+      is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 120,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
+      annual_rent: 9000.0,
+    },
+    asking_price: 1200000,
+    estimated_fee: 36000,
+    description: "ที่ดินราชพัสดุทำเลดี ใกล้ถนนสายหลัก เหมาะทำที่พักอาศัยหรือร้านค้าขนาดเล็ก สภาพแวดล้อมดี มีสาธารณูปโภคครบ บ้านพักอาศัย 1 ชั้น",
+    image_urls: [
+      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80"
+    ],
+    status: "ACTIVE",
+    createdAt: "2026-07-11T00:00:00Z",
+    updatedAt: "2026-07-11T00:00:00Z",
   }
 };
 
@@ -118,6 +181,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   const listing = mockListings[id] || mockListings["list-1"];
   const [requestSuccess, setRequestSuccess] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [calcType, setCalcType] = useState<"GENERAL" | "FAMILY" | "CO_LESSEE">("GENERAL");
   const [calcShare, setCalcShare] = useState<number>(100);
   const [calcResult, setCalcResult] = useState<any>(null);
@@ -243,7 +307,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   };
 
   const getRegionName = (prov: string) => {
-    if (prov === "อุดรธานี" || prov === "ขอนแก่น") return "ภาคตะวันออกเฉียงเหนือ";
+    if (["อุดรธานี", "ขอนแก่น", "หนองคาย"].includes(prov)) return "ภาคตะวันออกเฉียงเหนือ";
     if (["เชียงใหม่", "ตาก"].includes(prov)) return "ภาคเหนือ";
     if (["ชลบุรี", "ระยอง"].includes(prov)) return "ภาคตะวันออก";
     return "ภาคกลาง";
@@ -339,7 +403,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               สิทธิ์การเช่าที่ดินราชพัสดุ อำเภอ{listing.contract.district}, จังหวัด{listing.contract.province}
             </h1>
             <p className="text-gray-500 mt-2">
-              เลขที่สัญญาเช่า: {listing.contract.contract_number} • แปลงระวางหมายเลข: {listing.contract.parcel_number}
+              เลขที่สัญญาเช่า: {listing.contract.contract_number} • หมายเลขทะเบียนที่ราชพัสดุ: {listing.contract.parcel_number}
             </p>
           </div>
 
@@ -351,7 +415,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               { label: "พื้นที่ใช้สอย", val: listing.contract.usable_area_sqm && listing.contract.usable_area_sqm > 0 ? `${listing.contract.usable_area_sqm} ตร.ม.` : "ไม่มี (ที่ดินเปล่า)", icon: "🏗️" },
               { label: "ผังเมือง (Zoning)", val: listing.contract.zoning || "ไม่ระบุ", icon: "🎨" },
               { label: "จังหวัด", val: listing.contract.province, icon: "📍" },
-              { label: "ระวางที่ดิน", val: listing.contract.parcel_number, icon: "🗺️" },
+              { label: "ที่ราชพัสดุแปลงหมายเลขทะเบียนที่", val: listing.contract.parcel_number, icon: "🗺️" },
               { label: "สถานะสัญญา", val: "ปกติ (Active)", icon: "🛡️" },
             ].map((spec) => (
               <div key={spec.label} className="bg-gray-50/80 border border-trd-border/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
@@ -655,8 +719,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                 <Button variant="primary" className="w-full py-3 text-sm font-semibold" onClick={() => setShowContact(!showContact)}>
                   {showContact ? "ซ่อนข้อมูลติดต่อ" : "แสดงความสนใจ (Contact Lessee)"}
                 </Button>
-                <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500" onClick={() => window.open("/คู่มือการโอนสิทธิ.pdf", "_blank")}>
-                  📄 ดาวน์โหลดคู่มือการโอนสิทธิ
+                <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500 font-bold hover:text-trd-primary" onClick={() => setIsGuideOpen(true)}>
+                  📘 เปิดคู่มือและขั้นตอนการโอนสิทธิ์
                 </Button>
               </div>
 
@@ -671,6 +735,9 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
         </div>
       </div>
     </div>
+    
+    {/* Transfer Guide Modal */}
+    <TransferGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
   </>
   );
 }

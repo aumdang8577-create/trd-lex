@@ -72,7 +72,7 @@ export default function PropertyCard({ listing }: PropertyCardProps) {
 
             {/* Coordinates / Title */}
             <h4 className="text-base font-semibold text-trd-primary mb-1">
-              ระวาง: แปลงที่ {listing.contract?.parcel_number}
+              ที่ราชพัสดุทะเบียนที่: {listing.contract?.parcel_number}
             </h4>
 
             {/* Coordinate values */}

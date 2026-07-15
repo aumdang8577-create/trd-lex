@@ -52,25 +52,24 @@ export default function LeaseMap({
         maxZoom: 19,
       }).addTo(map);
 
-      // Custom TRD marker icon
+      // Custom TRD marker icon (Cyber glow circle)
       const trdIcon = L.divIcon({
         className: "trd-map-marker",
         html: `
           <div style="
-            background: linear-gradient(135deg, #00594C, #007A68);
-            width: 32px; height: 32px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            border: 3px solid #D4AF37;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background: #3B82F6;
+            width: 28px; height: 28px;
+            border: 1.5px solid #1E293B;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.45);
             display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
           ">
-            <span style="transform: rotate(45deg); color: white; font-size: 14px; font-weight: bold;">T</span>
+            <span style="color: white; font-family: monospace; font-size: 11px; font-weight: 900;">ธน.</span>
           </div>
         `,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
+        iconSize: [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor: [0, -28],
       });
 
       // Add listing markers
@@ -87,18 +86,18 @@ export default function LeaseMap({
           );
 
           marker.bindPopup(`
-            <div style="font-family: 'Noto Sans Thai', sans-serif; min-width: 200px;">
-              <div style="font-weight: 600; color: #00594C; margin-bottom: 4px;">
+            <div style="font-family: sans-serif; min-width: 200px; padding: 4px; color: #0F172A;">
+              <div style="font-weight: 900; color: #3B82F6; margin-bottom: 4px; font-size: 12px; text-transform: uppercase;">
                 ${listing.contract.province} — ${listing.contract.district}
               </div>
-              <div style="font-size: 12px; color: #6B7280; margin-bottom: 8px;">
+              <div style="font-size: 11px; color: #64748B; margin-bottom: 8px; font-weight: 500;">
                 แปลง ${listing.contract.parcel_number} • ${listing.contract.land_area_sqw} ตร.ว.
               </div>
-              <div style="font-size: 16px; font-weight: 700; color: #D4AF37;">
+              <div style="font-size: 15px; font-weight: 900; color: #111827; font-family: monospace;">
                 ฿${priceFormatted}
               </div>
-              <div style="font-size: 11px; color: #2E7D32; margin-top: 4px;">
-                ✅ Verified by TRD
+              <div style="font-size: 9px; color: #10B981; margin-top: 6px; font-weight: 700; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.05em;">
+                [ผ่านการตรวจสอบสิทธิ์ธนารักษ์]
               </div>
             </div>
           `);
@@ -128,7 +127,7 @@ export default function LeaseMap({
       />
       <div
         ref={mapRef}
-        className={`w-full h-[400px] rounded-xl overflow-hidden border border-trd-border/50 shadow-card ${className}`}
+        className={`w-full h-[400px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl ${className}`}
       />
     </>
   );

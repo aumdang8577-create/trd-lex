@@ -1,21 +1,28 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===========================
+/* =======================================
    TRD-LEX Design System
-   "Smart & Sustainable Treasury"
-   =========================== */
+   "Thesis 2: Cyber-Dark Tech Startup"
+   ======================================= */
 
 @layer base {
   :root {
-    --trd-primary: #00594C;
-    --trd-secondary: #D4AF37;
-    --trd-surface: #F8F9FA;
-    --trd-border: #E0E0E0;
-    --trd-text: #1A1A2E;
-    --trd-text-muted: #6B7280;
+    --trd-primary: #3B82F6;     /* Electric Azure Blue */
+    --trd-secondary: #F59E0B;   /* Neon Amber */
+    --trd-bg: #0B0F19;          /* Deep Space Blue Background */
+    --trd-surface: #111827;     /* Slate-900 Surface */
+    --trd-border: #1F2937;      /* Slate-800 Border */
+    --trd-text: #F9FAFB;        /* Off-White Text */
+    --trd-text-muted: #9CA3AF;  /* Muted Gray Text */
+    
+    /* Neon VALUE color strategy definitions */
+    --val-v: #10B981;           /* Emerald / Neon Green */
+    --val-a: #3B82F6;           /* Electric Azure Blue */
+    --val-l: #F59E0B;           /* Warm Amber / Neon Gold */
+    --val-u: #8B5CF6;           /* Neon Violet */
+    --val-e: #EF4444;           /* Coral Red / Neon Red */
   }
 
   * {
@@ -29,16 +36,17 @@
   }
 
   body {
-    font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    font-family: 'var(--font-sarabun)', 'Noto Sans Thai', 'Sarabun', sans-serif;
     color: var(--trd-text);
-    background-color: var(--trd-surface);
+    background-color: var(--trd-bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    line-height: 1.3;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--trd-text);
   }
 
   a {
@@ -48,36 +56,33 @@
 }
 
 @layer components {
-  /* TRD Verified Badge */
+  /* TRD Verified Badge (Neon Glow Pill) */
   .trd-verified-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
-    @apply bg-trd-primary text-white;
-    @apply shadow-sm;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border border-val-v/30 text-[9px] font-black font-mono tracking-widest uppercase rounded-full bg-val-v/10 text-val-v shadow-[0_0_12px_rgba(16,185,129,0.2)];
   }
 
-  /* Gold accent line — section divider */
+  /* Solid accent line — section divider */
   .trd-gold-divider {
-    @apply w-16 h-1 rounded-full;
-    background: linear-gradient(90deg, #D4AF37, #E0C464);
+    @apply w-16 h-[2px] bg-gradient-to-r from-trd-primary to-val-u rounded-full;
   }
 
-  /* Card base style */
+  /* Card base style (Bento Rounded Glassmorphism Style) */
   .trd-card {
-    @apply bg-white rounded-xl shadow-card border border-trd-border/50;
-    @apply transition-all duration-300 ease-out;
-    @apply hover:shadow-card-hover hover:-translate-y-1;
+    @apply bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-6;
+    @apply transition-all duration-300 ease-in-out;
+    @apply hover:border-slate-700/80 hover:bg-slate-900/80 hover:shadow-[0_0_20px_rgba(59,130,246,0.06)];
   }
 
-  /* Section heading */
+  /* Section heading (Editorial Monospace Title) */
   .trd-section-title {
-    @apply text-2xl font-bold text-trd-primary mb-2;
+    @apply text-xs font-black uppercase tracking-widest text-trd-primary mb-4 font-mono border-b border-slate-800 pb-2;
   }
 
-  /* Form input */
+  /* Form input (Cyberpunk Input Style) */
   .trd-input {
-    @apply w-full px-4 py-3 rounded-lg border border-trd-border bg-white;
-    @apply text-sm placeholder:text-gray-400;
-    @apply focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary;
+    @apply w-full px-3 py-2.5 border border-slate-800 bg-slate-950/60 text-trd-text rounded-xl font-mono;
+    @apply text-sm placeholder:text-slate-600;
+    @apply focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 focus:ring-1 focus:ring-trd-primary/30;
     @apply transition-all duration-200;
   }
 }
@@ -96,5 +101,27 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Glassmorphism utility */
+  .glass-panel {
+    @apply bg-slate-950/40 backdrop-blur-lg border border-slate-900/60;
+  }
+
+  /* Neon glows */
+  .shadow-neon-blue {
+    @apply shadow-[0_0_15px_rgba(59,130,246,0.12)];
+  }
+  .shadow-neon-green {
+    @apply shadow-[0_0_15px_rgba(16,185,129,0.12)];
+  }
+  .shadow-neon-amber {
+    @apply shadow-[0_0_15px_rgba(245,158,11,0.12)];
+  }
+  .shadow-neon-violet {
+    @apply shadow-[0_0_15px_rgba(139,92,246,0.12)];
+  }
+  .shadow-neon-red {
+    @apply shadow-[0_0_15px_rgba(239,68,68,0.12)];
   }
 }

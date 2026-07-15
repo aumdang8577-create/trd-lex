@@ -52,23 +52,23 @@ export default function Modal({
       }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-xs" />
 
       {/* Modal Panel */}
       <div
         className={`
-          relative bg-white rounded-2xl shadow-2xl w-full
+          relative bg-white border-4 border-trd-border w-full text-trd-midnight rounded-none shadow-flat
           ${sizeStyles[size]}
           animate-slide-up
         `}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-trd-border/50">
-            <h3 className="text-lg font-semibold text-trd-primary">{title}</h3>
+          <div className="flex items-center justify-between px-6 py-4 border-b-2 border-trd-border bg-slate-50">
+            <h3 className="text-xs font-black text-trd-midnight uppercase tracking-widest font-mono">{title}</h3>
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+              className="w-7 h-7 flex items-center justify-center border border-trd-border hover:bg-slate-200 text-trd-midnight transition-colors font-mono"
               aria-label="ปิด"
             >
               ✕
@@ -77,7 +77,7 @@ export default function Modal({
         )}
 
         {/* Body */}
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-6 py-5 text-trd-midnight font-sans text-sm">{children}</div>
       </div>
     </div>
   );

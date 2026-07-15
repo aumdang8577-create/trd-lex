@@ -161,3 +161,17 @@ model MiscellaneousFeeConfig {
   max_cap_amount      Float?    
 }
 
+model TreasuryParcel {
+  id               String   @id @default(uuid())
+  parcel_number    String   @unique
+  province         String   @default("หนองคาย")
+  district         String   @default("เมืองหนองคาย")
+  sub_district     String   @default("ในเมือง")
+  geometry_geojson String   @db.Text // JSON representation of the polygon geometry
+  centroid_lat     Float
+  centroid_lng     Float
+  land_area_sqw    Float
+  createdAt        DateTime @default(now())
+}
+
+

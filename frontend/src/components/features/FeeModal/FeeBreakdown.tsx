@@ -26,80 +26,81 @@ export default function FeeBreakdown({
   const stampDuty = askingPrice * stampDutyRate;
   const adminFee = askingPrice * adminFeeRate;
   const totalFee = transferFee + stampDuty + adminFee;
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="โครงสร้างค่าธรรมเนียมการโอนสิทธิ์" size="md">
-      <div className="space-y-4">
+    <Modal isOpen={isOpen} onClose={onClose} title="รายละเอียดอัตราประมาณการค่าโอนสิทธิ์" size="md">
+      <div className="space-y-4 font-sans text-trd-midnight">
+        
         {/* Price Summary */}
-        <div className="bg-trd-primary/5 rounded-xl p-4">
-          <div className="text-sm text-gray-500 mb-1">ราคาเสนอขายสิทธิ์</div>
-          <div className="text-2xl font-bold text-trd-primary">
+        <div className="bg-[#FAFAFA] rounded-none border-2 border-trd-border p-4 font-mono">
+          <div className="text-[9px] text-trd-text-muted mb-1 uppercase tracking-widest font-bold">ราคาเสนอโอนสิทธิ์สัญญาเช่า</div>
+          <div className="text-2xl font-black text-trd-midnight">
             ฿{fmt(askingPrice)}
           </div>
         </div>
 
         {/* Fee Breakdown Lines */}
-        <div className="space-y-3">
-          <div className="flex justify-between items-center py-2 border-b border-trd-border/30">
+        <div className="space-y-3 font-mono">
+          <div className="flex justify-between items-center py-2.5 border-b-2 border-trd-border/20">
             <div>
-              <div className="text-sm font-medium text-gray-700">
-                ค่าธรรมเนียมการโอน
+              <div className="text-xs font-bold text-trd-midnight uppercase tracking-wider">
+                ค่าธรรมเนียมการโอนสิทธิ์
               </div>
-              <div className="text-xs text-gray-400">
-                {(transferFeeRate * 100).toFixed(1)}% ของราคาเสนอขาย
+              <div className="text-[9px] text-trd-text-muted mt-0.5">
+                อัตราร้อยละ {(transferFeeRate * 100).toFixed(1)} ของมูลค่าการโอน
               </div>
             </div>
-            <div className="text-sm font-semibold text-gray-800">
+            <div className="text-sm font-black text-trd-midnight">
               ฿{fmt(transferFee)}
             </div>
           </div>
 
-          <div className="flex justify-between items-center py-2 border-b border-trd-border/30">
+          <div className="flex justify-between items-center py-2.5 border-b-2 border-trd-border/20">
             <div>
-              <div className="text-sm font-medium text-gray-700">อากรแสตมป์</div>
-              <div className="text-xs text-gray-400">
-                {(stampDutyRate * 100).toFixed(1)}% ของราคาเสนอขาย
+              <div className="text-xs font-bold text-trd-midnight uppercase tracking-wider">
+                ค่าอากรแสตมป์
+              </div>
+              <div className="text-[9px] text-trd-text-muted mt-0.5">
+                อัตราร้อยละ {(stampDutyRate * 100).toFixed(1)} ของมูลค่าการโอน
               </div>
             </div>
-            <div className="text-sm font-semibold text-gray-800">
+            <div className="text-sm font-black text-trd-midnight">
               ฿{fmt(stampDuty)}
             </div>
           </div>
 
-          <div className="flex justify-between items-center py-2 border-b border-trd-border/30">
+          <div className="flex justify-between items-center py-2.5 border-b-2 border-trd-border/20">
             <div>
-              <div className="text-sm font-medium text-gray-700">
-                ค่าดำเนินการ
+              <div className="text-xs font-bold text-trd-midnight uppercase tracking-wider">
+                ค่าธรรมเนียมการบริหารจัดการธุรการ
               </div>
-              <div className="text-xs text-gray-400">
-                {(adminFeeRate * 100).toFixed(1)}% ของราคาเสนอขาย
+              <div className="text-[9px] text-trd-text-muted mt-0.5">
+                อัตราร้อยละ {(adminFeeRate * 100).toFixed(1)} ของมูลค่าการโอน
               </div>
             </div>
-            <div className="text-sm font-semibold text-gray-800">
+            <div className="text-sm font-black text-trd-midnight">
               ฿{fmt(adminFee)}
             </div>
           </div>
         </div>
 
         {/* Total */}
-        <div className="bg-trd-secondary/10 rounded-xl p-4 flex justify-between items-center">
+        <div className="bg-trd-primary/10 border-2 border-trd-border rounded-none p-4 flex justify-between items-center font-mono">
           <div>
-            <div className="text-sm font-semibold text-trd-primary">
-              ค่าธรรมเนียมรวมโดยประมาณ
+            <div className="text-xs font-black text-trd-primary uppercase tracking-wider">
+              รวมประมาณการค่าโอนสิทธิ์เบื้องต้น
             </div>
-            <div className="text-xs text-gray-400">
-              (3.0% ของราคาเสนอขาย)
+            <div className="text-[9px] text-trd-text-muted mt-0.5">
+              (อัตราเฉลี่ยร้อยละ ๓.๐ ของมูลค่าการโอน)
             </div>
           </div>
-          <div className="text-xl font-bold text-trd-secondary-dark">
+          <div className="text-xl font-black text-trd-primary">
             ฿{fmt(totalFee)}
           </div>
         </div>
 
         {/* Disclaimer */}
-        <p className="text-xs text-gray-400 leading-relaxed">
-          ⚠️ ข้อมูลค่าธรรมเนียมเบื้องต้นนี้เป็นเพียงการประมาณการ
-          อัตราจริงอาจแตกต่างตามระเบียบของกรมธนารักษ์และข้อกำหนดสัญญาเช่า
+        <p className="text-[9px] font-mono text-trd-text-muted leading-relaxed uppercase tracking-wider border-t-2 border-trd-border/20 pt-3">
+          [ข้อควรระวัง] ข้อมูลการแจกแจงข้างต้นเป็นเพียงการคำนวณและประเมินเบื้องต้นเท่านั้น อัตราที่เรียกเก็บจริงอาจเปลี่ยนแปลงตามเงื่อนไขวัตถุประสงค์และระเบียบข้อบังคับฉบับจริงของกรมธนารักษ์
         </p>
       </div>
     </Modal>

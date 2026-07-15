@@ -100,38 +100,44 @@ export default function HomePage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
-    <>
+    <div className="bg-[#070A13] text-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-hero-gradient text-white overflow-hidden pb-32">
-        {/* Decorative gold accent */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-trd-secondary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-trd-secondary/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
+      <section className="relative bg-hero-gradient text-white overflow-hidden pb-28 pt-20 border-b border-slate-900">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl animate-fade-in mb-12">
             {/* Verified badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
-              <span className="w-2 h-2 bg-trd-secondary rounded-full animate-pulse-gold" />
-              <span className="text-sm font-medium">Smart &amp; Sustainable Treasury</span>
+            <div className="inline-flex items-center gap-2 bg-slate-950/60 border border-slate-800 px-3.5 py-1.5 mb-6 font-mono text-xs text-trd-primary uppercase tracking-widest font-bold rounded-full shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+              <span className="w-2 h-2 bg-val-v rounded-full animate-pulse" />
+              สถานะระบบ // เปิดการใช้งานปกติ
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-none uppercase tracking-tight font-sans text-white">
               ตลาดรองสิทธิการเช่า
               <br />
-              <span className="text-trd-secondary">ที่ราชพัสดุ</span>
+              <span className="text-trd-primary">ที่ราชพัสดุ</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-white/85 mb-8 max-w-2xl leading-relaxed">
-              แพลตฟอร์มเพื่อเปลี่ยนมือสิทธิการเช่าอย่างโปร่งใส ตรวจสอบได้
-              ผ่านการยืนยันตัวตนจากระบบ ThaID ของกรมธนารักษ์
+            <p className="text-sm sm:text-base text-slate-400 mb-8 max-w-2xl leading-relaxed font-medium">
+              แพลตฟอร์มการซื้อขายและโอนสิทธิการเช่าที่ราชพัสดุเพื่อความโปร่งใส 
+              ตรวจสอบสัญญาเช่าผ่านระบบ Smart Validation และบริการยืนยันตัวตนดิจิทัลผ่านระบบ ThaID ของกรมธนารักษ์
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="secondary" size="lg" onClick={() => window.location.href = "/listings"}>
-                🔍 ค้นหาประกาศ
+            <div className="flex flex-col sm:flex-row gap-4 font-mono text-xs uppercase tracking-widest">
+              <Button 
+                variant="primary" 
+                size="lg" 
+                className="font-black border border-slate-850 bg-trd-primary text-white rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-trd-primary-dark transition-all duration-150" 
+                onClick={() => window.location.href = "/listings"}
+              >
+                ค้นหาแปลงที่ดิน
               </Button>
-              <Button variant="outline" size="lg" onClick={() => setIsCreateOpen(true)}>
-                📋 ลงประกาศขายสิทธิ์
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="font-black border border-slate-800 text-white bg-slate-950/40 rounded-xl hover:bg-slate-900 transition-all duration-150" 
+                onClick={() => setIsCreateOpen(true)}
+              >
+                ลงทะเบียนประกาศโอนสิทธิ์
               </Button>
             </div>
           </div>
@@ -144,43 +150,39 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
           {[
-            { label: "ประกาศเปิดขาย", value: "128", icon: "📋" },
-            { label: "ผู้ใช้งานในระบบ", value: "1,240", icon: "👥" },
-            { label: "มูลค่ารวม (ล้านบาท)", value: "356", icon: "💰" },
+            { label: "ประกาศเปิดขาย", value: "128", code: "สถิติจำนวนสัญญาเช่าที่ประกาศโอน" },
+            { label: "ผู้ใช้งานในระบบ", value: "1,240", code: "สถิติจำนวนผู้ใช้งานในระบบทะเบียน" },
+            { label: "มูลค่ารวม (ล้านบาท)", value: "356", code: "สถิติมูลค่าธุรกรรมหมุนเวียนรวม" },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="trd-card px-6 py-5 flex items-center gap-4 animate-slide-up"
+              className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 px-6 py-5.5 flex flex-col justify-between animate-slide-up rounded-2xl shadow-xl hover:border-slate-700/80 transition-all duration-300"
             >
-              <div className="text-3xl">{stat.icon}</div>
-              <div>
-                <div className="text-2xl font-bold text-trd-primary">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-gray-500">{stat.label}</div>
+              <div className="text-[9px] text-trd-primary font-black uppercase tracking-widest">{stat.code}</div>
+              <div className="text-3xl font-black text-white mt-1">
+                {stat.value}
               </div>
+              <div className="text-[11px] text-slate-400 mt-1 font-sans font-bold">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Warning Banner (Disclaimer) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="bg-yellow-50 border-l-4 border-trd-gold p-4 rounded-xl shadow-sm">
+      {/* Warning Banner (Disclaimer - Swiss Red alert style) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+        <div className="bg-val-e/10 border border-val-e/30 border-l-4 border-l-val-e p-4 rounded-xl shadow-lg text-white">
           <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-trd-gold" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
+            <div className="flex-shrink-0 font-mono text-val-e text-xs font-black tracking-widest uppercase">
+              [ประกาศคำชี้แจงส่วนราชการ]
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">
+            <div className="ml-4">
+              <h3 className="text-xs font-black text-val-e uppercase tracking-wider font-mono">
                 ข้อควรทราบก่อนการเจรจาโอนสิทธิ
               </h3>
-              <div className="mt-2 text-xs text-yellow-700 leading-relaxed">
+              <div className="mt-1 text-xs text-slate-300 leading-relaxed font-sans font-medium">
                 <p>
                   TRD-LEX เป็นเพียงแพลตฟอร์มกลางในการแสดงข้อมูลทำเลศักยภาพเท่านั้น 
                   <strong> การทำธุรกรรมเพื่อเปลี่ยนแปลงชื่อผู้เช่าในสัญญาอย่างสมบูรณ์ จะต้องดำเนินการ ณ สำนักงานธนารักษ์พื้นที่ที่รับผิดชอบเท่านั้น</strong> 
@@ -195,10 +197,13 @@ export default function HomePage() {
       {/* Featured Properties Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="trd-section-title text-3xl">รายการสิทธิการเช่าแนะนำ</h2>
-          <div className="trd-gold-divider mx-auto mt-4" />
-          <p className="mt-4 text-gray-500 max-w-xl mx-auto">
-            สิทธิการเช่าที่ผ่านการตรวจสอบสถานะสัญญาโดยระบบ Smart Validation ของกรมธนารักษ์เรียบร้อยแล้ว
+          <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+            รายการแนะนำประจำสัปดาห์
+          </span>
+          <h2 className="text-2xl font-black text-white uppercase mt-1 font-sans tracking-wide">รายการแนะนำสิทธิการเช่า</h2>
+          <div className="w-20 h-0.5 bg-slate-800 mx-auto mt-4" />
+          <p className="mt-4 text-xs text-slate-400 max-w-xl mx-auto font-sans leading-relaxed">
+            แปลงที่ราชพัสดุศักยภาพสูงที่ยืนยันข้อมูลสัญญาผ่านระบบ Smart Validation สำเร็จแล้ว
           </p>
         </div>
 
@@ -216,6 +221,8 @@ export default function HomePage() {
               buildingType={listing.contract.building_type}
               usableAreaSqm={listing.contract.usable_area_sqm}
               zoning={listing.contract.zoning}
+              locationLat={listing.contract.location_lat}
+              locationLng={listing.contract.location_lng}
             />
           ))}
         </div>
@@ -227,12 +234,15 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-white border-t border-b border-trd-border/50 py-20">
+      <section className="bg-slate-950 border-t border-b border-slate-900 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="trd-section-title text-3xl">ฟีเจอร์หลักของระบบ</h2>
-            <div className="trd-gold-divider mx-auto mt-4" />
-            <p className="mt-4 text-gray-500 max-w-xl mx-auto">
+            <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+              กลไกการให้บริการของระบบ
+            </span>
+            <h2 className="text-2xl font-black text-white uppercase mt-1 font-sans tracking-wide">ฟีเจอร์หลักของระบบ</h2>
+            <div className="w-20 h-0.5 bg-slate-800 mx-auto mt-4" />
+            <p className="mt-4 text-xs text-slate-400 max-w-xl mx-auto leading-relaxed font-medium font-sans">
               ออกแบบเพื่อความโปร่งใสและการตรวจสอบได้ทุกขั้นตอน
             </p>
           </div>
@@ -240,51 +250,47 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: "🛡️",
                 title: "ยืนยันตัวตน ThaID",
                 desc: "ระบบจำลองการยืนยันตัวตนผ่าน ThaID ของกรมการปกครอง เพื่อความปลอดภัยสูงสุด",
-                badge: "ความปลอดภัย",
+                badge: "ระบบความมั่นคงปลอดภัยในการยืนยันตัวตน",
               },
               {
-                icon: "📄",
                 title: "ตรวจสอบสัญญาเช่า",
                 desc: "ตรวจสอบสถานะสัญญาเช่าที่ราชพัสดุแบบอัตโนมัติ ลดเวลาดำเนินการด้วยมือ",
-                badge: "Smart Validation",
+                badge: "ระบบตรวจสอบความถูกต้องสัญญา",
               },
               {
-                icon: "🗺️",
                 title: "ค้นหาเชิงพื้นที่",
                 desc: "แสดงหมุดประกาศที่เปิดขายบนแผนที่ ค้นหาตามจังหวัดและอำเภอได้ทันที",
-                badge: "Map Search",
+                badge: "แผนที่สารสนเทศภูมิศาสตร์เชิงพื้นที่",
               },
               {
-                icon: "💵",
                 title: "ประเมินค่าธรรมเนียม",
                 desc: "คำนวณค่าธรรมเนียมการโอนสิทธิ์เบื้องต้นอัตโนมัติ โปร่งใสทุกรายการ",
-                badge: "Fee Estimator",
+                badge: "ระบบคำนวณอัตราค่าธรรมเนียมหลวง",
               },
               {
-                icon: "📊",
                 title: "จัดการประกาศ",
                 desc: "สร้าง แก้ไข และปิดประกาศได้ด้วยตนเอง มีสถานะชัดเจน (ACTIVE/SOLD/HIDDEN)",
-                badge: "CRUD",
+                badge: "ระบบบันทึกคำสั่งและจัดการประกาศ",
               },
               {
-                icon: "✅",
                 title: "Verified by TRD",
                 desc: "ทุกประกาศผ่านการตรวจสอบสิทธิ์จากระบบฐานข้อมูลกรมธนารักษ์",
-                badge: "Trust Badge",
+                badge: "การรับรองข้อมูลทะเบียนกรมธนารักษ์",
               },
-            ].map((feature) => (
-              <div key={feature.title} className="trd-card p-6 group">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <Badge variant="gold" className="mb-3">
+            ].map((feature, idx) => (
+              <div key={feature.title} className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 hover:-translate-y-1 hover:border-slate-700/80 transition-all duration-300 group">
+                <div className="text-[9px] font-mono text-trd-primary mb-3 uppercase tracking-widest font-black">
+                  [ ระบบงานย่อยที่ ๐{idx + 1} ]
+                </div>
+                <div className="inline-block bg-val-u/10 border border-val-u/30 text-val-u text-[8px] font-black font-mono px-2 py-0.5 rounded-full tracking-widest uppercase mb-3 font-sans shadow-[0_0_10px_rgba(139,92,246,0.15)]">
                   {feature.badge}
-                </Badge>
-                <h3 className="text-lg font-semibold text-trd-primary mb-2">
+                </div>
+                <h3 className="text-sm font-black text-white mb-2 font-mono">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p className="text-xs text-slate-400 leading-relaxed font-sans font-medium">
                   {feature.desc}
                 </p>
               </div>
@@ -294,22 +300,28 @@ export default function HomePage() {
       </section>
 
       {/* CTA Footer */}
-      <section className="bg-trd-gradient text-white py-16">
+      <section className="bg-hero-gradient border-b border-slate-900 py-24">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-4">
-            พร้อมเริ่มต้นใช้งาน?
-          </h2>
-          <p className="text-white/80 mb-8 text-lg">
-            เข้าสู่ระบบด้วย ThaID เพื่อเริ่มค้นหาหรือลงประกาศสิทธิการเช่าที่ราชพัสดุ
+          <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+            ขั้นตอนการเริ่มใช้งานระบบ
+          </span>
+          <h2 className="text-2xl font-black mb-4 font-sans tracking-wide text-white mt-1">พร้อมเริ่มต้นใช้งาน?</h2>
+          <p className="text-slate-400 mb-8 text-xs max-w-md mx-auto leading-relaxed font-sans font-medium">
+            เข้าสู่ระบบดิจิทัลด้วยบัญชีการยืนยันสิทธิ์ ThaID เพื่อเริ่มดำเนินการหรือวิเคราะห์ทำเลศักยภาพที่ราชพัสดุ
           </p>
-          <Button variant="secondary" size="lg">
-            เข้าสู่ระบบด้วย ThaID →
+          <Button 
+            variant="primary" 
+            size="lg" 
+            className="font-mono text-xs uppercase tracking-widest font-black border border-slate-800 bg-trd-primary text-white rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-trd-primary-dark transition-all duration-150 py-2.5 px-6"
+            onClick={() => window.location.href = "/login"}
+          >
+            ลงชื่อเข้าใช้งานผ่านระบบ ThaID
           </Button>
         </div>
       </section>
       {/* Create Listing Modal */}
       <CreateListingModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
-    </>
+    </div>
   );
 }
 

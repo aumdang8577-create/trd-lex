@@ -29,6 +29,23 @@ class ContractService:
                 message="สัญญานี้ไม่ได้ลงทะเบียนภายใต้เลขบัตรประชาชนของคุณ"
             )
             
+        # ซิงค์พิกัดแผนที่และขนาดพื้นที่ให้ตรงกับแปลงที่ดินราชพัสดุ (Shapefile) ในฐานข้อมูลโดยอัตโนมัติ
+        try:
+            parcel = await db.treasuryparcel.find_unique(
+                where={"parcel_number": contract.parcel_number}
+            )
+            if parcel:
+                contract = await db.leasecontract.update(
+                    where={"id": contract.id},
+                    data={
+                        "location_lat": parcel.centroid_lat,
+                        "location_lng": parcel.centroid_lng,
+                        "land_area_sqw": parcel.land_area_sqw
+                    }
+                )
+        except Exception as es:
+            print(f"Error syncing contract coordinates with parcel: {es}")
+            
         # คำนวณค่าเช่ารายปีและค่าจัดให้เช่าตามระเบียบหลวงแบบไดนามิก และอัปเดตลงฐานข้อมูลผ่าน Prisma ORM
         from app.core.calculations import (
             calculate_annual_rent,
@@ -79,3 +96,51 @@ class ContractService:
             message="พบข้อมูลสัญญาเช่าและคุณเป็นเจ้าของสิทธิ์ สามารถลงประกาศได้",
             contract_data=contract_data
         )
+
+    @staticmethod
+    async def get_parcels(province: str = None):
+        if province:
+            return await db.treasuryparcel.find_many(where={"province": province})
+        return await db.treasuryparcel.find_many()
+
+    @staticmethod
+    async def search_parcel(parcel_number: str):
+        return await db.treasuryparcel.find_unique(where={"parcel_number": parcel_number})
+
+    @staticmethod
+    async def find_parcel_by_location(lat: float, lng: float):
+        import json
+        parcels = await db.treasuryparcel.find_many()
+        
+        for p in parcels:
+            # Quick bounding box check
+            if abs(p.centroid_lat - lat) > 0.02 or abs(p.centroid_lng - lng) > 0.02:
+                continue
+                
+            try:
+                geom = json.loads(p.geometry_geojson)
+                if geom.get("type") == "Polygon" and geom.get("coordinates"):
+                    poly = geom["coordinates"][0] # Outer boundary ring (coords are [lng, lat])
+                    
+                    # Ray casting algorithm
+                    inside = False
+                    n = len(poly)
+                    p1x, p1y = poly[0]
+                    for i in range(n + 1):
+                        p2x, p2y = poly[i % n]
+                        if lat > min(p1y, p2y):
+                            if lat <= max(p1y, p2y):
+                                if lng <= max(p1x, p2x):
+                                    if p1y != p2y:
+                                        xints = (lat - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                                    if p1x == p2x or lng <= xints:
+                                        inside = not inside
+                        p1x, p1y = p2x, p2y
+                    
+                    if inside:
+                        return p
+            except Exception as e:
+                print(f"Error checking polygon boundary: {e}")
+                continue
+        return None
+

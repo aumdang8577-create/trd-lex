@@ -16,12 +16,12 @@ const initialListings: Listing[] = [
     contract: {
       id: "contract-1",
       contract_number: "TRD-66-001",
-      parcel_number: "1024/65",
-      location_lat: 13.7712,
-      location_lng: 100.5401,
-      province: "กรุงเทพมหานคร",
-      district: "พญาไท",
-      sub_district: "สามเสนใน",
+      parcel_number: "อด.1234",
+      location_lat: 17.4138,
+      location_lng: 102.7872,
+      province: "อุดรธานี",
+      district: "เมืองอุดรธานี",
+      sub_district: "หมากแข้ง",
       land_area_sqw: 120,
       is_active: true,
       building_type: "อาคารพาณิชย์",
@@ -30,7 +30,7 @@ const initialListings: Listing[] = [
     },
     asking_price: 1500000,
     estimated_fee: 45000,
-    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองพญาไท ใกล้รถไฟฟ้า เหมาะทำร้านกาแฟหรือโชว์รูมสินค้าขนาดเล็ก",
+    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองเมืองอุดรธานี ใกล้เซ็นทรัลอุดรธานี เหมาะทำร้านค้าหรือสำนักงานขนาดเล็ก",
     image_urls: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -44,12 +44,12 @@ const initialListings: Listing[] = [
     contract: {
       id: "contract-2",
       contract_number: "TRD-66-002",
-      parcel_number: "589/12",
-      location_lat: 12.9235,
-      location_lng: 100.8824,
-      province: "ชลบุรี",
-      district: "บางละมุง",
-      sub_district: "หนองปรือ",
+      parcel_number: "ขก.5678",
+      location_lat: 16.4322,
+      location_lng: 102.8236,
+      province: "ขอนแก่น",
+      district: "เมืองขอนแก่น",
+      sub_district: "ในเมือง",
       land_area_sqw: 80,
       is_active: true,
       building_type: "บ้านพักอาศัย",
@@ -58,7 +58,7 @@ const initialListings: Listing[] = [
     },
     asking_price: 980000,
     estimated_fee: 29400,
-    description: "แปลงที่ดินราชพัสดุพัทยาใต้ ทำเลพักอาศัย เงียบสงบ ใกล้สิ่งอำนวยความสะดวกมากมาย",
+    description: "แปลงที่ดินราชพัสดุในเมืองขอนแก่น ทำเลพักอาศัย เงียบสงบ ใกล้วัดหนองแวงและบึงแก่นนคร เดินทางสะดวกมีสาธารณูปโภคครบครัน",
     image_urls: ["https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -72,13 +72,13 @@ const initialListings: Listing[] = [
     contract: {
       id: "contract-3",
       contract_number: "TRD-66-003",
-      parcel_number: "220/8",
-      location_lat: 18.7883,
-      location_lng: 98.9853,
-      province: "เชียงใหม่",
-      district: "เมืองเชียงใหม่",
-      sub_district: "ศรีภูมิ",
-      land_area_sqw: 150,
+      parcel_number: "นค.1507",
+      location_lat: 17.87762258070912,
+      location_lng: 102.7435163606957,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 3677.44,
       is_active: true,
       building_type: "อาคารพาณิชย์",
       usable_area_sqm: 350,
@@ -86,11 +86,67 @@ const initialListings: Listing[] = [
     },
     asking_price: 2400000,
     estimated_fee: 72000,
-    description: "สิทธิ์การเช่าระยะยาวสำหรับทำธุรกิจเกสท์เฮ้าส์หรือร้านอาหารในเขตคูเมืองเก่าเชียงใหม่ ดึงดูดนักท่องเที่ยวได้ดีเยี่ยม",
+    description: "สิทธิ์การเช่าระยะยาวใกล้ริมแม่น้ำโขง เมืองหนองคาย เหมาะสำหรับทำร้านอาหารหรือโฮมสเตย์รองรับนักท่องเที่ยวริมโขงและตลาดท่าเสด็จ",
     image_urls: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
     updatedAt: "2026-07-09T00:00:00Z",
+  },
+  {
+    id: "list-4",
+    sellerId: "seller-2",
+    seller: { id: "seller-2", thaid_id: "456", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
+    contractId: "contract-4",
+    contract: {
+      id: "contract-4",
+      contract_number: "TRD-66-004",
+      parcel_number: "นค.1509",
+      location_lat: 17.87523837156668,
+      location_lng: 102.7425037912517,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 6263.67,
+      is_active: true,
+      building_type: null,
+      usable_area_sqm: 0,
+      zoning: "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)",
+    },
+    asking_price: 3800000,
+    estimated_fee: 114000,
+    description: "แปลงที่ดินขนาดใหญ่ใจกลางเมืองหนองคาย เหมาะสำหรับพัฒนาโครงการอาคารพาณิชย์หรือคอนโดมิเนียมรองรับเขตเศรษฐกิจพิเศษ",
+    image_urls: ["https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-10T00:00:00Z",
+    updatedAt: "2026-07-10T00:00:00Z",
+  },
+  {
+    id: "list-5",
+    sellerId: "seller-1",
+    seller: { id: "seller-1", thaid_id: "123", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
+    contractId: "contract-5",
+    contract: {
+      id: "contract-5",
+      contract_number: "TRD-66-005",
+      parcel_number: "นค.1496",
+      location_lat: 17.8792408132012,
+      location_lng: 102.7489926859958,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 1030.53,
+      is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 120,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
+    },
+    asking_price: 1200000,
+    estimated_fee: 36000,
+    description: "ที่ดินราชพัสดุทำเลดี ใกล้ถนนสายหลัก เหมาะทำที่พักอาศัยหรือร้านค้าขนาดเล็ก สภาพแวดล้อมดี มีสาธารณูปโภคครบ",
+    image_urls: ["https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-11T00:00:00Z",
+    updatedAt: "2026-07-11T00:00:00Z",
   }
 ];
 
@@ -165,11 +221,14 @@ export default function ListingsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 font-sans text-trd-midnight">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-trd-primary">ค้นหาประกาศสิทธิการเช่า</h1>
-        <p className="text-gray-500 mt-2">
-          ค้นหาและเปรียบเทียบสิทธิการเช่าที่ราชพัสดุผ่านแผนที่และระบบการค้นหาแบบละเอียด
+        <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+          การสืบค้นข้อมูลสัญญาเช่าเชิงพื้นที่
+        </span>
+        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">ค้นหาประกาศสิทธิการเช่า</h1>
+        <p className="text-xs text-trd-text-muted mt-2 leading-relaxed font-medium">
+          ค้นหา ตรวจสอบ และวิเคราะห์พิกัดสิทธิการเช่าที่ราชพัสดุผ่านแผนที่และระบบการค้นหาแบบกริดละเอียด
         </p>
       </div>
 
@@ -182,35 +241,35 @@ export default function ListingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Listings List */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="flex justify-between items-center pb-4 border-b border-trd-border/50">
-            <h2 className="text-lg font-semibold text-trd-primary">
-              พบประกาศทั้งหมด ({listings.length} รายการ)
+          <div className="flex justify-between items-center pb-4 border-b-2 border-trd-border">
+            <h2 className="text-xs font-black text-trd-midnight font-mono uppercase tracking-widest">
+              จำนวนผลลัพธ์รายการตรวจสอบสิทธิ์ที่ค้นพบ ({listings.length} รายการ)
             </h2>
           </div>
 
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white rounded-2xl border border-trd-border overflow-hidden shadow-sm animate-pulse">
+                <div key={i} className="bg-white border-2 border-trd-border overflow-hidden animate-pulse rounded-none shadow-flat">
                   {/* Image Skeleton */}
-                  <div className="h-48 bg-gray-200" />
+                  <div className="h-44 bg-slate-200" />
                   {/* Content Skeleton */}
                   <div className="p-5 space-y-4">
                     <div className="flex justify-between items-center">
-                      <div className="h-4 bg-gray-200 rounded w-1/3" />
-                      <div className="h-5 bg-gray-200 rounded-full w-1/4" />
+                      <div className="h-3 bg-slate-200 rounded w-1/3" />
+                      <div className="h-4 bg-slate-200 rounded w-1/4" />
                     </div>
                     
-                    <div className="h-6 bg-gray-200 rounded w-3/4" />
+                    <div className="h-5 bg-slate-200 rounded w-3/4" />
                     
                     <div className="space-y-2 pt-2">
-                      <div className="h-3 bg-gray-200 rounded w-5/6" />
-                      <div className="h-3 bg-gray-200 rounded w-4/5" />
+                      <div className="h-2.5 bg-slate-200 rounded w-5/6" />
+                      <div className="h-2.5 bg-slate-200 rounded w-4/5" />
                     </div>
 
-                    <div className="flex gap-2 pt-3 border-t border-gray-100">
-                      <div className="h-4 bg-gray-200 rounded w-1/4" />
-                      <div className="h-4 bg-gray-200 rounded w-1/4" />
+                    <div className="flex gap-2 pt-3 border-t-2 border-trd-border/20">
+                      <div className="h-3 bg-slate-200 rounded w-1/4" />
+                      <div className="h-3 bg-slate-200 rounded w-1/4" />
                     </div>
                   </div>
                 </div>
@@ -231,24 +290,25 @@ export default function ListingsPage() {
                   buildingType={listing.contract.building_type}
                   usableAreaSqm={listing.contract.usable_area_sqm}
                   zoning={listing.contract.zoning}
+                  locationLat={listing.contract.location_lat}
+                  locationLng={listing.contract.location_lng}
                 />
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-trd-border p-12 text-center text-gray-400">
-              <span className="text-5xl block mb-4">🔍</span>
-              ไม่พบประกาศที่ตรงตามเงื่อนไขการค้นหาของคุณ
+            <div className="bg-white border-2 border-trd-border p-12 text-center text-trd-text-muted font-mono text-xs uppercase tracking-widest font-bold rounded-none shadow-flat">
+              [ ไม่พบข้อมูลทะเบียนสัญญาเช่าตามเงื่อนไขที่ระบุ ]
             </div>
           )}
         </div>
 
         {/* Map View */}
         <div className="lg:col-span-5 lg:sticky lg:top-24">
-          <div className="bg-white rounded-2xl border border-trd-border/50 overflow-hidden shadow-sm">
-            <div className="p-4 bg-trd-primary text-white font-semibold flex items-center justify-between">
-              <span>🗺️ แสดงผลบนแผนที่</span>
-              <span className="text-xs bg-trd-secondary text-trd-primary-dark font-bold px-2 py-0.5 rounded-full">
-                Active Listings
+          <div className="bg-white border-2 border-trd-border overflow-hidden shadow-flat rounded-none">
+            <div className="p-3 bg-slate-50 text-trd-midnight font-mono text-xs uppercase tracking-widest font-black flex items-center justify-between border-b-2 border-trd-border">
+              <span>แผนที่ระบบสารสนเทศภูมิศาสตร์แสดงพิกัดที่ดิน</span>
+              <span className="text-[8px] bg-val-e border border-trd-border text-white px-1.5 py-0.5 font-bold font-mono rounded-none">
+                แผนที่แสดงผลปกติ
               </span>
             </div>
             <LeaseMap listings={listings} className="!rounded-none !border-none !h-[450px]" />

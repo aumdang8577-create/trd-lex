@@ -38,3 +38,18 @@ class ValidateContractResponse(BaseModel):
     is_valid: bool
     message: str
     contract_data: Optional[ContractDataResponse] = None
+
+class TreasuryParcelResponse(BaseModel):
+    id: str
+    parcel_number: str
+    province: str
+    district: str
+    sub_district: str
+    geometry_geojson: str
+    centroid_lat: float
+    centroid_lng: float
+    land_area_sqw: float
+
+    class Config:
+        from_attributes = True
+

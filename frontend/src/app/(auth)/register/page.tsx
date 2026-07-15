@@ -99,8 +99,7 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-2 gap-y-2 text-xs">
                   <span className="text-gray-400">เลขที่สัญญา:</span>
                   <span className="font-semibold text-gray-800">{validatedData.contract_number}</span>
-                  
-                  <span className="text-gray-400">ระวางแปลง:</span>
+                  <span className="text-gray-400">ทะเบียนที่ราชพัสดุเลขที่:</span>
                   <span className="font-semibold text-gray-800">{validatedData.parcel_number}</span>
                   
                   <span className="text-gray-400">พื้นที่รวม:</span>

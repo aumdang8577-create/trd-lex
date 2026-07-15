@@ -24,12 +24,12 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
 
   // Common provinces for selection
   const provinces = [
+    "อุดรธานี",
+    "ขอนแก่น",
+    "หนองคาย",
     "กรุงเทพมหานคร",
     "ชลบุรี",
     "เชียงใหม่",
-    "ภูเก็ต",
-    "ขอนแก่น",
-    "สงขลา",
   ];
 
   // Thai Zoning options
@@ -44,26 +44,27 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
     <form
       onSubmit={handleSubmit}
       className={`
-        bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100/80
-        p-6 w-full max-w-5xl mx-auto
+        bg-slate-900/60 backdrop-blur-md border border-slate-800/85
+        p-5 w-full max-w-5xl mx-auto
         grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end
+        shadow-2xl shadow-black/40 rounded-2xl hover:border-slate-700/80 transition-all duration-300
         ${className}
       `}
     >
       {/* Province */}
-      <div className="w-full">
-        <label className="block text-xs font-semibold text-trd-primary mb-1.5 uppercase tracking-wide">
+      <div className="w-full font-sans">
+        <label className="block text-[9px] font-bold text-trd-primary mb-1 uppercase tracking-widest font-mono">
           จังหวัด
         </label>
         <select
           value={province}
           title="เลือกจังหวัด"
           onChange={(e) => setProvince(e.target.value)}
-          className="w-full px-3 py-2.5 rounded-lg border border-trd-border bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary transition-all duration-200"
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
         >
-          <option value="">เลือกจังหวัดทั้งหมด</option>
+          <option value="" className="bg-slate-900 text-white">ทุกจังหวัด</option>
           {provinces.map((prov) => (
-            <option key={prov} value={prov}>
+            <option key={prov} value={prov} className="bg-slate-900 text-white">
               {prov}
             </option>
           ))}
@@ -71,61 +72,61 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
       </div>
 
       {/* District */}
-      <div className="w-full">
-        <label className="block text-xs font-semibold text-trd-primary mb-1.5 uppercase tracking-wide">
+      <div className="w-full font-sans">
+        <label className="block text-[9px] font-bold text-trd-primary mb-1 uppercase tracking-widest font-mono">
           อำเภอ / เขต
         </label>
         <input
           type="text"
-          placeholder="เช่น พญาไท, บางละมุง"
+          placeholder="เช่น เมืองอุดรธานี"
           value={district}
           onChange={(e) => setDistrict(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg border border-trd-border bg-white text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary transition-all duration-200"
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
         />
       </div>
 
       {/* Min Price */}
-      <div className="w-full">
-        <label className="block text-xs font-semibold text-trd-primary mb-1.5 uppercase tracking-wide">
-          ราคาต่ำสุด (บาท)
+      <div className="w-full font-sans">
+        <label className="block text-[9px] font-bold text-trd-primary mb-1 uppercase tracking-widest font-mono">
+          ราคาเริ่มต้น (บาท)
         </label>
         <input
           type="number"
-          placeholder="ไม่มีขั้นต่ำ"
+          placeholder="ระบุราคาต่ำสุด"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg border border-trd-border bg-white text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary transition-all duration-200"
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
         />
       </div>
 
       {/* Max Price */}
-      <div className="w-full">
-        <label className="block text-xs font-semibold text-trd-primary mb-1.5 uppercase tracking-wide">
+      <div className="w-full font-sans">
+        <label className="block text-[9px] font-bold text-trd-primary mb-1 uppercase tracking-widest font-mono">
           ราคาสูงสุด (บาท)
         </label>
         <input
           type="number"
-          placeholder="ไม่จำกัด"
+          placeholder="ระบุราคาสูงสุด"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg border border-trd-border bg-white text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary transition-all duration-200"
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
         />
       </div>
 
       {/* Zoning */}
-      <div className="w-full">
-        <label className="block text-xs font-semibold text-trd-primary mb-1.5 uppercase tracking-wide">
-          ผังสีผังเมือง
+      <div className="w-full font-sans">
+        <label className="block text-[9px] font-bold text-trd-primary mb-1 uppercase tracking-widest font-mono">
+          เขตการใช้ประโยชน์ที่ดิน
         </label>
         <select
           value={zoning}
           title="เลือกผังเมือง"
           onChange={(e) => setZoning(e.target.value)}
-          className="w-full px-3 py-2.5 rounded-lg border border-trd-border bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-trd-primary/30 focus:border-trd-primary transition-all duration-200"
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
         >
-          <option value="">เลือกผังเมืองทั้งหมด</option>
+          <option value="" className="bg-slate-900 text-white">ทุกเขตการใช้ประโยชน์</option>
           {zones.map((z) => (
-            <option key={z} value={z}>
+            <option key={z} value={z} className="bg-slate-900 text-white">
               {z}
             </option>
           ))}
@@ -133,13 +134,13 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
       </div>
 
       {/* Search Button */}
-      <div className="w-full">
+      <div className="w-full font-sans">
         <Button
           type="submit"
           variant="primary"
-          className="w-full py-2.5 flex items-center justify-center gap-2 text-sm shadow-md"
+          className="w-full py-2 flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-mono font-black border border-slate-850 bg-trd-primary text-white rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:shadow-[0_0_20px_rgba(59,130,246,0.35)] hover:bg-trd-primary-dark transition-all duration-200"
         >
-          <span>🔍</span> ค้นหาสิทธิ์
+          สืบค้นข้อมูลสัญญาเช่า
         </Button>
       </div>
     </form>

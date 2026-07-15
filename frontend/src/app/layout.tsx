@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th" className={sarabun.variable}>
-      <body className="font-sans bg-trd-surface text-gray-800 antialiased min-h-screen flex flex-col">
+      <body className="font-sans antialiased min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow flex flex-col">
           {children}

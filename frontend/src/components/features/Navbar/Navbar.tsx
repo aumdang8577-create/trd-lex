@@ -56,12 +56,12 @@ export default function Navbar() {
   const [isMegaOpen, setIsMegaOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-40 backdrop-blur-md bg-white/70 border-b border-gray-100/80 shadow-sm">
+    <nav className="sticky top-0 z-40 backdrop-blur-lg bg-slate-950/70 border-b border-slate-900 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-105">
+            <div className="relative w-10 h-10 transition-transform duration-200 group-hover:-translate-y-0.5">
               <img
                 src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png"
                 alt="ตราสัญลักษณ์กรมธนารักษ์"
@@ -69,29 +69,29 @@ export default function Navbar() {
               />
             </div>
             <div>
-              <span className="text-lg font-extrabold text-trd-primary">TRD</span>
-              <span className="text-lg font-extrabold text-trd-secondary">-LEX</span>
-              <p className="text-[9px] text-gray-400 -mt-1 font-semibold leading-tight">
-                ตลาดซื้อขายสิทธิ์ราชพัสดุ
+              <span className="text-lg font-black text-white uppercase tracking-tight">TRD</span>
+              <span className="text-lg font-black text-trd-primary uppercase tracking-tight">-LEX</span>
+              <p className="text-[8px] text-trd-text-muted -mt-1 font-bold leading-tight font-mono uppercase tracking-widest">
+                ตลาดรองสิทธิการเช่าที่ราชพัสดุ
               </p>
             </div>
           </Link>
 
-          {/* Role Demonstration Selector (For testing presentation modes) */}
-          <div className="hidden lg:flex items-center gap-1 bg-gray-100 p-1.5 rounded-lg border border-trd-border/40 text-xs">
-            <span className="text-gray-400 px-2 font-medium">โหมดทดสอบ:</span>
+          {/* Role Demonstration Selector (Cyber glass tabs) */}
+          <div className="hidden lg:flex items-center gap-1.5 bg-slate-950 p-1 border border-slate-800 rounded-xl text-[10px] font-mono shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            <span className="text-trd-text-muted px-2 font-bold uppercase">ระบบจำลองบทบาท:</span>
             {[
-              { id: "GUEST", label: "บุคคลทั่วไป" },
-              { id: "SELLER", label: "ผู้เช่า/ผู้ขาย" },
-              { id: "INVESTOR", label: "นักลงทุน" },
+              { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
+              { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
+              { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
             ].map((r) => (
               <button
                 key={r.id}
                 onClick={() => handleRoleChange(r.id as UserRole)}
-                className={`px-3 py-1 rounded-md transition-all font-semibold ${
+                className={`px-3 py-1 transition-all font-black border rounded-lg ${
                   role === r.id
-                    ? "bg-trd-primary text-white shadow-sm"
-                    : "text-gray-500 hover:text-trd-primary"
+                    ? "bg-trd-primary text-white border-slate-700 shadow-neon-blue"
+                    : "text-trd-text-muted border-transparent hover:text-white"
                 }`}
               >
                 {r.label}
@@ -111,17 +111,17 @@ export default function Navbar() {
                 >
                   <Link
                     href={link.href}
-                    className="text-sm font-semibold text-gray-600 hover:text-trd-primary transition-colors flex items-center gap-1"
+                    className="text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white transition-colors flex items-center gap-1 font-mono"
                   >
                     {link.label}
-                    <span className="text-[10px] transition-transform duration-200 group-hover:rotate-180">▼</span>
+                    <span className="text-[8px]">▼</span>
                   </Link>
                 </div>
               ) : (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-sm font-semibold text-gray-600 hover:text-trd-primary transition-colors"
+                  className="text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white transition-colors font-mono"
                 >
                   {link.label}
                 </Link>
@@ -135,22 +135,24 @@ export default function Navbar() {
               <Button
                 variant="primary"
                 size="sm"
-                className="!bg-gradient-to-r !from-trd-primary !to-trd-primary-light flex items-center gap-1.5 font-semibold text-xs py-2 px-4 shadow-sm"
+                className="!bg-trd-primary hover:!bg-trd-primary-dark border border-slate-800 text-white text-xs font-bold font-mono py-1.5 px-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all duration-150"
                 onClick={() => window.location.href = "/login"}
               >
-                🛡️ เข้าสู่ระบบด้วย ThaID
+                ลงชื่อเข้าใช้ด้วย ThaID
               </Button>
             ) : (
               <div className="flex items-center gap-3">
-                <div className="flex flex-col text-right">
-                  <span className="text-xs font-bold text-trd-primary">
-                    {role === "SELLER" ? "คุณสมชาย ใจดี" : "ผู้แทนบริษัท พัฒนาจำกัด"}
+                <div className="flex flex-col text-right font-mono">
+                  <span className="text-xs font-black text-white">
+                    {role === "SELLER" ? "สมชาย ใจดี" : "ผู้แทนบริษัท พัฒนาจำกัด"}
                   </span>
-                  <span className="text-[10px] text-status-valid">✓ ThaID Verified</span>
+                  <span className="text-[8px] text-val-v uppercase tracking-wider font-extrabold">
+                    [ยืนยันตัวตนผ่าน ThaID]
+                  </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-xs font-semibold text-red-500 hover:underline"
+                  className="text-xs font-black text-val-e hover:text-red-400 font-mono uppercase tracking-wider border border-slate-800 rounded-lg px-2.5 py-1 bg-slate-950/40 hover:bg-slate-900 transition-colors"
                 >
                   ออกจากระบบ
                 </button>
@@ -160,20 +162,20 @@ export default function Navbar() {
 
           {/* Mobile Hamburger */}
           <button
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+            className="md:hidden w-10 h-10 flex items-center justify-center border border-slate-800 hover:bg-slate-900 rounded-xl transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="เปิดเมนู"
           >
             <svg
-              className="w-5 h-5 text-gray-600"
+              className="w-5 h-5 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
               {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
@@ -183,25 +185,25 @@ export default function Navbar() {
       {/* Mega Menu Dropdown */}
       {isMegaOpen && (
         <div
-          className="absolute left-0 right-0 bg-white border-b border-trd-border/50 shadow-lg z-50 animate-slide-down hidden md:block"
+          className="absolute left-0 right-0 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 shadow-2xl shadow-black/50 z-50 animate-slide-down hidden md:block"
           onMouseEnter={() => setIsMegaOpen(true)}
           onMouseLeave={() => setIsMegaOpen(false)}
         >
           <div className="max-w-7xl mx-auto px-8 py-8 grid grid-cols-4 gap-8">
             {/* Column 1 */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-trd-primary border-b border-trd-border/50 pb-2 flex items-center gap-1.5">
-                🌏 แยกตามภูมิภาค
+            <div className="space-y-3 font-sans">
+              <h4 className="text-xs font-black uppercase tracking-wider text-trd-primary border-b border-slate-900 pb-2 flex items-center gap-1.5 font-mono">
+                กลุ่มจังหวัดภูมิภาค
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-xs">
                 {[
+                  { name: "ภาคอีสาน (อุดรฯ & ขอนแก่น & หนองคาย)", query: "query=ภาคตะวันออกเฉียงเหนือ" },
                   { name: "ภาคกลาง (กรุงเทพฯ & ปริมณฑล)", query: "province=กรุงเทพมหานคร" },
                   { name: "ภาคเหนือ (เชียงใหม่ & ท่องเที่ยว)", query: "province=เชียงใหม่" },
                   { name: "ภาคตะวันออก (ชลบุรี & ระยอง)", query: "province=ชลบุรี" },
-                  { name: "ภาคอีสาน (ขอนแก่น & นครราชสีมา)", query: "query=ขอนแก่น" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
                       {item.name}
                     </Link>
                   </li>
@@ -211,19 +213,19 @@ export default function Navbar() {
 
             {/* Column 2 */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-trd-primary border-b border-trd-border/50 pb-2 flex items-center gap-1.5">
-                🏭 เขตเศรษฐกิจพิเศษ (EEC)
+              <h4 className="text-xs font-black uppercase tracking-wider text-trd-primary border-b border-slate-900 pb-2 flex items-center gap-1.5 font-mono">
+                เขตพัฒนาพิเศษภาคตะวันออก (EEC)
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-xs">
                 {[
                   { name: "พื้นที่อุตสาหกรรมชลบุรี (พัทยา)", query: "province=ชลบุรี" },
                   { name: "พื้นที่พัฒนาพิเศษระยอง", query: "query=ระยอง" },
                   { name: "พื้นที่เชื่อมต่อฉะเชิงเทรา", query: "query=ฉะเชิงเทรา" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 flex items-center gap-1">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 flex items-center gap-1.5 font-bold">
                       <span>{item.name}</span>
-                      <span className="text-[9px] bg-trd-secondary/15 text-trd-secondary-dark px-1.5 py-0.5 rounded font-bold">EEC</span>
+                      <span className="text-[8px] bg-val-l/10 text-val-l border border-val-l/30 px-1 py-0.5 font-mono font-black rounded">EEC</span>
                     </Link>
                   </li>
                 ))}
@@ -232,17 +234,17 @@ export default function Navbar() {
 
             {/* Column 3 */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-trd-primary border-b border-trd-border/50 pb-2 flex items-center gap-1.5">
-                📦 พื้นที่การค้าชายแดน
+              <h4 className="text-xs font-black uppercase tracking-wider text-trd-primary border-b border-slate-900 pb-2 flex items-center gap-1.5 font-mono">
+                เขตเศรษฐกิจพิเศษชายแดน (SEZ)
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-xs">
                 {[
                   { name: "ด่านศุลกากรแม่สอด (ตาก)", query: "query=ตาก" },
                   { name: "พื้นที่เศรษฐกิจพิเศษสระแก้ว", query: "query=สระแก้ว" },
                   { name: "พื้นที่ขนส่งสินค้าหนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
                       {item.name}
                     </Link>
                   </li>
@@ -252,18 +254,18 @@ export default function Navbar() {
 
             {/* Column 4 */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-trd-primary border-b border-trd-border/50 pb-2 flex items-center gap-1.5">
-                🔥 ทำเลทองยอดฮิต
+              <h4 className="text-xs font-black uppercase tracking-wider text-trd-primary border-b border-slate-900 pb-2 flex items-center gap-1.5 font-mono">
+                ทำเลศักยภาพสูง
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-xs">
                 {[
-                  { name: "พญาไท, กรุงเทพมหานคร", query: "query=พญาไท" },
-                  { name: "ศรีภูมิ, คูเมืองเก่าเชียงใหม่", query: "query=ศรีภูมิ" },
-                  { name: "บางละมุง, ชลบุรี", query: "query=บางละมุง" },
+                  { name: "หมากแข้ง, อุดรธานี", query: "query=หมากแข้ง" },
+                  { name: "ในเมือง, ขอนแก่น", query: "query=ขอนแก่น" },
+                  { name: "ในเมือง, หนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-gray-600 hover:text-trd-secondary hover:underline block py-0.5 font-medium">
-                      ⭐ {item.name}
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
+                      {item.name}
                     </Link>
                   </li>
                 ))}
@@ -275,20 +277,24 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-trd-border/50 bg-white animate-fade-in shadow-inner">
+        <div className="md:hidden border-t border-slate-900 bg-slate-950/95 backdrop-blur-lg animate-fade-in">
           <div className="px-4 py-4 space-y-3">
             {/* Mobile test role pills */}
-            <div className="bg-gray-50 p-2 rounded-xl border border-trd-border/30 flex items-center justify-around text-xs mb-2">
-              <span className="text-gray-400 font-semibold">โหมดทดลอง:</span>
-              {(["GUEST", "SELLER", "INVESTOR"] as UserRole[]).map((r) => (
+            <div className="bg-slate-900/60 p-2 border border-slate-800 flex items-center justify-around text-[9px] font-mono mb-2 rounded-xl">
+              <span className="text-trd-text-muted font-bold">ระบบจำลองบทบาท:</span>
+              {[
+                { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
+                { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
+                { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
+              ].map((r) => (
                 <button
-                  key={r}
-                  onClick={() => handleRoleChange(r)}
-                  className={`px-2 py-1 rounded-md font-bold ${
-                    role === r ? "bg-trd-primary text-white" : "text-gray-500"
+                  key={r.id}
+                  onClick={() => handleRoleChange(r.id as UserRole)}
+                  className={`px-2 py-0.5 font-black border rounded-lg ${
+                    role === r.id ? "bg-trd-primary text-white border-slate-700 shadow-neon-blue" : "text-slate-400 border-transparent"
                   }`}
                 >
-                  {r === "GUEST" ? "ทั่วไป" : r === "SELLER" ? "ผู้ขาย" : "นักลงทุน"}
+                  {r.label}
                 </button>
               ))}
             </div>
@@ -297,7 +303,7 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="block text-sm font-semibold text-gray-600 py-2 border-b border-gray-50"
+                className="block text-xs font-black uppercase tracking-wider text-slate-300 py-2.5 border-b border-slate-900/40 hover:text-white font-mono"
               >
                 {link.label}
               </Link>
@@ -308,22 +314,24 @@ export default function Navbar() {
                 <Button
                   variant="primary"
                   size="sm"
-                  className="w-full flex items-center justify-center gap-1.5"
+                  className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-slate-800 text-xs py-2 shadow-lg bg-trd-primary text-white font-mono"
                   onClick={() => window.location.href = "/login"}
                 >
-                  🛡️ เข้าสู่ระบบด้วย ThaID
+                  ลงชื่อเข้าใช้ด้วย ThaID
                 </Button>
               ) : (
-                <div className="flex items-center justify-between border-t border-trd-border/30 pt-3">
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-bold text-trd-primary">
+                <div className="flex items-center justify-between border-t border-slate-900 pt-3">
+                  <div className="flex flex-col text-left font-mono">
+                    <span className="text-xs font-bold text-white">
                       {role === "SELLER" ? "คุณสมชาย ใจดี" : "ผู้แทนบริษัท พัฒนาจำกัด"}
                     </span>
-                    <span className="text-[9px] text-status-valid">✓ ThaID Verified</span>
+                    <span className="text-[8px] text-val-v uppercase tracking-wider font-extrabold">
+                      [ยืนยันตัวตนผ่าน ThaID]
+                    </span>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="text-xs font-semibold text-red-500 hover:underline"
+                    className="text-xs font-black text-val-e hover:underline font-mono border border-slate-800 bg-slate-950/60 rounded-lg px-2 py-0.5"
                   >
                     ออกจากระบบ
                   </button>

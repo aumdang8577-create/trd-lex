@@ -10,37 +10,46 @@ const config: Config = {
     extend: {
       colors: {
         trd: {
-          primary: "#007D4F",     // เขียวมรกตกรมธนารักษ์
-          "primary-light": "#009F65",
-          "primary-dark": "#005C3A",
-          secondary: "#D4AF37",   // ทองสัญลักษณ์
-          "secondary-light": "#E5C35E",
-          "secondary-dark": "#C08A38",
-          gold: "#D4AF37",        // ทองโลโก้
-          goldDark: "#C08A38",    // ทองสำริด
-          midnight: "#131326",    // น้ำเงินเข้มขอบโลโก้
-          surface: "#F8F9FA",     // พื้นหลังสะอาดตา
-          "surface-dark": "#131326",
-          border: "#E0E0E0",     // เส้นขอบระเบียบ
+          primary: "#3B82F6",     /* Electric Azure Blue */
+          "primary-light": "#60A5FA",
+          "primary-dark": "#1D4ED8",
+          secondary: "#F59E0B",   /* Warm Amber */
+          "secondary-light": "#FBBF24",
+          "secondary-dark": "#D97706",
+          midnight: "#070A13",    /* Dark midnight blue background */
+          text: "#F9FAFB",        /* Off-white primary text */
+          "text-muted": "#9CA3AF", /* Muted gray text */
+          surface: "#111827",     /* Slate-900 surface */
+          "surface-dark": "#0B0F19",
+          border: "#1F2937",      /* Slate-800 border */
+        },
+        val: {
+          v: "#10B981",           /* V : Value - Emerald */
+          a: "#3B82F6",           /* A : Appraise - Blue */
+          l: "#F59E0B",           /* L : Legacy - Amber */
+          u: "#8B5CF6",           /* U : Unity - Violet */
+          e: "#EF4444",           /* E : Efficiency - Red */
         },
         status: {
-          valid: "#2E7D32",      // ผ่านการตรวจสอบ
-          pending: "#ED6C02",    // รอการตรวจสอบ
-          invalid: "#D32F2F",    // สัญญาไม่ถูกต้อง
+          valid: "#10B981",      /* Emerald */
+          pending: "#F59E0B",    /* Amber */
+          invalid: "#EF4444",    /* Red */
         },
       },
       fontFamily: {
         sans: ["var(--font-sarabun)", "sans-serif"],
+        mono: ["Courier New", "Courier", "monospace"],
       },
       boxShadow: {
-        card: "0 4px 6px -1px rgba(0, 125, 79, 0.1), 0 2px 4px -1px rgba(0, 125, 79, 0.06)",
-        "card-hover": "0 10px 25px -5px rgba(0, 125, 79, 0.15), 0 8px 10px -6px rgba(0, 125, 79, 0.1)",
-        gold: "0 4px 14px 0 rgba(212, 175, 55, 0.3)",
+        card: "0px 10px 25px -5px rgba(0, 0, 0, 0.3)",
+        "card-hover": "0px 20px 35px -5px rgba(0, 0, 0, 0.4)",
+        flat: "0px 0px 15px 0px rgba(59, 130, 246, 0.08)", /* Glowing border instead of flat offset */
+        "flat-hover": "0px 0px 20px 0px rgba(59, 130, 246, 0.15)",
       },
       backgroundImage: {
-        "trd-gradient": "linear-gradient(135deg, #007D4F 0%, #009F65 50%, #007D4F 100%)",
-        "gold-gradient": "linear-gradient(135deg, #D4AF37 0%, #E5C35E 50%, #D4AF37 100%)",
-        "hero-gradient": "linear-gradient(180deg, #007D4F 0%, #005C3A 100%)",
+        "trd-gradient": "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
+        "gold-gradient": "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+        "hero-gradient": "radial-gradient(ellipse at top, #111827, #0B0F19)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-out",

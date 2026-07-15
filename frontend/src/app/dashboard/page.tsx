@@ -8,11 +8,11 @@ import { formatCurrency } from "@/lib/utils";
 
 // Mock historic SOLD transactions to calculate real-time looking dashboard metrics
 const mockSoldListings = [
-  { id: "sold-1", province: "กรุงเทพมหานคร", district: "พญาไท", area: 150, price: 2000000, fee: 60000, type: "พาณิชย์ (ร้านอาหาร)" },
-  { id: "sold-2", province: "ชลบุรี", district: "บางละมุง", area: 250, price: 3200000, fee: 96000, type: "บริการ (โรงแรม/โฮสเทล)" },
-  { id: "sold-3", province: "เชียงใหม่", district: "หางดง", area: 400, price: 4500000, fee: 135000, type: "เกษตรกรรมแปรรูป" },
-  { id: "sold-4", province: "ภูเก็ต", district: "ถลาง", area: 180, price: 2800000, fee: 84000, type: "พาณิชย์ (ออฟฟิศทำงาน)" },
-  { id: "sold-5", province: "ขอนแก่น", district: "เมืองขอนแก่น", area: 320, price: 1900000, fee: 57000, type: "พาณิชย์ (โกดังเก็บสินค้า)" }
+  { id: "sold-1", province: "อุดรธานี", district: "เมืองอุดรธานี", area: 150, price: 2000000, fee: 60000, type: "พาณิชย์ (ร้านอาหาร)" },
+  { id: "sold-2", province: "ขอนแก่น", district: "เมืองขอนแก่น", area: 250, price: 3200000, fee: 96000, type: "บริการ (โรงแรม/โฮสเทล)" },
+  { id: "sold-3", province: "หนองคาย", district: "เมืองหนองคาย", area: 400, price: 4500000, fee: 135000, type: "เกษตรกรรมแปรรูป" },
+  { id: "sold-4", province: "อุดรธานี", district: "กุมภวาปี", area: 180, price: 2800000, fee: 84000, type: "พาณิชย์ (ออฟฟิศทำงาน)" },
+  { id: "sold-5", province: "ขอนแก่น", district: "ชุมแพ", area: 320, price: 1900000, fee: 57000, type: "พาณิชย์ (โกดังเก็บสินค้า)" }
 ];
 
 export default function DashboardPage() {
@@ -187,11 +187,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="space-y-4">
                 {[
-                  { name: "กรุงเทพมหานคร", val: 150, pct: "25%" },
-                  { name: "ชลบุรี", val: 250, pct: "41.6%" },
-                  { name: "เชียงใหม่", val: 400, pct: "66.6%" },
-                  { name: "ภูเก็ต", val: 180, pct: "30%" },
-                  { name: "ขอนแก่น", val: 320, pct: "53.3%" },
+                  { name: "ขอนแก่น", val: 570, pct: "95%" },
+                  { name: "หนองคาย", val: 400, pct: "66.6%" },
+                  { name: "อุดรธานี", val: 330, pct: "55%" },
                 ].map((prov) => (
                   <div key={prov.name} className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold text-gray-700">
@@ -219,11 +217,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="space-y-4">
                 {[
-                  { name: "เชียงใหม่", val: 4500000, pct: "90%" },
-                  { name: "ชลบุรี", val: 3200000, pct: "64%" },
-                  { name: "ภูเก็ต", val: 2800000, pct: "56%" },
-                  { name: "กรุงเทพมหานคร", val: 2000000, pct: "40%" },
-                  { name: "ขอนแก่น", val: 1900000, pct: "38%" },
+                  { name: "ขอนแก่น", val: 5100000, pct: "100%" },
+                  { name: "อุดรธานี", val: 4800000, pct: "94%" },
+                  { name: "หนองคาย", val: 4500000, pct: "88%" },
                 ].map((prov) => (
                   <div key={prov.name} className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold text-gray-700">

@@ -110,3 +110,6 @@ htmlcov/
 *.tmp
 *.temp
 .snapshots/
+
+# Local Netlify folder
+.netlify
