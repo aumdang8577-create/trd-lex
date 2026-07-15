@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const isGithubActions = process.env.GITHUB_ACTIONS === "true";
+
+const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // ปิดใช้งานการย่อรูปภาพของ Next.js เนื่องจาก Static Hosting ไม่รอบรับ
     remotePatterns: [
@@ -15,7 +19,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // ป้องกันปัญหาตัวแปรเสริมล้มเหลวในระบบคลาวด์บิวด์
   },
-  output: "standalone", // สร้างเวอร์ชัน Standalone สำหรับการรันใน Docker
+  // เมื่อบิวด์บน GitHub Actions ให้ส่งออกเป็น Static HTML
+  output: isGithubActions ? "export" : "standalone",
+  // กำหนด subpath ของ repository สำหรับ GitHub Pages
+  basePath: isGithubActions ? "/trd-lex" : "",
 };
 
 export default nextConfig;
