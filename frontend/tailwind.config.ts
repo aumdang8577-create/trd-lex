@@ -10,23 +10,23 @@ const config: Config = {
     extend: {
       colors: {
         trd: {
-          primary: "#3B82F6",     /* Electric Azure Blue */
-          "primary-light": "#60A5FA",
-          "primary-dark": "#1D4ED8",
-          secondary: "#F59E0B",   /* Warm Amber */
-          "secondary-light": "#FBBF24",
-          "secondary-dark": "#D97706",
-          midnight: "#070A13",    /* Dark midnight blue background */
-          text: "#F9FAFB",        /* Off-white primary text */
-          "text-muted": "#9CA3AF", /* Muted gray text */
-          surface: "#111827",     /* Slate-900 surface */
-          "surface-dark": "#0B0F19",
-          border: "#1F2937",      /* Slate-800 border */
+          primary: "var(--trd-primary)",     /* Royal Navy */
+          "primary-light": "var(--trd-primary-light)",
+          "primary-dark": "var(--trd-primary-dark)",
+          secondary: "var(--trd-secondary)",   /* Classic Gold */
+          "secondary-light": "var(--trd-secondary-light)",
+          "secondary-dark": "var(--trd-secondary-dark)",
+          midnight: "#0F1A30",    /* Deep Royal Navy background */
+          text: "var(--trd-text)",        /* Adaptive text color */
+          "text-muted": "var(--trd-text-muted)", /* Adaptive muted text color */
+          surface: "var(--trd-surface)",     /* Adaptive surface background */
+          "surface-dark": "#070D1A",
+          border: "var(--trd-border)",      /* Adaptive border color */
         },
         val: {
-          v: "#10B981",           /* V : Value - Emerald */
-          a: "#3B82F6",           /* A : Appraise - Blue */
-          l: "#F59E0B",           /* L : Legacy - Amber */
+          v: "var(--trd-secondary-dark)", /* V : Value - Gold */
+          a: "var(--trd-primary)",        /* A : Appraise - Navy */
+          l: "var(--trd-secondary)",      /* L : Legacy - Gold */
           u: "#8B5CF6",           /* U : Unity - Violet */
           e: "#EF4444",           /* E : Efficiency - Red */
         },
@@ -41,15 +41,15 @@ const config: Config = {
         mono: ["Courier New", "Courier", "monospace"],
       },
       boxShadow: {
-        card: "0px 10px 25px -5px rgba(0, 0, 0, 0.3)",
-        "card-hover": "0px 20px 35px -5px rgba(0, 0, 0, 0.4)",
-        flat: "0px 0px 15px 0px rgba(59, 130, 246, 0.08)", /* Glowing border instead of flat offset */
-        "flat-hover": "0px 0px 20px 0px rgba(59, 130, 246, 0.15)",
+        card: "0px 10px 25px -5px rgba(15, 26, 48, 0.05)",
+        "card-hover": "0px 20px 35px -5px rgba(15, 26, 48, 0.1)",
+        flat: "0px 0px 15px 0px rgba(212, 175, 55, 0.08)", /* Glowing border instead of flat offset */
+        "flat-hover": "0px 0px 20px 0px rgba(212, 175, 55, 0.15)",
       },
       backgroundImage: {
-        "trd-gradient": "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
-        "gold-gradient": "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-        "hero-gradient": "radial-gradient(ellipse at top, #111827, #0B0F19)",
+        "trd-gradient": "linear-gradient(135deg, #0F1A30 0%, #070D1A 100%)",
+        "gold-gradient": "linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%)",
+        "hero-gradient": "radial-gradient(ellipse at top, #1E2E4A, #0F1A30)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-out",

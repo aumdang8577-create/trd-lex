@@ -7,20 +7,33 @@
    "Thesis 2: Cyber-Dark Tech Startup"
    ======================================= */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =======================================
+   TRD-LEX Design System
+   "Thesis 2.1: Royal Navy & Gold Hybrid"
+   ======================================= */
+
 @layer base {
   :root {
-    --trd-primary: #3B82F6;     /* Electric Azure Blue */
-    --trd-secondary: #F59E0B;   /* Neon Amber */
-    --trd-bg: #0B0F19;          /* Deep Space Blue Background */
-    --trd-surface: #111827;     /* Slate-900 Surface */
-    --trd-border: #1F2937;      /* Slate-800 Border */
-    --trd-text: #F9FAFB;        /* Off-White Text */
-    --trd-text-muted: #9CA3AF;  /* Muted Gray Text */
+    --trd-primary: #0F1A30;       /* Royal Navy */
+    --trd-primary-light: #1E2E4A;
+    --trd-primary-dark: #070D1A;
+    --trd-secondary: #D4AF37;     /* Classic Gold */
+    --trd-secondary-light: #F3C63F;
+    --trd-secondary-dark: #AA7C11;
+    --trd-bg: #F8FAFC;            /* Clean light background */
+    --trd-surface: #FFFFFF;       /* Pure white surface */
+    --trd-border: #E2E8F0;        /* Light gray border */
+    --trd-text: #0F1A30;          /* Navy text for primary readability */
+    --trd-text-muted: #64748B;    /* Slate-500 text */
     
     /* Neon VALUE color strategy definitions */
     --val-v: #10B981;           /* Emerald / Neon Green */
-    --val-a: #3B82F6;           /* Electric Azure Blue */
-    --val-l: #F59E0B;           /* Warm Amber / Neon Gold */
+    --val-a: #0F1A30;           /* Royal Navy */
+    --val-l: #D4AF37;           /* Classic Gold */
     --val-u: #8B5CF6;           /* Neon Violet */
     --val-e: #EF4444;           /* Coral Red / Neon Red */
   }
@@ -46,7 +59,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 800;
     line-height: 1.25;
-    color: var(--trd-text);
+    color: var(--trd-primary);
   }
 
   a {
@@ -58,31 +71,31 @@
 @layer components {
   /* TRD Verified Badge (Neon Glow Pill) */
   .trd-verified-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 border border-val-v/30 text-[9px] font-black font-mono tracking-widest uppercase rounded-full bg-val-v/10 text-val-v shadow-[0_0_12px_rgba(16,185,129,0.2)];
+    @apply inline-flex items-center gap-1.5 px-3 py-1 border border-[#D4AF37]/40 text-[9px] font-black font-mono tracking-widest uppercase rounded-full bg-[#D4AF37]/10 text-trd-secondary-dark shadow-[0_0_12px_rgba(212,175,55,0.2)];
   }
 
   /* Solid accent line — section divider */
   .trd-gold-divider {
-    @apply w-16 h-[2px] bg-gradient-to-r from-trd-primary to-val-u rounded-full;
+    @apply w-16 h-[3px] bg-gradient-to-r from-trd-secondary to-trd-secondary-dark rounded-full;
   }
 
-  /* Card base style (Bento Rounded Glassmorphism Style) */
+  /* Card base style (Light Bento Style) */
   .trd-card {
-    @apply bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-6;
+    @apply bg-white rounded-2xl border border-slate-200/80 p-6;
     @apply transition-all duration-300 ease-in-out;
-    @apply hover:border-slate-700/80 hover:bg-slate-900/80 hover:shadow-[0_0_20px_rgba(59,130,246,0.06)];
+    @apply hover:border-slate-350 hover:bg-slate-50/20 hover:shadow-[0_10px_30px_rgba(15,26,48,0.05)];
   }
 
   /* Section heading (Editorial Monospace Title) */
   .trd-section-title {
-    @apply text-xs font-black uppercase tracking-widest text-trd-primary mb-4 font-mono border-b border-slate-800 pb-2;
+    @apply text-xs font-black uppercase tracking-widest text-trd-secondary-dark mb-4 font-mono border-b border-slate-200 pb-2;
   }
 
-  /* Form input (Cyberpunk Input Style) */
+  /* Form input (Elegant Light Input Style) */
   .trd-input {
-    @apply w-full px-3 py-2.5 border border-slate-800 bg-slate-950/60 text-trd-text rounded-xl font-mono;
-    @apply text-sm placeholder:text-slate-600;
-    @apply focus:outline-none focus:border-trd-primary/50 focus:bg-slate-950 focus:ring-1 focus:ring-trd-primary/30;
+    @apply w-full px-3 py-2.5 border border-slate-200 bg-white text-trd-primary rounded-xl font-mono;
+    @apply text-sm placeholder:text-slate-400;
+    @apply focus:outline-none focus:border-trd-secondary focus:bg-white focus:ring-1 focus:ring-trd-secondary;
     @apply transition-all duration-200;
   }
 }
@@ -105,18 +118,26 @@
 
   /* Glassmorphism utility */
   .glass-panel {
-    @apply bg-slate-950/40 backdrop-blur-lg border border-slate-900/60;
+    @apply bg-white/70 backdrop-blur-lg border border-slate-200/60;
   }
 
-  /* Neon glows */
+  /* Navy panel */
+  .navy-panel {
+    @apply bg-[#0F1A30] text-white border border-[#1E2E4A];
+  }
+
+  /* Gold glows */
+  .shadow-neon-gold {
+    @apply shadow-[0_0_15px_rgba(212,175,55,0.2)];
+  }
   .shadow-neon-blue {
-    @apply shadow-[0_0_15px_rgba(59,130,246,0.12)];
+    @apply shadow-[0_0_15px_rgba(15,26,48,0.1)];
   }
   .shadow-neon-green {
-    @apply shadow-[0_0_15px_rgba(16,185,129,0.12)];
+    @apply shadow-[0_0_15px_rgba(16,185,129,0.1)];
   }
   .shadow-neon-amber {
-    @apply shadow-[0_0_15px_rgba(245,158,11,0.12)];
+    @apply shadow-[0_0_15px_rgba(212,175,55,0.12)];
   }
   .shadow-neon-violet {
     @apply shadow-[0_0_15px_rgba(139,92,246,0.12)];
@@ -124,4 +145,16 @@
   .shadow-neon-red {
     @apply shadow-[0_0_15px_rgba(239,68,68,0.12)];
   }
+}
+
+/* Leaflet dark popups override */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #0F1A30 !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #1E2E4A !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(7, 13, 26, 0.5) !important;
+}
+.leaflet-popup-close-button {
+  color: #94A3B8 !important;
 }

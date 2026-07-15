@@ -1,5 +1,6 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
+set "PYTHONUTF8=1"
 echo =========================================================
 echo       TRD Lease Exchange (TRD-LEX) - Backend Setup
 echo =========================================================

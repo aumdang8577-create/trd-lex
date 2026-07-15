@@ -36,7 +36,7 @@ export default function EconomicDashboard() {
   }, []);
 
   return (
-    <div className="w-full bg-slate-900/60 backdrop-blur-md p-6 border border-slate-800/80 font-sans rounded-2xl shadow-2xl">
+    <div className="w-full bg-[#0F1A30] p-6 border border-[#1E2E4A]/80 font-sans rounded-2xl shadow-[0_12px_35px_rgba(7,13,26,0.3)]">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-base font-black text-white font-mono uppercase tracking-widest">
@@ -46,10 +46,10 @@ export default function EconomicDashboard() {
             รายงานสถิติสารสนเทศตามเวลาจริงเชื่อมโยงกับฐานข้อมูลทะเบียนกลางกรมธนารักษ์
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-val-v/10 text-val-v border border-val-v/30 px-3 py-1 font-mono font-black rounded-xl shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+        <div className="flex items-center gap-2 bg-emerald-950/40 text-emerald-300 border border-emerald-900/50 px-3 py-1 font-mono font-black rounded-xl shadow-[0_0_12px_rgba(16,185,129,0.1)]">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-val-v opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-val-v"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-450"></span>
           </span>
           <span className="text-[9px] uppercase tracking-wider">
             เชื่อมโยงสด
@@ -61,39 +61,39 @@ export default function EconomicDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
         
         {/* Card 1: Revived land */}
-        <div className="bg-slate-950/40 p-5 border border-slate-800/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-slate-700/60 hover:shadow-[0_0_18px_rgba(16,185,129,0.1)] rounded-xl">
-          <p className="text-[8px] font-black text-trd-primary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๑ // พื้นที่ราชพัสดุที่ได้รับการฟื้นฟูพัฒนาธุรกิจ</p>
+        <div className="bg-[#070D1A]/55 p-5 border border-[#1E2E4A]/60 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-trd-secondary/50 hover:shadow-[0_10px_20px_rgba(7,13,26,0.4)] rounded-xl">
+          <p className="text-[8px] font-black text-trd-secondary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๑ // พื้นที่ราชพัสดุที่ได้รับการฟื้นฟูพัฒนาธุรกิจ</p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-black text-val-v">
+            <h3 className="text-3xl font-black text-emerald-400">
               {data.revived_land_sqw.toLocaleString()}
             </h3>
-            <span className="text-[9px] font-black text-slate-500 uppercase">ตารางวา</span>
+            <span className="text-[9px] font-black text-slate-400 uppercase">ตารางวา</span>
           </div>
-          <span className="text-[9px] block text-slate-400 mt-2 font-sans font-bold">พื้นที่ที่เปลี่ยนเป็นธุรกิจใหม่</span>
+          <span className="text-[9px] block text-slate-300 mt-2 font-sans font-bold">พื้นที่ที่เปลี่ยนเป็นธุรกิจใหม่</span>
         </div>
 
         {/* Card 2: State revenue */}
-        <div className="bg-slate-950/40 p-5 border border-slate-800/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-slate-700/60 hover:shadow-[0_0_18px_rgba(245,158,11,0.1)] rounded-xl">
-          <p className="text-[8px] font-black text-trd-primary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๒ // ประมาณการรายได้ค่าธรรมเนียมนำส่งรัฐ</p>
+        <div className="bg-[#070D1A]/55 p-5 border border-[#1E2E4A]/60 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-trd-secondary/50 hover:shadow-[0_10px_20px_rgba(7,13,26,0.4)] rounded-xl">
+          <p className="text-[8px] font-black text-trd-secondary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๒ // ประมาณการรายได้ค่าธรรมเนียมนำส่งรัฐ</p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-black text-val-l">
+            <h3 className="text-3xl font-black text-trd-secondary">
               {data.state_revenue_baht.toLocaleString()}
             </h3>
-            <span className="text-[9px] font-black text-slate-500 uppercase">บาท</span>
+            <span className="text-[9px] font-black text-slate-400 uppercase">บาท</span>
           </div>
-          <span className="text-[9px] block text-slate-400 mt-2 font-sans font-bold">ประมาณการรายได้ค่าธรรมเนียมรัฐ</span>
+          <span className="text-[9px] block text-slate-300 mt-2 font-sans font-bold">ประมาณการรายได้ค่าธรรมเนียมรัฐ</span>
         </div>
 
         {/* Card 3: Economic circulation */}
-        <div className="bg-slate-950/40 p-5 border border-slate-800/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-slate-700/60 hover:shadow-[0_0_18px_rgba(59,130,246,0.1)] rounded-xl">
-          <p className="text-[8px] font-black text-trd-primary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๓ // มูลค่าธุรกรรมหมุนเวียนรวมในระบบตลาดรอง</p>
+        <div className="bg-[#070D1A]/55 p-5 border border-[#1E2E4A]/60 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-trd-secondary/50 hover:shadow-[0_10px_20px_rgba(7,13,26,0.4)] rounded-xl">
+          <p className="text-[8px] font-black text-trd-secondary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๓ // มูลค่าธุรกรรมหมวนเวียนรวมในระบบตลาดรอง</p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-black text-val-a">
+            <h3 className="text-3xl font-black text-white">
               {(data.economic_circulation_baht / 1000000).toFixed(2)}
             </h3>
-            <span className="text-[9px] font-black text-slate-500 uppercase">ล้านบาท</span>
+            <span className="text-[9px] font-black text-slate-400 uppercase">ล้านบาท</span>
           </div>
-          <span className="text-[9px] block text-slate-400 mt-2 font-sans font-bold">มูลค่าการลงทุนหมุนเวียนรวมในตลาด</span>
+          <span className="text-[9px] block text-slate-300 mt-2 font-sans font-bold">มูลค่าการลงทุนหมุนเวียนรวมในตลาด</span>
         </div>
 
       </div>

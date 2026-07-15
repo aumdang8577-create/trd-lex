@@ -100,24 +100,24 @@ export default function HomePage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
-    <div className="bg-[#070A13] text-white min-h-screen">
+    <div className="bg-trd-bg text-trd-primary min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-hero-gradient text-white overflow-hidden pb-28 pt-20 border-b border-slate-900">
+      <section className="relative bg-hero-gradient text-white overflow-hidden pb-28 pt-20 border-b border-[#1E2E4A]">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl animate-fade-in mb-12">
             {/* Verified badge */}
-            <div className="inline-flex items-center gap-2 bg-slate-950/60 border border-slate-800 px-3.5 py-1.5 mb-6 font-mono text-xs text-trd-primary uppercase tracking-widest font-bold rounded-full shadow-[0_0_15px_rgba(59,130,246,0.1)]">
-              <span className="w-2 h-2 bg-val-v rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-[#070D1A]/60 border border-[#1E2E4A] px-3.5 py-1.5 mb-6 font-mono text-xs text-trd-secondary uppercase tracking-widest font-bold rounded-full shadow-neon-gold">
+              <span className="w-2 h-2 bg-trd-secondary rounded-full animate-pulse" />
               สถานะระบบ // เปิดการใช้งานปกติ
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-none uppercase tracking-tight font-sans text-white">
               ตลาดรองสิทธิการเช่า
               <br />
-              <span className="text-trd-primary">ที่ราชพัสดุ</span>
+              <span className="text-trd-secondary">ที่ราชพัสดุ</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-400 mb-8 max-w-2xl leading-relaxed font-medium">
+            <p className="text-sm sm:text-base text-slate-300 mb-8 max-w-2xl leading-relaxed font-medium">
               แพลตฟอร์มการซื้อขายและโอนสิทธิการเช่าที่ราชพัสดุเพื่อความโปร่งใส 
               ตรวจสอบสัญญาเช่าผ่านระบบ Smart Validation และบริการยืนยันตัวตนดิจิทัลผ่านระบบ ThaID ของกรมธนารักษ์
             </p>
@@ -126,7 +126,7 @@ export default function HomePage() {
               <Button 
                 variant="primary" 
                 size="lg" 
-                className="font-black border border-slate-850 bg-trd-primary text-white rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-trd-primary-dark transition-all duration-150" 
+                className="font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150" 
                 onClick={() => window.location.href = "/listings"}
               >
                 ค้นหาแปลงที่ดิน
@@ -134,7 +134,7 @@ export default function HomePage() {
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="font-black border border-slate-800 text-white bg-slate-950/40 rounded-xl hover:bg-slate-900 transition-all duration-150" 
+                className="font-black border border-[#1E2E4A] text-white bg-[#070D1A]/40 rounded-xl hover:bg-[#1E2E4A]/40 transition-all duration-150" 
                 onClick={() => setIsCreateOpen(true)}
               >
                 ลงทะเบียนประกาศโอนสิทธิ์
@@ -159,30 +159,30 @@ export default function HomePage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 px-6 py-5.5 flex flex-col justify-between animate-slide-up rounded-2xl shadow-xl hover:border-slate-700/80 transition-all duration-300"
+              className="bg-[#0F1A30] border border-[#1E2E4A]/80 px-6 py-5.5 flex flex-col justify-between animate-slide-up rounded-2xl shadow-2xl hover:border-trd-secondary/40 transition-all duration-300"
             >
-              <div className="text-[9px] text-trd-primary font-black uppercase tracking-widest">{stat.code}</div>
+              <div className="text-[9px] text-trd-secondary-dark font-black uppercase tracking-widest">{stat.code}</div>
               <div className="text-3xl font-black text-white mt-1">
                 {stat.value}
               </div>
-              <div className="text-[11px] text-slate-400 mt-1 font-sans font-bold">{stat.label}</div>
+              <div className="text-[11px] text-slate-350 mt-1 font-sans font-bold">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Warning Banner (Disclaimer - Swiss Red alert style) */}
+      {/* Warning Banner (Disclaimer - Soft light Red style) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="bg-val-e/10 border border-val-e/30 border-l-4 border-l-val-e p-4 rounded-xl shadow-lg text-white">
+        <div className="bg-red-50 border border-red-200 border-l-4 border-l-red-500 p-4 rounded-xl shadow-sm text-slate-700">
           <div className="flex">
-            <div className="flex-shrink-0 font-mono text-val-e text-xs font-black tracking-widest uppercase">
+            <div className="flex-shrink-0 font-mono text-red-650 text-xs font-black tracking-widest uppercase">
               [ประกาศคำชี้แจงส่วนราชการ]
             </div>
             <div className="ml-4">
-              <h3 className="text-xs font-black text-val-e uppercase tracking-wider font-mono">
+              <h3 className="text-xs font-black text-red-700 uppercase tracking-wider font-mono">
                 ข้อควรทราบก่อนการเจรจาโอนสิทธิ
               </h3>
-              <div className="mt-1 text-xs text-slate-300 leading-relaxed font-sans font-medium">
+              <div className="mt-1 text-xs text-slate-650 leading-relaxed font-sans font-medium">
                 <p>
                   TRD-LEX เป็นเพียงแพลตฟอร์มกลางในการแสดงข้อมูลทำเลศักยภาพเท่านั้น 
                   <strong> การทำธุรกรรมเพื่อเปลี่ยนแปลงชื่อผู้เช่าในสัญญาอย่างสมบูรณ์ จะต้องดำเนินการ ณ สำนักงานธนารักษ์พื้นที่ที่รับผิดชอบเท่านั้น</strong> 
@@ -197,12 +197,12 @@ export default function HomePage() {
       {/* Featured Properties Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
-          <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+          <span className="text-[9px] font-mono text-trd-secondary-dark uppercase tracking-widest font-black">
             รายการแนะนำประจำสัปดาห์
           </span>
-          <h2 className="text-2xl font-black text-white uppercase mt-1 font-sans tracking-wide">รายการแนะนำสิทธิการเช่า</h2>
-          <div className="w-20 h-0.5 bg-slate-800 mx-auto mt-4" />
-          <p className="mt-4 text-xs text-slate-400 max-w-xl mx-auto font-sans leading-relaxed">
+          <h2 className="text-2xl font-black text-trd-primary uppercase mt-1 font-sans tracking-wide">รายการแนะนำสิทธิการเช่า</h2>
+          <div className="trd-gold-divider mx-auto mt-4" />
+          <p className="mt-4 text-xs text-slate-500 max-w-xl mx-auto font-sans leading-relaxed">
             แปลงที่ราชพัสดุศักยภาพสูงที่ยืนยันข้อมูลสัญญาผ่านระบบ Smart Validation สำเร็จแล้ว
           </p>
         </div>
@@ -234,15 +234,15 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-slate-950 border-t border-b border-slate-900 py-24">
+      <section className="bg-white border-t border-b border-slate-200/80 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+            <span className="text-[9px] font-mono text-trd-secondary-dark uppercase tracking-widest font-black">
               กลไกการให้บริการของระบบ
             </span>
-            <h2 className="text-2xl font-black text-white uppercase mt-1 font-sans tracking-wide">ฟีเจอร์หลักของระบบ</h2>
-            <div className="w-20 h-0.5 bg-slate-800 mx-auto mt-4" />
-            <p className="mt-4 text-xs text-slate-400 max-w-xl mx-auto leading-relaxed font-medium font-sans">
+            <h2 className="text-2xl font-black text-trd-primary uppercase mt-1 font-sans tracking-wide">ฟีเจอร์หลักของระบบ</h2>
+            <div className="trd-gold-divider mx-auto mt-4" />
+            <p className="mt-4 text-xs text-slate-500 max-w-xl mx-auto leading-relaxed font-medium font-sans">
               ออกแบบเพื่อความโปร่งใสและการตรวจสอบได้ทุกขั้นตอน
             </p>
           </div>
@@ -280,17 +280,17 @@ export default function HomePage() {
                 badge: "การรับรองข้อมูลทะเบียนกรมธนารักษ์",
               },
             ].map((feature, idx) => (
-              <div key={feature.title} className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 hover:-translate-y-1 hover:border-slate-700/80 transition-all duration-300 group">
-                <div className="text-[9px] font-mono text-trd-primary mb-3 uppercase tracking-widest font-black">
+              <div key={feature.title} className="bg-[#0F1A30] border border-[#1E2E4A]/80 rounded-2xl p-6 hover:-translate-y-1 hover:border-trd-secondary/50 hover:shadow-[0_10px_25px_rgba(7,13,26,0.3)] transition-all duration-300 group">
+                <div className="text-[9px] font-mono text-trd-secondary mb-3 uppercase tracking-widest font-black">
                   [ ระบบงานย่อยที่ ๐{idx + 1} ]
                 </div>
-                <div className="inline-block bg-val-u/10 border border-val-u/30 text-val-u text-[8px] font-black font-mono px-2 py-0.5 rounded-full tracking-widest uppercase mb-3 font-sans shadow-[0_0_10px_rgba(139,92,246,0.15)]">
+                <div className="inline-block bg-purple-950/40 border border-purple-900/50 text-purple-300 text-[8px] font-black font-mono px-2.5 py-1 rounded-full tracking-widest uppercase mb-3 font-sans shadow-[0_0_10px_rgba(139,92,246,0.1)]">
                   {feature.badge}
                 </div>
-                <h3 className="text-sm font-black text-white mb-2 font-mono">
+                <h3 className="text-sm font-black text-white mb-2 font-mono group-hover:text-trd-secondary-light transition-colors duration-200">
                   {feature.title}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed font-sans font-medium">
+                <p className="text-xs text-slate-300 leading-relaxed font-sans font-medium">
                   {feature.desc}
                 </p>
               </div>
@@ -300,19 +300,19 @@ export default function HomePage() {
       </section>
 
       {/* CTA Footer */}
-      <section className="bg-hero-gradient border-b border-slate-900 py-24">
+      <section className="bg-hero-gradient border-b border-[#1E2E4A] py-24">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
+          <span className="text-[9px] font-mono text-trd-secondary uppercase tracking-widest font-black">
             ขั้นตอนการเริ่มใช้งานระบบ
           </span>
           <h2 className="text-2xl font-black mb-4 font-sans tracking-wide text-white mt-1">พร้อมเริ่มต้นใช้งาน?</h2>
-          <p className="text-slate-400 mb-8 text-xs max-w-md mx-auto leading-relaxed font-sans font-medium">
+          <p className="text-slate-300 mb-8 text-xs max-w-md mx-auto leading-relaxed font-sans font-medium">
             เข้าสู่ระบบดิจิทัลด้วยบัญชีการยืนยันสิทธิ์ ThaID เพื่อเริ่มดำเนินการหรือวิเคราะห์ทำเลศักยภาพที่ราชพัสดุ
           </p>
           <Button 
             variant="primary" 
             size="lg" 
-            className="font-mono text-xs uppercase tracking-widest font-black border border-slate-800 bg-trd-primary text-white rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:bg-trd-primary-dark transition-all duration-150 py-2.5 px-6"
+            className="font-mono text-xs uppercase tracking-widest font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150 py-2.5 px-6"
             onClick={() => window.location.href = "/login"}
           >
             ลงชื่อเข้าใช้งานผ่านระบบ ThaID

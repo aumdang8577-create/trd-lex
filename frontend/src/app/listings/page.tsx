@@ -250,26 +250,26 @@ export default function ListingsPage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white border-2 border-trd-border overflow-hidden animate-pulse rounded-none shadow-flat">
+                <div key={i} className="bg-[#0F1A30] border border-[#1E2E4A]/80 overflow-hidden animate-pulse rounded-2xl shadow-lg">
                   {/* Image Skeleton */}
-                  <div className="h-44 bg-slate-200" />
+                  <div className="h-44 bg-slate-900/80" />
                   {/* Content Skeleton */}
                   <div className="p-5 space-y-4">
                     <div className="flex justify-between items-center">
-                      <div className="h-3 bg-slate-200 rounded w-1/3" />
-                      <div className="h-4 bg-slate-200 rounded w-1/4" />
+                      <div className="h-3 bg-slate-800 rounded w-1/3" />
+                      <div className="h-4 bg-slate-800 rounded w-1/4" />
                     </div>
                     
-                    <div className="h-5 bg-slate-200 rounded w-3/4" />
+                    <div className="h-5 bg-slate-800 rounded w-3/4" />
                     
                     <div className="space-y-2 pt-2">
-                      <div className="h-2.5 bg-slate-200 rounded w-5/6" />
-                      <div className="h-2.5 bg-slate-200 rounded w-4/5" />
+                      <div className="h-2.5 bg-slate-800 rounded w-5/6" />
+                      <div className="h-2.5 bg-slate-800 rounded w-4/5" />
                     </div>
 
-                    <div className="flex gap-2 pt-3 border-t-2 border-trd-border/20">
-                      <div className="h-3 bg-slate-200 rounded w-1/4" />
-                      <div className="h-3 bg-slate-200 rounded w-1/4" />
+                    <div className="flex gap-2 pt-3 border-t border-[#1E2E4A]/60">
+                      <div className="h-3 bg-slate-800 rounded w-1/4" />
+                      <div className="h-3 bg-slate-800 rounded w-1/4" />
                     </div>
                   </div>
                 </div>
@@ -296,7 +296,7 @@ export default function ListingsPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white border-2 border-trd-border p-12 text-center text-trd-text-muted font-mono text-xs uppercase tracking-widest font-bold rounded-none shadow-flat">
+            <div className="bg-[#0F1A30] border border-[#1E2E4A]/80 p-12 text-center text-slate-400 font-mono text-xs uppercase tracking-widest font-bold rounded-2xl shadow-lg">
               [ ไม่พบข้อมูลทะเบียนสัญญาเช่าตามเงื่อนไขที่ระบุ ]
             </div>
           )}
@@ -304,11 +304,11 @@ export default function ListingsPage() {
 
         {/* Map View */}
         <div className="lg:col-span-5 lg:sticky lg:top-24">
-          <div className="bg-white border-2 border-trd-border overflow-hidden shadow-flat rounded-none">
-            <div className="p-3 bg-slate-50 text-trd-midnight font-mono text-xs uppercase tracking-widest font-black flex items-center justify-between border-b-2 border-trd-border">
+          <div className="bg-[#0F1A30] border border-[#1E2E4A]/80 overflow-hidden shadow-[0_12px_35px_rgba(7,13,26,0.35)] rounded-2xl">
+            <div className="p-4 bg-[#070D1A] text-white font-mono text-xs uppercase tracking-widest font-black flex items-center justify-between border-b border-[#1E2E4A]">
               <span>แผนที่ระบบสารสนเทศภูมิศาสตร์แสดงพิกัดที่ดิน</span>
-              <span className="text-[8px] bg-val-e border border-trd-border text-white px-1.5 py-0.5 font-bold font-mono rounded-none">
-                แผนที่แสดงผลปกติ
+              <span className="text-[8px] bg-gold-gradient border border-transparent text-[#0F1A30] px-2 py-0.5 font-extrabold font-mono rounded-lg shadow-neon-gold">
+                DARK MAP ACTIVE
               </span>
             </div>
             <LeaseMap listings={listings} className="!rounded-none !border-none !h-[450px]" />

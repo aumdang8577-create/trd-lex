@@ -45,26 +45,28 @@ export default function LeaseMap({
         scrollWheelZoom: true,
       });
 
-      // Add OpenStreetMap tile layer
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      // Add CartoDB Dark Matter tile layer (Dark/Midnight Map)
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19,
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 20,
       }).addTo(map);
 
-      // Custom TRD marker icon (Cyber glow circle)
+      // Custom TRD marker icon (Gold border & Navy circle with cyber glow)
       const trdIcon = L.divIcon({
         className: "trd-map-marker",
         html: `
           <div style="
-            background: #3B82F6;
+            background: #0F1A30;
             width: 28px; height: 28px;
-            border: 1.5px solid #1E293B;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.45);
+            border: 2px solid #D4AF37;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
             display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
+            transition: all 0.2s ease-in-out;
           ">
-            <span style="color: white; font-family: monospace; font-size: 11px; font-weight: 900;">ธน.</span>
+            <span style="color: #D4AF37; font-family: monospace; font-size: 11px; font-weight: 900;">ธน.</span>
           </div>
         `,
         iconSize: [28, 28],
@@ -86,15 +88,15 @@ export default function LeaseMap({
           );
 
           marker.bindPopup(`
-            <div style="font-family: sans-serif; min-width: 200px; padding: 4px; color: #0F172A;">
-              <div style="font-weight: 900; color: #3B82F6; margin-bottom: 4px; font-size: 12px; text-transform: uppercase;">
+            <div style="font-family: sans-serif; min-width: 200px; padding: 4px;">
+              <div style="font-weight: 900; color: #D4AF37; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; font-family: monospace; tracking-wide: 0.05em;">
                 ${listing.contract.province} — ${listing.contract.district}
               </div>
-              <div style="font-size: 11px; color: #64748B; margin-bottom: 8px; font-weight: 500;">
+              <div style="font-size: 11px; color: #94A3B8; margin-bottom: 8px; font-weight: 500;">
                 แปลง ${listing.contract.parcel_number} • ${listing.contract.land_area_sqw} ตร.ว.
               </div>
-              <div style="font-size: 15px; font-weight: 900; color: #111827; font-family: monospace;">
-                ฿${priceFormatted}
+              <div style="font-size: 15px; font-weight: 900; color: #FFFFFF; font-family: monospace; display: flex; align-items: center; gap: 4px;">
+                <span>฿${priceFormatted}</span>
               </div>
               <div style="font-size: 9px; color: #10B981; margin-top: 6px; font-weight: 700; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.05em;">
                 [ผ่านการตรวจสอบสิทธิ์ธนารักษ์]
