@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import SearchBar from "@/components/features/SearchBar/SearchBar";
@@ -97,6 +98,7 @@ const mockListings: Listing[] = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
@@ -127,7 +129,7 @@ export default function HomePage() {
                 variant="primary" 
                 size="lg" 
                 className="font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150" 
-                onClick={() => window.location.href = "/listings"}
+                onClick={() => router.push("/listings")}
               >
                 ค้นหาแปลงที่ดิน
               </Button>
@@ -313,7 +315,7 @@ export default function HomePage() {
             variant="primary" 
             size="lg" 
             className="font-mono text-xs uppercase tracking-widest font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150 py-2.5 px-6"
-            onClick={() => window.location.href = "/login"}
+            onClick={() => router.push("/login")}
           >
             ลงชื่อเข้าใช้งานผ่านระบบ ThaID
           </Button>

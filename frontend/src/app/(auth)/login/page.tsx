@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -8,6 +9,7 @@ import Card, { CardHeader, CardContent, CardFooter } from "@/components/ui/Card"
 import api from "@/lib/api";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [thaidId, setThaidId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +31,7 @@ export default function LoginPage() {
       setSuccess(true);
       // Redirect or state update (in mock we just show login success)
       setTimeout(() => {
-        window.location.href = "/";
+        router.push("/");
       }, 1500);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "การเข้าสู่ระบบผิดพลาด");

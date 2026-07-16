@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -8,6 +9,7 @@ import Card, { CardHeader, CardContent, CardFooter } from "@/components/ui/Card"
 import api from "@/lib/api";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [contractNumber, setContractNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -123,7 +125,7 @@ export default function RegisterPage() {
                 <Button
                   variant="primary"
                   onClick={() => {
-                    window.location.href = "/login";
+                    router.push("/login");
                   }}
                   className="flex-1 py-3"
                 >

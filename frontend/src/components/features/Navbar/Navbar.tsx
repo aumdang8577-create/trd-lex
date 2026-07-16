@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 type UserRole = "GUEST" | "SELLER" | "INVESTOR";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [role, setRole] = useState<UserRole>("GUEST");
 
@@ -24,7 +26,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     handleRoleChange("GUEST");
-    window.location.href = "/";
+    router.push("/");
   };
 
   // Dynamic menu definitions
@@ -136,7 +138,7 @@ export default function Navbar() {
                 variant="primary"
                 size="sm"
                 className="!bg-gold-gradient border border-transparent text-[#0F1A30] text-xs font-black font-mono py-1.5 px-4 rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150"
-                onClick={() => window.location.href = "/login"}
+                onClick={() => router.push("/login")}
               >
                 ลงชื่อเข้าใช้ด้วย ThaID
               </Button>
@@ -315,7 +317,7 @@ export default function Navbar() {
                   variant="primary"
                   size="sm"
                   className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-transparent text-xs py-2 shadow-neon-gold bg-gold-gradient text-[#0F1A30] font-mono font-black"
-                  onClick={() => window.location.href = "/login"}
+                  onClick={() => router.push("/login")}
                 >
                   ลงชื่อเข้าใช้ด้วย ThaID
                 </Button>
