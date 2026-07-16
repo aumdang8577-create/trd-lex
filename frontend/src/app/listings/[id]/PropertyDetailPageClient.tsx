@@ -394,7 +394,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
         <div className="lg:col-span-8 space-y-8">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <Badge variant="valid">เปิดเสนอขาย</Badge>
+              <Badge variant="valid">เปิดข้อเสนอหาผู้รับโอนสิทธิ</Badge>
               <span className="trd-verified-badge text-[10px]">
                 ✅ Verified by TRD (Smart Validation)
               </span>
