@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
   output: isGithubActions ? "export" : "standalone",
   // กำหนด subpath ของ repository สำหรับ GitHub Pages
   basePath: isGithubActions ? "/trd-lex" : "",
+  // บังคับใช้ trailing slash เพื่อให้การเปิดลิงก์ย่อยตรงๆ ทำงานได้บน GitHub Pages
+  trailingSlash: true,
 };
 
 export default nextConfig;
