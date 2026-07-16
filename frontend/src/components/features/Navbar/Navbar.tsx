@@ -61,126 +61,132 @@ export default function Navbar() {
     <nav className="sticky top-0 z-40 backdrop-blur-lg bg-[#0F1A30]/95 border-b-2 border-trd-secondary shadow-[0_4px_20px_rgba(15,26,48,0.25)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative w-10 h-10 transition-transform duration-200 group-hover:-translate-y-0.5">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png"
-                alt="ตราสัญลักษณ์กรมธนารักษ์"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div>
-              <span className="text-lg font-black text-white uppercase tracking-tight">TRD</span>
-              <span className="text-lg font-black text-trd-secondary uppercase tracking-tight">-LEX</span>
-              <p className="text-[8px] text-slate-300 -mt-1 font-bold leading-tight font-mono uppercase tracking-widest">
-                ตลาดรองสิทธิการเช่าที่ราชพัสดุ
-              </p>
-            </div>
-          </Link>
+          {/* Left Section: Logo & Nav Links */}
+          <div className="flex items-center gap-8">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="relative w-10 h-10 transition-transform duration-200 group-hover:-translate-y-0.5">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png"
+                  alt="ตราสัญลักษณ์กรมธนารักษ์"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <span className="text-lg font-black text-white uppercase tracking-tight">TRD</span>
+                <span className="text-lg font-black text-trd-secondary uppercase tracking-tight">-LEX</span>
+                <p className="text-[8px] text-slate-300 -mt-1 font-bold leading-tight font-mono uppercase tracking-widest">
+                  ตลาดรองสิทธิการเช่าที่ราชพัสดุ
+                </p>
+              </div>
+            </Link>
 
-          {/* Role Demonstration Selector (Cyber glass tabs) */}
-          <div className="hidden lg:flex items-center gap-1.5 bg-[#070D1A] p-1 border border-[#1E2E4A] rounded-xl text-[10px] font-mono shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-            <span className="text-slate-400 px-2 font-bold uppercase">ระบบจำลองบทบาท:</span>
-            {[
-              { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
-              { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
-              { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
-            ].map((r) => (
-              <button
-                key={r.id}
-                onClick={() => handleRoleChange(r.id as UserRole)}
-                className={`px-3 py-1 transition-all font-black border rounded-lg ${
-                  role === r.id
-                    ? "bg-gold-gradient text-[#0F1A30] border-transparent shadow-neon-gold"
-                    : "text-slate-400 border-transparent hover:text-white"
-                }`}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) =>
-              link.hasMega ? (
-                <div
-                  key={link.label}
-                  className="relative h-16 flex items-center"
-                  onMouseEnter={() => setIsMegaOpen(true)}
-                  onMouseLeave={() => setIsMegaOpen(false)}
-                >
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) =>
+                link.hasMega ? (
+                  <div
+                    key={link.label}
+                    className="relative h-16 flex items-center"
+                    onMouseEnter={() => setIsMegaOpen(true)}
+                    onMouseLeave={() => setIsMegaOpen(false)}
+                  >
+                    <Link
+                      href={link.href}
+                      className="text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-trd-secondary transition-colors flex items-center gap-1 font-mono"
+                    >
+                      {link.label}
+                      <span className="text-[8px]">▼</span>
+                    </Link>
+                  </div>
+                ) : (
                   <Link
+                    key={link.label}
                     href={link.href}
-                    className="text-xs font-bold uppercase tracking-wider text-slate-350 hover:text-trd-secondary transition-colors flex items-center gap-1 font-mono"
+                    className="text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-trd-secondary transition-colors font-mono"
                   >
                     {link.label}
-                    <span className="text-[8px]">▼</span>
                   </Link>
-                </div>
-              ) : (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="text-xs font-bold uppercase tracking-wider text-slate-350 hover:text-trd-secondary transition-colors font-mono"
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
-          </div>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            {role === "GUEST" ? (
-              <Button
-                variant="primary"
-                size="sm"
-                className="!bg-gold-gradient border border-transparent text-[#0F1A30] text-xs font-black font-mono py-1.5 px-4 rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150"
-                onClick={() => router.push("/login")}
-              >
-                ลงชื่อเข้าใช้ด้วย ThaID
-              </Button>
-            ) : (
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col text-right font-mono">
-                  <span className="text-xs font-black text-white">
-                    {role === "SELLER" ? "สมชาย ใจดี" : "ผู้แทนบริษัท พัฒนาจำกัด"}
-                  </span>
-                  <span className="text-[8px] text-trd-secondary uppercase tracking-wider font-extrabold">
-                    [ยืนยันตัวตนผ่าน ThaID]
-                  </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="text-xs font-black text-red-400 hover:text-red-300 font-mono uppercase tracking-wider border border-[#1E2E4A] rounded-lg px-2.5 py-1 bg-[#1E2E4A]/30 hover:bg-[#1E2E4A]/60 transition-colors"
-                >
-                  ออกจากระบบ
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile Hamburger */}
-          <button
-            className="md:hidden w-10 h-10 flex items-center justify-center border border-[#1E2E4A] hover:bg-[#1E2E4A]/50 rounded-xl transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="เปิดเมนู"
-          >
-            <svg
-              className="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                )
               )}
-            </svg>
-          </button>
+            </div>
+          </div>
+
+          {/* Right Section: Role Selector, Actions, Mobile Hamburger */}
+          <div className="flex items-center gap-4">
+            {/* Role Demonstration Selector (Cyber glass tabs) */}
+            <div className="hidden lg:flex items-center gap-1.5 bg-[#070D1A] p-1 border border-[#1E2E4A] rounded-xl text-[10px] font-mono shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+              <span className="text-slate-400 px-2 font-bold uppercase">ระบบจำลองบทบาท:</span>
+              {[
+                { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
+                { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
+                { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
+              ].map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => handleRoleChange(r.id as UserRole)}
+                  className={`px-3 py-1 transition-all font-black border rounded-lg ${
+                    role === r.id
+                      ? "bg-gold-gradient text-[#0F1A30] border-transparent shadow-neon-gold"
+                      : "text-slate-400 border-transparent hover:text-white"
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-3">
+              {role === "GUEST" ? (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="!bg-gold-gradient border border-transparent text-[#0F1A30] text-xs font-black font-mono py-1.5 px-4 rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150"
+                  onClick={() => router.push("/login")}
+                >
+                  ลงชื่อเข้าใช้ด้วย ThaID
+                </Button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col text-right font-mono">
+                    <span className="text-xs font-black text-white">
+                      {role === "SELLER" ? "สมชาย ใจดี" : "ผู้แทนบริษัท พัฒนาจำกัด"}
+                    </span>
+                    <span className="text-[8px] text-trd-secondary uppercase tracking-wider font-extrabold">
+                      [ยืนยันตัวตนผ่าน ThaID]
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="text-xs font-black text-red-400 hover:text-red-300 font-mono uppercase tracking-wider border border-[#1E2E4A] rounded-lg px-2.5 py-1 bg-[#1E2E4A]/30 hover:bg-[#1E2E4A]/60 transition-colors"
+                  >
+                    ออกจากระบบ
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden w-10 h-10 flex items-center justify-center border border-[#1E2E4A] hover:bg-[#1E2E4A]/50 rounded-xl transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="เปิดเมนู"
+            >
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -205,7 +211,7 @@ export default function Navbar() {
                   { name: "ภาคตะวันออก (ชลบุรี & ระยอง)", query: "province=ชลบุรี" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-350 hover:text-white hover:underline block py-0.5 font-bold">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
                       {item.name}
                     </Link>
                   </li>
@@ -225,7 +231,7 @@ export default function Navbar() {
                   { name: "พื้นที่เชื่อมต่อฉะเชิงเทรา", query: "query=ฉะเชิงเทรา" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-350 hover:text-white hover:underline block py-0.5 flex items-center gap-1.5 font-bold">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 flex items-center gap-1.5 font-bold">
                       <span>{item.name}</span>
                       <span className="text-[8px] bg-trd-secondary/15 text-trd-secondary border border-trd-secondary/30 px-1 py-0.5 font-mono font-black rounded">EEC</span>
                     </Link>
@@ -246,7 +252,7 @@ export default function Navbar() {
                   { name: "พื้นที่ขนส่งสินค้าหนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-350 hover:text-white hover:underline block py-0.5 font-bold">
+                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
                       {item.name}
                     </Link>
                   </li>
