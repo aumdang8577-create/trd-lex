@@ -7,8 +7,8 @@ import sys
 import httpx
 
 # Disable all proxies for localhost/internal communication during tests
-os.environ["NO_PROXY"] = "*"
-os.environ["no_proxy"] = "*"
+os.environ["NO_PROXY"] = "localhost,127.0.0.1,::1"
+os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
 # Force the DATABASE_URL to point to the test database (allow environment override)
 os.environ["DATABASE_URL"] = os.environ.get(
@@ -21,6 +21,7 @@ def setup_db():
     print("\n[conftest] Resetting and pushing test database schema...")
     env = os.environ.copy()
     env["DATABASE_URL"] = os.environ["DATABASE_URL"]
+    env["PYTHONUTF8"] = "1"
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     schema_path = os.path.join(base_dir, "prisma", "schema.prisma")
