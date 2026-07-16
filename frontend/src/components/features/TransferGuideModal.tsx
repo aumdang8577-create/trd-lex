@@ -189,19 +189,19 @@ export default function TransferGuideModal({ isOpen, onClose }: TransferGuideMod
                 <h5 className="font-black text-trd-midnight border-b-2 border-trd-border pb-1 text-xs font-mono uppercase tracking-wider">เอกสารของผู้ขอโอนสิทธิการเช่า (ผู้เช่าเดิม)</h5>
                 <ul className="space-y-1.5 text-[11px] text-trd-text-muted font-sans font-medium">
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferor-contract" name="docTransferorContract" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>สัญญาเช่าที่ราชพัสดุฉบับจริง (คู่ฉบับของผู้เช่า)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferor-receipt" name="docTransferorReceipt" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>ใบเสร็จรับเงินค่าเช่าปีล่าสุด</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferor-id" name="docTransferorId" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>สำเนาบัตรประชาชน และสำเนาทะเบียนบ้าน</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferor-family" name="docTransferorFamily" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>หลักฐานยืนยันความสัมพันธ์ครอบครัว (ถ้ามี เพื่อขอรับส่วนลด)</span>
                   </li>
                 </ul>
@@ -212,19 +212,19 @@ export default function TransferGuideModal({ isOpen, onClose }: TransferGuideMod
                 <h5 className="font-black text-trd-midnight border-b-2 border-trd-border pb-1 text-xs font-mono uppercase tracking-wider">เอกสารของผู้ขอรับโอนสิทธิการเช่า (ผู้เช่ารายใหม่)</h5>
                 <ul className="space-y-1.5 text-[11px] text-trd-text-muted font-sans font-medium">
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferee-id" name="docTransfereeId" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>สำเนาบัตรประชาชน และสำเนาทะเบียนบ้าน</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferee-intent" name="docTransfereeIntent" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>หนังสือแสดงความจำนงขอเช่าที่ดินราชพัสดุ (กรอกที่สำนักงาน)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferee-map" name="docTransfereeMap" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>แผนที่สังเขปแสดงขอบเขตที่ต้องการใช้งาน</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <input type="checkbox" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
+                    <input type="checkbox" id="doc-transferee-plan" name="docTransfereePlan" readOnly checked className="mt-0.5 rounded text-trd-primary accent-trd-primary" />
                     <span>แผนดำเนินงานพัฒนาธุรกิจ/วัตถุประสงค์การใช้ประโยชน์</span>
                   </li>
                 </ul>

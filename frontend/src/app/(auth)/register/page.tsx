@@ -74,6 +74,8 @@ export default function RegisterPage() {
           {!validatedData ? (
             <form onSubmit={handleValidate} className="space-y-6">
               <Input
+                id="register-contract-number"
+                name="contractNumber"
                 label="เลขที่สัญญาเช่าที่ราชพัสดุ"
                 placeholder="ระบุรหัสสัญญาเช่าของคุณ"
                 value={contractNumber}

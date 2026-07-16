@@ -57,6 +57,8 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
           จังหวัด
         </label>
         <select
+          id="search-province"
+          name="province"
           value={province}
           title="เลือกจังหวัด"
           onChange={(e) => setProvince(e.target.value)}
@@ -77,6 +79,8 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
           อำเภอ / เขต
         </label>
         <input
+          id="search-district"
+          name="district"
           type="text"
           placeholder="เช่น เมืองอุดรธานี"
           value={district}
@@ -91,6 +95,8 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
           ราคาเริ่มต้น (บาท)
         </label>
         <input
+          id="search-min-price"
+          name="minPrice"
           type="number"
           placeholder="ระบุราคาต่ำสุด"
           value={minPrice}
@@ -105,6 +111,8 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
           ราคาสูงสุด (บาท)
         </label>
         <input
+          id="search-max-price"
+          name="maxPrice"
           type="number"
           placeholder="ระบุราคาสูงสุด"
           value={maxPrice}
@@ -119,6 +127,8 @@ export default function SearchBar({ onSearch, className = "" }: SearchBarProps) 
           เขตการใช้ประโยชน์ที่ดิน
         </label>
         <select
+          id="search-zoning"
+          name="zoning"
           value={zoning}
           title="เลือกผังเมือง"
           onChange={(e) => setZoning(e.target.value)}

@@ -70,6 +70,8 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
+              id="login-thaid"
+              name="thaidId"
               label="เลขประจำตัวประชาชน (ThaID)"
               placeholder="กรอกเลข 13 หลักของบัญชีทดสอบ"
               value={thaidId}

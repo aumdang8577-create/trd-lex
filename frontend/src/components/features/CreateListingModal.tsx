@@ -138,6 +138,8 @@ export default function CreateListingModal({
             <h4 className="font-black text-trd-primary uppercase tracking-wider font-mono text-sm">ขั้นตอนที่ 1: ตรวจสอบสัญญาเช่าที่ราชพัสดุ</h4>
             <p className="text-xs text-trd-text-muted font-bold">กรุณากรอกรหัสเลขสัญญาของคุณเพื่อยืนยันตัวตนและความถูกต้องของแปลงที่ดินกับฐานข้อมูลกรมธนารักษ์</p>
             <Input
+              id="listing-contract-number"
+              name="contractNumber"
               label="เลขที่สัญญาเช่า"
               placeholder="ตัวอย่าง: TRD-66-001 หรือ TRD-66-002"
               value={contractNumber}
@@ -158,6 +160,8 @@ export default function CreateListingModal({
             <h4 className="font-black text-trd-primary uppercase tracking-wider font-mono text-sm">ขั้นตอนที่ 2: ระบุข้อมูลการเสนอขายและตั้งราคา</h4>
             <p className="text-xs text-trd-text-muted font-bold">แปลง {contractData?.parcel_number} ({contractData?.province}) ขนาด {contractData?.land_area_sqw} ตร.ว.</p>
             <Input
+              id="listing-asking-price"
+              name="askingPrice"
               label="ราคาเสนอขายสิทธิ์ (บาท)"
               type="number"
               placeholder="ระบุตัวเลขจำนวนเงิน"
@@ -168,6 +172,8 @@ export default function CreateListingModal({
             <div className="w-full font-sans">
               <label className="block text-xs font-black text-trd-midnight mb-1.5 uppercase tracking-widest font-mono">คำอธิบายรายละเอียดที่ดิน</label>
               <textarea
+                id="listing-description"
+                name="description"
                 className="trd-input min-h-[100px] resize-none"
                 placeholder="ระบุข้อดี จุดเด่น ทำเล สภาพสิ่งปลูกสร้าง"
                 value={description}
@@ -190,6 +196,8 @@ export default function CreateListingModal({
             {imageUrls.map((url, index) => (
               <div key={index} className="flex gap-2 items-center">
                 <Input
+                  id={`listing-image-url-${index}`}
+                  name={`imageUrl${index}`}
                   placeholder="https://images.unsplash.com/..."
                   value={url}
                   onChange={(e) => {

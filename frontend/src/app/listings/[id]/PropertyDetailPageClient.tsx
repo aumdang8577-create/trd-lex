@@ -505,6 +505,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                   <div className="flex items-center justify-between bg-trd-primary/5 px-2.5 py-2 rounded-lg border border-trd-primary/10">
                     <span className="text-[10px] font-semibold text-trd-primary">เปิดเครื่องคำนวณขั้นสูง (ระเบียบราชการ)</span>
                     <input
+                      id="calc-detailed-mode"
+                      name="detailedCalc"
                       type="checkbox"
                       checked={isDetailedCalc}
                       title="คำนวณแบบละเอียด"
@@ -518,6 +520,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                       <div>
                         <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">วัตถุประสงค์การเช่า</label>
                         <select
+                          id="calc-purpose"
+                          name="calcPurpose"
                           value={calcPurpose}
                           onChange={(e: any) => setCalcPurpose(e.target.value)}
                           className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
@@ -532,6 +536,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <div>
                           <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ภูมิภาค</label>
                           <select
+                            id="calc-region"
+                            name="calcRegion"
                             value={calcRegion}
                             onChange={(e: any) => setCalcRegion(e.target.value)}
                             className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
@@ -543,6 +549,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <div>
                           <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ระดับทำเล</label>
                           <select
+                            id="calc-class"
+                            name="calcClass"
                             value={calcClass}
                             onChange={(e: any) => setCalcClass(e.target.value)}
                             className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
@@ -558,6 +566,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <div>
                           <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">เนื้อที่ดิน (ตร.ว.)</label>
                           <input
+                            id="calc-land-area"
+                            name="calcLandArea"
                             type="number"
                             value={calcLandArea}
                             onChange={(e) => setCalcLandArea(Number(e.target.value))}
@@ -567,6 +577,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <div>
                           <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ป.ม. ที่ดิน (บาท/ตร.ว.)</label>
                           <input
+                            id="calc-appraisal"
+                            name="calcAppraisal"
                             type="number"
                             value={calcAppraisal}
                             onChange={(e) => setCalcAppraisal(Number(e.target.value))}
@@ -578,6 +590,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                       <div>
                         <label className="block text-[9px] text-gray-500 font-semibold mb-0.5">ประเภทอาคาร</label>
                         <select
+                          id="calc-building-type"
+                          name="calcBuildingType"
                           value={calcBuildingType}
                           onChange={(e: any) => setCalcBuildingType(e.target.value)}
                           className="w-full px-2 py-1 rounded border border-trd-border bg-white text-[11px] text-gray-700"
@@ -595,6 +609,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                           <div>
                             <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">พท.ใช้สอย(ตรม.)</label>
                             <input
+                              id="calc-usable-area"
+                              name="calcUsableArea"
                               type="number"
                               value={calcUsableArea}
                               onChange={(e) => setCalcUsableArea(Number(e.target.value))}
@@ -604,6 +620,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                           <div>
                             <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">ป.ม.อาคาร(/ตรม)</label>
                             <input
+                              id="calc-bld-appraisal"
+                              name="calcBldAppraisal"
                               type="number"
                               value={calcBldAppraisal}
                               onChange={(e) => setCalcBldAppraisal(Number(e.target.value))}
@@ -613,6 +631,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                           <div>
                             <label className="block text-[8px] text-gray-500 font-semibold mb-0.5">ค่าเสื่อมสะสม(%)</label>
                             <input
+                              id="calc-depreciation"
+                              name="calcDepreciation"
                               type="number"
                               value={calcDepreciation}
                               onChange={(e) => setCalcDepreciation(Number(e.target.value))}
@@ -629,6 +649,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                       ประเภทผู้รับโอน
                     </label>
                     <select
+                      id="calc-transfer-type"
+                      name="calcType"
                       value={calcType}
                       title="เลือกประเภทผู้รับโอน"
                       onChange={(e) => setCalcType(e.target.value as any)}
@@ -647,6 +669,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                         <span className="text-trd-primary font-bold">{calcShare}%</span>
                       </label>
                       <input
+                        id="calc-share"
+                        name="calcShare"
                         type="range"
                         min="1"
                         max="100"
