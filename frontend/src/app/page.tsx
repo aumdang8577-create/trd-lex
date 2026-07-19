@@ -113,7 +113,7 @@ export default function HomePage() {
               สถานะระบบ // เปิดการใช้งานปกติ
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-loose uppercase tracking-tight font-sans text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 uppercase tracking-tight font-sans text-white" style={{ lineHeight: '1.6' }}>
               ตลาดรองสิทธิการเช่า
               <br />
               <span className="text-trd-secondary">ที่ราชพัสดุ</span>
