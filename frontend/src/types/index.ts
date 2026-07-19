@@ -4,7 +4,7 @@
 // ===========================
 
 export type Role = "USER" | "ADMIN";
-export type ListingStatus = "ACTIVE" | "SOLD" | "HIDDEN";
+export type ListingStatus = "ACTIVE" | "SOLD" | "HIDDEN" | "IN_NEGOTIATION";
 
 export interface User {
   id: string;

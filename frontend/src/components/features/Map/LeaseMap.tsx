@@ -18,7 +18,7 @@ interface LeaseMapProps {
  */
 export default function LeaseMap({
   listings = [],
-  center = [17.4138, 102.7872], // Upper Northeast (Udon Thani, Khon Kaen, Nong Khai)
+  center,
   zoom = 8,
   className = "",
 }: LeaseMapProps) {
@@ -26,6 +26,7 @@ export default function LeaseMap({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markerGroupRef = useRef<L.FeatureGroup | null>(null);
   const LRef = useRef<any>(null);
+  const lastCenterRef = useRef<[number, number] | null>(null);
 
   // Helper to draw markers
   const triggerMarkerUpdate = () => {
@@ -91,6 +92,24 @@ export default function LeaseMap({
         markerGroup.addLayer(marker);
       }
     });
+
+    // Auto-bounds fitting to dynamically align map view with filtered database listings
+    if (listings.length > 0) {
+      const validCoords = listings
+        .filter((l) => l.contract?.location_lat && l.contract?.location_lng)
+        .map((l) => [l.contract.location_lat, l.contract.location_lng] as [number, number]);
+
+      if (validCoords.length > 0) {
+        if (validCoords.length === 1 && center) {
+          // If parent specified center explicitly, let center useEffect handle view positioning
+        } else if (validCoords.length === 1) {
+          map.setView(validCoords[0], 14);
+        } else {
+          const bounds = L.latLngBounds(validCoords);
+          map.fitBounds(bounds, { padding: [40, 40] });
+        }
+      }
+    }
   };
 
   // 1. Initialize map once on mount
@@ -105,7 +124,7 @@ export default function LeaseMap({
       LRef.current = L;
 
       // Fix default marker icons (Webpack asset issue)
-      delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl;
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -113,8 +132,9 @@ export default function LeaseMap({
       });
 
       // Create map instance
+      const defaultCenter: [number, number] = [17.4138, 102.7872];
       const map = L.map(mapRef.current!, {
-        center,
+        center: center || defaultCenter,
         zoom,
         scrollWheelZoom: true,
       });
@@ -150,10 +170,15 @@ export default function LeaseMap({
     };
   }, []); // Empty dependencies -> initialize once
 
-  // 2. Handle map view changes (center/zoom) dynamically
+  // 2. Handle map view changes (center/zoom) dynamically, checking actual changes to prevent re-render loops
   useEffect(() => {
     if (mapInstanceRef.current && center) {
-      mapInstanceRef.current.setView(center, zoom);
+      const latChanged = !lastCenterRef.current || lastCenterRef.current[0] !== center[0];
+      const lngChanged = !lastCenterRef.current || lastCenterRef.current[1] !== center[1];
+      if (latChanged || lngChanged) {
+        mapInstanceRef.current.setView(center, zoom);
+        lastCenterRef.current = center;
+      }
     }
   }, [center, zoom]);
 
