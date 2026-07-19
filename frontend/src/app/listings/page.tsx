@@ -591,6 +591,54 @@ const initialListings: Listing[] = [
   },
 ];
 
+const localImageFiles = [
+  "images.jpg",
+  "images (1).jpg",
+  "images (2).jpg",
+  "images (3).jpg",
+  "images (4).jpg",
+  "images (5).jpg",
+  "images (6).jpg",
+  "images (7).jpg",
+  "images (8).jpg",
+  "images (9).jpg",
+  "images (10).jpg",
+  "images (11).jpg",
+  "images (12).jpg",
+  "images (13).jpg",
+  "images (14).jpg",
+  "images (15).jpg",
+  "images (16).jpg",
+  "images (17).jpg",
+  "images (18).jpg",
+  "images (19).jpg",
+  "images (20).jpg",
+  "images (21).jpg",
+  "images (22).jpg",
+  "images (23).jpg",
+  "dszfgdrhtrj.jpg",
+  "esdgdxfh.jpg"
+];
+
+const replaceWithLocalImage = (imgUrl: string, id: string): string => {
+  if (imgUrl.includes("unsplash.com") || !imgUrl.startsWith("/images/")) {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const idx = Math.abs(hash) % localImageFiles.length;
+    return `/images/${localImageFiles[idx]}`;
+  }
+  return imgUrl;
+};
+
+const mapListingsWithLocalImages = (data: Listing[]) => {
+  return data.map((l) => ({
+    ...l,
+    image_urls: l.image_urls.map((url) => replaceWithLocalImage(url, l.id))
+  }));
+};
+
 function ListingsContent() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -643,7 +691,7 @@ function ListingsContent() {
           }
         }
         
-        setListings(listData);
+        setListings(mapListingsWithLocalImages(listData));
       } catch (err) {
         console.error("Error fetching listings, using initial mock:", err);
         let listData = [...initialListings];
@@ -683,7 +731,7 @@ function ListingsContent() {
           }
         }
         
-        setListings(listData);
+        setListings(mapListingsWithLocalImages(listData));
       } finally {
         setLoading(false);
       }
@@ -731,7 +779,7 @@ function ListingsContent() {
         }
       }
 
-      setListings(filtered);
+      setListings(mapListingsWithLocalImages(filtered));
     } catch (err) {
       console.error("Search fetch failed, using local filter on initial mock:", err);
       let filtered = [...initialListings];
@@ -764,7 +812,7 @@ function ListingsContent() {
           filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
         }
       }
-      setListings(filtered);
+      setListings(mapListingsWithLocalImages(filtered));
     } finally {
       setLoading(false);
     }

@@ -71,7 +71,7 @@ const initialMyListings: Listing[] = [
     asking_price: 1500000,
     estimated_fee: 45000,
     description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองพญาไท ใกล้รถไฟฟ้า เหมาะทำร้านกาแฟหรือโชว์รูมสินค้าขนาดเล็ก",
-    image_urls: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"],
+    image_urls: ["/images/images (7).jpg"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
     updatedAt: "2026-07-09T00:00:00Z",
@@ -80,19 +80,19 @@ const initialMyListings: Listing[] = [
 
 const PRESET_IMAGES = [
   {
-    url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
+    url: "/images/images (19).jpg",
     label: "ที่ดินเปล่า / ธรรมชาติ"
   },
   {
-    url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+    url: "/images/images (7).jpg",
     label: "อาคารพาณิชย์ / ตึกเมือง"
   },
   {
-    url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80",
+    url: "/images/images (1).jpg",
     label: "บ้านพักอาศัย / ทรัพย์สินอยู่อาศัย"
   },
   {
-    url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
+    url: "/images/images (13).jpg",
     label: "โรงงาน / คลังสินค้าอุตสาหกรรม"
   }
 ];

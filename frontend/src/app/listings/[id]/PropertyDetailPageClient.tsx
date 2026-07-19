@@ -597,6 +597,55 @@ const mockListings: Record<string, Listing> = {
   },
 };
 
+const localImageFiles = [
+  "images.jpg",
+  "images (1).jpg",
+  "images (2).jpg",
+  "images (3).jpg",
+  "images (4).jpg",
+  "images (5).jpg",
+  "images (6).jpg",
+  "images (7).jpg",
+  "images (8).jpg",
+  "images (9).jpg",
+  "images (10).jpg",
+  "images (11).jpg",
+  "images (12).jpg",
+  "images (13).jpg",
+  "images (14).jpg",
+  "images (15).jpg",
+  "images (16).jpg",
+  "images (17).jpg",
+  "images (18).jpg",
+  "images (19).jpg",
+  "images (20).jpg",
+  "images (21).jpg",
+  "images (22).jpg",
+  "images (23).jpg",
+  "dszfgdrhtrj.jpg",
+  "esdgdxfh.jpg"
+];
+
+const replaceWithLocalImage = (imgUrl: string, id: string): string => {
+  if (imgUrl.includes("unsplash.com") || !imgUrl.startsWith("/images/")) {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const idx = Math.abs(hash) % localImageFiles.length;
+    return `/images/${localImageFiles[idx]}`;
+  }
+  return imgUrl;
+};
+
+const mapListingWithLocalImages = (item: Listing): Listing => {
+  if (!item) return item;
+  return {
+    ...item,
+    image_urls: item.image_urls.map((url) => replaceWithLocalImage(url, item.id))
+  };
+};
+
 interface PropertyDetailPageProps {
   params: Promise<{ id: string }>;
 }
@@ -604,7 +653,7 @@ interface PropertyDetailPageProps {
 export default function PropertyDetailPage({ params }: PropertyDetailPageProps) {
   const router = useRouter();
   const { id } = use(params);
-  const [listing, setListing] = useState<Listing>(mockListings[id] || mockListings["list-1"]);
+  const [listing, setListing] = useState<Listing>(mapListingWithLocalImages(mockListings[id] || mockListings["list-1"]));
   const [loadingListing, setLoadingListing] = useState<boolean>(true);
   const [userRole, setUserRole] = useState<string>("GUEST");
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
@@ -630,7 +679,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
         setLoadingListing(true);
         const data = await api.getListingById(id);
         if (active && data) {
-          setListing(data);
+          setListing(mapListingWithLocalImages(data));
         }
       } catch (err) {
         console.error("Error fetching listing from DB, using fallback mock:", err);
