@@ -18,6 +18,7 @@ interface PropertyCardProps {
   zoning?: string | null;
   locationLat?: number | null;
   locationLng?: number | null;
+  annualRent?: number;
 }
 
 export default function PropertyCard({
@@ -33,9 +34,10 @@ export default function PropertyCard({
   zoning,
   locationLat,
   locationLng,
+  annualRent = 12000,
 }: PropertyCardProps) {
   const [isFeeOpen, setIsFeeOpen] = useState(false);
-  const estimatedFee = price * 0.03  // Parse color mapping for Zoning without emoji
+  const estimatedFee = annualRent * 6.0;  // Parse color mapping for Zoning without emoji
   const getZoningColorClass = (zoneText: string | null | undefined) => {
     if (!zoneText) return "border-[#1E2E4A] text-slate-400 bg-[#070D1A]/45";
     if (zoneText.includes("สีแดง")) return "border-red-900/50 text-red-300 bg-red-950/40";
@@ -143,6 +145,7 @@ export default function PropertyCard({
         onClose={() => setIsFeeOpen(false)} 
         askingPrice={price} 
         estimatedFee={estimatedFee} 
+        annualRent={annualRent}
       />
     </div>
   );

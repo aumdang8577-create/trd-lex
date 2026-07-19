@@ -10,6 +10,7 @@ import type {
   ValidateContractResponse,
   ListingListResponse,
   Listing,
+  LeaseContract,
   CreateListingRequest,
   UpdateListingRequest,
   UpdateListingStatusRequest,
@@ -97,6 +98,10 @@ class ApiClient {
     });
   }
 
+  async getMyContracts(): Promise<LeaseContract[]> {
+    return this.request<LeaseContract[]>("/contracts/my");
+  }
+
   // ===== Listings =====
   async getListings(params?: {
     province?: string;
@@ -123,6 +128,10 @@ class ApiClient {
     return this.request<Listing>(`/listings/${id}`);
   }
 
+  async getMyListings(): Promise<Listing[]> {
+    return this.request<Listing[]>("/listings/my");
+  }
+
   async createListing(data: CreateListingRequest): Promise<Listing> {
     return this.request<Listing>("/listings", {
       method: "POST",
@@ -147,6 +156,12 @@ class ApiClient {
     return this.request<Listing>(`/listings/${id}/status`, {
       method: "PATCH",
       body: JSON.stringify(data),
+    });
+  }
+
+  async deleteListing(id: string): Promise<void> {
+    return this.request<void>(`/listings/${id}`, {
+      method: "DELETE",
     });
   }
 

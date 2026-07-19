@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
-type UserRole = "GUEST" | "SELLER" | "INVESTOR";
+type UserRole = "GUEST" | "SELLER" | "INVESTOR" | "OFFICER";
 
 export default function Navbar() {
   const router = useRouter();
@@ -22,6 +22,8 @@ export default function Navbar() {
   const handleRoleChange = (newRole: UserRole) => {
     setRole(newRole);
     localStorage.setItem("trd_user_role", newRole);
+    // Dispatch a custom event to notify other components of role changes
+    window.dispatchEvent(new Event("trd-role-changed"));
   };
 
   const handleLogout = () => {
@@ -36,22 +38,24 @@ export default function Navbar() {
         return [
           { label: "จัดการประกาศของฉัน", href: "/my-listings" },
           { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
-          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
-          { label: "แดชบอร์ดรายได้", href: "/dashboard" },
         ];
       case "INVESTOR":
         return [
           { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
-          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "รายการที่บันทึกไว้ (Wishlist)", href: "/wishlist" },
-          { label: "เปรียบเทียบค่าธรรมเนียม", href: "/dashboard" },
           { label: "ประวัติการติดต่อ", href: "/messages" },
+        ];
+      case "OFFICER":
+        return [
+          { label: "แดชบอร์ดรายได้รัฐ", href: "/dashboard" },
+          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
+          { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
         ];
       case "GUEST":
       default:
         return [
           { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
-          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "วิธีการใช้งาน", href: "/#how-it-works" },
         ];
     }
@@ -122,8 +126,9 @@ export default function Navbar() {
               <span className="text-slate-400 px-2 font-bold uppercase">ระบบจำลองบทบาท:</span>
               {[
                 { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
-                { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
-                { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
+                { id: "SELLER", label: "ผู้โอนสิทธิ์" },
+                { id: "INVESTOR", label: "ผู้ลงทุน" },
+                { id: "OFFICER", label: "เจ้าหน้าที่ธนารักษ์" },
               ].map((r) => (
                 <button
                   key={r.id}

@@ -144,3 +144,14 @@ class ContractService:
                 continue
         return None
 
+    @staticmethod
+    async def get_my_contracts(current_user: User):
+        # Search for active contracts belonging to user's thaid_id
+        contracts = await db.leasecontract.find_many(
+            where={
+                "lessee_thaid_id": current_user.thaid_id,
+                "is_active": True
+            }
+        )
+        return contracts
+

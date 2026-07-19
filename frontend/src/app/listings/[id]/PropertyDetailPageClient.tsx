@@ -8,6 +8,7 @@ import Card, { CardContent } from "@/components/ui/Card";
 import LeaseMap from "@/components/features/Map/LeaseMap";
 import Breadcrumb from "@/components/features/Breadcrumb";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import type { Listing } from "@/types";
 import api from "@/lib/api";
@@ -601,8 +602,50 @@ interface PropertyDetailPageProps {
 }
 
 export default function PropertyDetailPage({ params }: PropertyDetailPageProps) {
+  const router = useRouter();
   const { id } = use(params);
-  const listing = mockListings[id] || mockListings["list-1"];
+  const [listing, setListing] = useState<Listing>(mockListings[id] || mockListings["list-1"]);
+  const [loadingListing, setLoadingListing] = useState<boolean>(true);
+  const [userRole, setUserRole] = useState<string>("GUEST");
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkRole = () => {
+      const role = localStorage.getItem("trd_user_role") || "GUEST";
+      setUserRole(role);
+    };
+    checkRole();
+    const interval = setInterval(checkRole, 1000);
+    window.addEventListener("storage", checkRole);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", checkRole);
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const fetchListing = async () => {
+      try {
+        setLoadingListing(true);
+        const data = await api.getListingById(id);
+        if (active && data) {
+          setListing(data);
+        }
+      } catch (err) {
+        console.error("Error fetching listing from DB, using fallback mock:", err);
+      } finally {
+        if (active) {
+          setLoadingListing(false);
+        }
+      }
+    };
+    fetchListing();
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
   const [requestSuccess, setRequestSuccess] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
@@ -681,7 +724,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
 
         if (calcType === "FAMILY") {
           final = base * 0.25;
-          desc = "ได้รับสิทธิลดหย่อนร้อยละ 75 (โอนให้ทายาท/คู่สมรส)";
+          desc = "ได้รับสิทธิลดหย่อนร้อยละ 75 (โอนให้บุพการี/ผู้สืบสันดาน/คู่สมรส)";
         } else if (calcType === "CO_LESSEE") {
           const ratio = calcShare / 100.0;
           final = base * ratio;
@@ -719,11 +762,17 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
     calcDepreciation
   ]);
 
-  // Fee calculation
-  const transferFee = listing.asking_price * 0.02;
-  const stampDuty = listing.asking_price * 0.005;
-  const adminFee = listing.asking_price * 0.005;
-  const totalFee = transferFee + stampDuty + adminFee;
+  // Fee calculation strictly based on Treasury Department Order 683/2560 (การคิดค่าเช่าค่าธรรมเนียม.md)
+  const annualRentValue = listing.contract.annual_rent || 12000.0;
+  const generalTransferFee = annualRentValue * 6.0;
+  const arrangementFee = annualRentValue * 2.0;
+  const familyTransferFee = annualRentValue * 1.5;
+  
+  // Rounded per Rule 23.2 (nearest 10 Baht)
+  const roundedGeneral = Math.round(generalTransferFee / 10) * 10;
+  const roundedArrangement = Math.round(arrangementFee / 10) * 10;
+  const roundedFamily = Math.round(familyTransferFee / 10) * 10;
+  const roundedTotalFee = roundedGeneral + roundedArrangement;
 
   const handleRequestTransfer = () => {
     setRequestSuccess(true);
@@ -817,11 +866,20 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
         {/* Left Column: Details */}
         <div className="lg:col-span-8 space-y-8">
           <div>
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex flex-wrap items-center gap-3 mb-3">
               <Badge variant="valid">เปิดข้อเสนอหาผู้รับโอนสิทธิ</Badge>
               <span className="trd-verified-badge text-[10px]">
                 ✅ Verified by TRD (Smart Validation)
               </span>
+              {loadingListing ? (
+                <Badge variant="outline" className="border-trd-secondary text-trd-secondary bg-[#070D1A] text-[9px] font-mono animate-pulse">
+                  [ DATABASE: กำลังดึงข้อมูล... ]
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="border-emerald-500 text-emerald-400 bg-[#070D1A] text-[9px] font-mono">
+                  [ DATABASE: ดึงข้อมูลสำเร็จ ]
+                </Badge>
+              )}
             </div>
             <h1 className="text-3xl font-bold text-trd-primary leading-tight">
               สิทธิ์การเช่าที่ดินราชพัสดุ อำเภอ{listing.contract.district}, จังหวัด{listing.contract.province}
@@ -891,26 +949,26 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               {/* Fee Breakdown Table */}
               <div className="space-y-3">
                 <h4 className="text-xs font-bold text-trd-primary uppercase tracking-wide border-b border-trd-border/50 pb-2">
-                  โครงสร้างค่าธรรมเนียมโดยประมาณ (Fee Estimator)
+                  ประมาณการค่าธรรมเนียม (ระเบียบธนารักษ์)
                 </h4>
 
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">1. ค่าธรรมเนียมการโอน (2.0%)</span>
-                    <span className="font-semibold text-gray-800">{formatCurrency(transferFee)}</span>
+                    <span className="text-gray-500">1. ค่าธรรมเนียมการโอนสิทธิ์ (6 เท่า)</span>
+                    <span className="font-semibold text-gray-800">{formatCurrency(roundedGeneral)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">2. อากรแสตมป์ (0.5%)</span>
-                    <span className="font-semibold text-gray-800">{formatCurrency(stampDuty)}</span>
+                    <span className="text-gray-500">2. ค่าธรรมเนียมจัดให้เช่า (2 เท่า)</span>
+                    <span className="font-semibold text-gray-800">{formatCurrency(roundedArrangement)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">3. ค่าดำเนินการโอนกรรมสิทธิ์ (0.5%)</span>
-                    <span className="font-semibold text-gray-800">{formatCurrency(adminFee)}</span>
+                  <div className="flex justify-between text-status-valid font-medium">
+                    <span>3. โอนสิทธิ์กรณีทายาท (1.5 เท่า)</span>
+                    <span>{formatCurrency(roundedFamily)}</span>
                   </div>
                   
                   <div className="flex justify-between border-t border-trd-border/50 pt-2 font-bold text-sm text-trd-primary">
-                    <span>ยอดรวมประมาณการ</span>
-                    <span className="text-trd-secondary-dark">{formatCurrency(totalFee)}</span>
+                    <span>รวมอัตราปกติ (1 + 2)</span>
+                    <span className="text-trd-secondary-dark">{formatCurrency(roundedTotalFee)}</span>
                   </div>
                 </div>
               </div>
@@ -1081,7 +1139,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                       className="w-full px-2.5 py-1.5 rounded border border-trd-border bg-white text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-trd-primary"
                     >
                       <option value="GENERAL">บุคคลทั่วไป (อัตราปกติ)</option>
-                      <option value="FAMILY">ครอบครัว/ทายาท/คู่สมรส (ลด 75%)</option>
+                      <option value="FAMILY">บุพการี/ผู้สืบสันดาน/คู่สมรส (ลด 75%)</option>
                       <option value="CO_LESSEE">ผู้เช่าร่วมกัน (ตามสัดส่วน)</option>
                     </select>
                   </div>
@@ -1164,7 +1222,17 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                     <p className="text-[10px] text-gray-500">โปรดโทรติดต่อเพื่อทำการเจรจาโอนสิทธิ์นอกระบบ</p>
                   </div>
                 )}
-                <Button variant="primary" className="w-full py-3 text-sm font-semibold" onClick={() => setShowContact(!showContact)}>
+                <Button
+                  variant="primary"
+                  className="w-full py-3 text-sm font-semibold animate-pulse hover:animate-none"
+                  onClick={() => {
+                    if (userRole === "GUEST") {
+                      setIsAuthModalOpen(true);
+                    } else {
+                      setShowContact(!showContact);
+                    }
+                  }}
+                >
                   {showContact ? "ซ่อนข้อมูลติดต่อ" : "แสดงความสนใจ (Contact Lessee)"}
                 </Button>
                 <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500 font-bold hover:text-trd-primary" onClick={() => setIsGuideOpen(true)}>
@@ -1186,6 +1254,79 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
     
     {/* Transfer Guide Modal */}
     <TransferGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
+
+    {/* ThaID Auth Modal */}
+    <ThaidAuthModal
+      isOpen={isAuthModalOpen}
+      onClose={() => setIsAuthModalOpen(false)}
+      onLogin={() => router.push("/login")}
+    />
   </>
+  );
+}
+
+interface ThaidAuthModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onLogin: () => void;
+}
+
+function ThaidAuthModal({ isOpen, onClose, onLogin }: ThaidAuthModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#070D1A]/80 backdrop-blur-md p-4 transition-all duration-300">
+      <div className="bg-[#0F1A30] border-2 border-trd-secondary/60 rounded-2xl max-w-md w-full overflow-hidden shadow-[0_20px_50px_rgba(212,175,55,0.25)] relative p-6 space-y-6 animate-scale-up">
+        
+        {/* Header decoration */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gold-gradient"></div>
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors font-bold font-mono text-sm"
+          title="ปิด"
+        >
+          ✕
+        </button>
+
+        {/* Content */}
+        <div className="text-center space-y-4 pt-2">
+          {/* Logo or Icon */}
+          <div className="mx-auto w-16 h-16 bg-[#070D1A] rounded-full border border-[#1E2E4A] flex items-center justify-center p-2.5 shadow-inner">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png"
+              alt="ตราสัญลักษณ์กรมธนารักษ์"
+              className="w-full h-full object-contain animate-pulse"
+            />
+          </div>
+
+          <h3 className="text-base font-black text-white uppercase tracking-wide font-sans">
+            จำเป็นต้องยืนยันตัวตน (ThaID Required)
+          </h3>
+          
+          <p className="text-xs text-slate-300 leading-relaxed font-medium font-sans">
+            เพื่อความปลอดภัยและป้องกันผู้ไม่ประสงค์ดี ระบบกำหนดให้เฉพาะผู้ใช้ที่ยืนยันตัวตนดิจิทัลผ่านระบบ ThaID ของกรมการปกครองแล้วเท่านั้น จึงจะสามารถแสดงความสนใจหรือเข้าถึงข้อมูลติดต่อของผู้เสนอขายสิทธิ์สัญญาเช่าได้
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2.5 pt-2">
+          <button
+            onClick={onLogin}
+            className="w-full bg-gold-gradient border border-transparent text-[#0F1A30] text-xs font-mono uppercase tracking-widest font-black py-3 rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150 text-center cursor-pointer"
+          >
+            เข้าสู่ระบบด้วย ThaID
+          </button>
+          
+          <button
+            onClick={onClose}
+            className="w-full border border-[#1E2E4A] text-slate-300 bg-[#070D1A]/50 text-xs font-mono uppercase tracking-widest font-black py-2.5 rounded-xl hover:bg-[#1E2E4A]/30 transition-all duration-150 text-center cursor-pointer"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

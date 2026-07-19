@@ -17,11 +17,70 @@ const mockSoldListings = [
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "provincial">("overview");
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkRole = () => {
+      setUserRole(localStorage.getItem("trd_user_role") || "GUEST");
+    };
+    checkRole();
+    window.addEventListener("trd-role-changed", checkRole);
+    window.addEventListener("storage", checkRole);
+    return () => {
+      window.removeEventListener("trd-role-changed", checkRole);
+      window.removeEventListener("storage", checkRole);
+    };
+  }, []);
 
   // Sum calculations
   const totalAreaDeveloped = mockSoldListings.reduce((sum, item) => sum + item.area, 0);
   const totalFeesCollected = mockSoldListings.reduce((sum, item) => sum + item.fee, 0);
   const totalInvestmentCirculated = mockSoldListings.reduce((sum, item) => sum + item.price, 0);
+
+  if (userRole === null) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-pulse text-slate-450 font-mono text-xs uppercase tracking-widest font-bold">
+          [ กำลังตรวจสอบสิทธิ์การเข้าใช้งาน... ]
+        </div>
+      </div>
+    );
+  }
+
+  if (userRole !== "OFFICER") {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
+        <div className="max-w-md w-full bg-[#0F1A30] border-2 border-red-500/40 rounded-2xl p-8 text-center space-y-6 shadow-[0_15px_40px_rgba(239,68,68,0.15)] relative overflow-hidden">
+          {/* Cyber grid bg pattern or subtle red top bar */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-600 to-orange-500"></div>
+          
+          <div className="w-16 h-16 bg-[#070D1A] border border-red-500/30 text-red-500 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-pulse">
+            🔒
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-base font-black text-white uppercase tracking-wider font-sans">
+              เข้าถึงแบบจำกัดสิทธิ์ (เฉพาะเจ้าหน้าที่เท่านั้น)
+            </h2>
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono font-bold">
+              Restricted to Treasury Officials Only
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+            ระบบหน้ารายงานสถิติและเครื่องมือวิเคราะห์มูลค่าทางเศรษฐกิจของรัฐ (แดชบอร์ดรายได้) สงวนสิทธิ์ไว้เฉพาะผู้ปฏิบัติงานและเจ้าหน้าที่ของกรมธนารักษ์เท่านั้น
+          </p>
+
+          <div className="bg-[#070D1A] rounded-xl border border-[#1E2E4A] p-4 text-[10.5px] text-trd-secondary-dark font-mono text-left space-y-1">
+            <span className="font-black">[คำแนะนำการจำลองสิทธิ์]</span>
+            <p className="text-slate-400 font-sans leading-normal font-medium mt-0.5">
+              คุณสามารถเข้าใช้งานหน้านี้เพื่อทดสอบฟังก์ชันงานได้ทันที โดยทำการเปลี่ยนบทบาทผู้ใช้ให้เป็น **"เจ้าหน้าที่ธนารักษ์"** ผ่านแผงระบบจำลองบทบาทด้านบนสุดของแถบนำทาง Navbar ครับ
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

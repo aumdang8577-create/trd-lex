@@ -229,7 +229,7 @@ def calculate_transfer_fee(
     if transfer_type == TransferType.FAMILY:
         # Rule 3.3: 25% of standard fee (75% discount)
         final_fee = base_fee * 0.25
-        desc = "ได้รับสิทธิลดหย่อนร้อยละ 75 (โอนให้ทายาท/บุพการี/คู่สมรส)"
+        desc = "ได้รับสิทธิลดหย่อนร้อยละ 75 (โอนให้บุพการี/ผู้สืบสันดาน/คู่สมรส)"
     elif transfer_type == TransferType.CO_LESSEE:
         # Rule 3.2: proportional transfer
         ratio = max(1.0, min(100.0, transfer_share)) / 100.0

@@ -124,8 +124,19 @@ export default function TransferGuideModal({ isOpen, onClose }: TransferGuideMod
             <h4 className="text-xs font-black text-trd-primary border-b-2 border-trd-border pb-1.5 flex items-center gap-1.5 font-mono uppercase tracking-widest">
               คำสั่งกรมธนารักษ์ว่าด้วยอัตราค่าธรรมเนียมการโอน
             </h4>
+            
+            {/* Definition of ราคาเสนอโอนสิทธิ์ (Asking Price) */}
+            <div className="bg-[#0F1A30]/5 border border-trd-primary/20 rounded-xl p-3.5 space-y-1.5">
+              <h5 className="text-[11px] font-black text-trd-primary font-mono uppercase tracking-wide">
+                💡 ราคาเสนอโอนสิทธิ์ (Asking Price) คืออะไร?
+              </h5>
+              <p className="text-[10.5px] text-slate-600 font-sans leading-relaxed font-medium">
+                <strong>ราคาเสนอโอนสิทธิ์ (Asking Price)</strong> คือ มูลค่าชดเชยหรือราคาตกลงซื้อขายสิทธิการครอบครองสัญญาเช่าที่ <strong>ผู้เช่าเดิม (ผู้โอนสิทธิ์) และผู้ลงทุน (ผู้รับโอน) เจรจาตกลงชำระเงินกันเองนอกระบบ</strong> โดยไม่ผ่านกรมธนารักษ์ ซึ่งราคาเสนอโอนสิทธิ์นี้ <strong className="text-trd-secondary-dark font-extrabold text-red-600">จะไม่มีความเกี่ยวข้องหรือนำมาใช้ในการคำนวณค่าเช่าราชการหรือค่าธรรมเนียมหลวง</strong> แต่อย่างใด
+              </p>
+            </div>
+
             <p className="text-[11px] text-trd-text-muted font-sans font-medium leading-relaxed">
-              การคำนวณค่าธรรมเนียมการโอนสิทธิเช่าจะคิดบนฐานของ <strong className="text-trd-midnight">"ค่าเช่ารายปีที่ปรับปรุงแล้ว"</strong> ตามสภาพทำเลและประเภทการใช้ประโยชน์ ณ ปัจจุบัน ดังนี้:
+              สำหรับการคำนวณค่าธรรมเนียมโอนสิทธิ์ของราชการ จะคิดบนฐานของ <strong className="text-trd-midnight">"ค่าเช่ารายปีที่ปรับปรุงแล้ว"</strong> ตามสภาพทำเลและประเภทการใช้ประโยชน์ ณ ปัจจุบัน ดังนี้:
             </p>
             <div className="border-2 border-trd-border rounded-none overflow-hidden shadow-flat">
               <table className="w-full text-left border-collapse text-[11px] font-mono">

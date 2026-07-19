@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status
-from app.schemas.contract import ValidateContractRequest, ValidateContractResponse, TreasuryParcelResponse
+from app.schemas.contract import ValidateContractRequest, ValidateContractResponse, TreasuryParcelResponse, ContractDataResponse
 from app.services.contract_service import ContractService
 from app.core.security import get_current_user
 from prisma.models import User
@@ -16,6 +16,15 @@ async def validate_contract(
     ตรวจสอบความถูกต้องของสัญญาเช่าที่ราชพัสดุและกรรมสิทธิ์สำหรับผู้ใช้ปัจจุบัน
     """
     return await ContractService.validate_contract(request.contract_number, current_user)
+
+@router.get("/my", response_model=List[ContractDataResponse])
+async def get_my_contracts(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    ดึงรายการสัญญาเช่าทั้งหมดของผู้ใช้ปัจจุบันตามเลขบัตรประชาชน ThaID
+    """
+    return await ContractService.get_my_contracts(current_user)
 
 @router.get("/parcels", response_model=List[TreasuryParcelResponse])
 async def get_parcels(

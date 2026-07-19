@@ -101,6 +101,22 @@ export default function BenefitsEvaluatorPage() {
   const [landArea, setLandArea] = useState<number>(400); // 1 ไร่
   const [landType, setLandType] = useState<"COMMERCIAL" | "RESIDENTIAL" | "AGRICULTURE" | "INDUSTRIAL">("COMMERCIAL");
   const [selectedDevId, setSelectedDevId] = useState<string>("logistics");
+  
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkRole = () => {
+      setUserRole(localStorage.getItem("trd_user_role") || "GUEST");
+    };
+    checkRole();
+    window.addEventListener("trd-role-changed", checkRole);
+    window.addEventListener("storage", checkRole);
+    return () => {
+      window.removeEventListener("trd-role-changed", checkRole);
+      window.removeEventListener("storage", checkRole);
+    };
+  }, []);
+
   const [askingPrice, setAskingPrice] = useState<number>(1200000);
   const [transferType, setTransferType] = useState<"GENERAL" | "FAMILY">("GENERAL");
   const [customPriceInput, setCustomPriceInput] = useState<string>("1,200,000");
@@ -189,6 +205,54 @@ export default function BenefitsEvaluatorPage() {
   // ผลประโยชน์ต่อระบบเศรษฐกิจท้องถิ่น (GDP Multiplier Effect: เงินที่สะพัดในจังหวัดจากการก่อสร้างและการจ้างงาน)
   // อัตราทวีคูณทางการคลังระดับท้องถิ่น (Local GDP Multiplier) สำหรับจังหวัดภูมิภาคคิดเป็น 3.2 เท่าของมูลค่าการเปลี่ยนมือและการลงทุนตั้งต้น
   const localEconomicGdpMultiplier = (askingPrice + (landArea * 500)) * 3.2;
+  if (userRole === null) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-pulse text-slate-450 font-mono text-xs uppercase tracking-widest font-bold">
+          [ Authenticating User ACL... ]
+        </div>
+      </div>
+    );
+  }
+
+  if (userRole !== "OFFICER") {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center px-4 py-12 bg-trd-surface font-sans">
+        <div className="max-w-md w-full bg-[#0F1A30] border-2 border-red-500/40 rounded-2xl p-8 text-center space-y-6 shadow-[0_15px_40px_rgba(239,68,68,0.15)] relative overflow-hidden">
+          {/* Cyber top decoration */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-650 to-orange-500"></div>
+          
+          <div className="w-16 h-16 bg-[#070D1A] border border-red-500/30 text-red-500 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-pulse">
+            🚫
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-base font-black text-white uppercase tracking-wider">
+              HTTP 403 Forbidden
+            </h2>
+            <p className="text-[10px] text-red-400 font-mono tracking-widest font-bold uppercase">
+              [ Access Denied: Insufficient Privileges ]
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+            สิทธิ์การเข้าถึงข้อมูลระบบการจำลองโครงการลงทุนหลวงและการประเมินความคุ้มค่าทางการเงิน (Benefits Evaluator Engine) ถูกจำกัดสิทธิ์ในระดับ Access Control List (ACL) ให้เข้าถึงได้เฉพาะบัญชีประเภทเจ้าหน้าที่ธนารักษ์ที่มีสิทธิ์รักษาความปลอดภัยระดับ 2 ขึ้นไปเท่านั้น
+          </p>
+
+          <div className="bg-[#070D1A] rounded-xl border border-[#1E2E4A] p-4 text-[10.5px] text-trd-secondary-dark font-mono text-left space-y-1.5 text-slate-300">
+            <span className="font-black">[Dev-Console Tips]</span>
+            <p className="text-slate-400 font-sans leading-normal font-medium mt-0.5">
+              ระบบตรวจพบบทบาทปัจจุบันของคุณเป็น <strong className="text-white">"{userRole}"</strong> โปรดจำลองสิทธิ์ความมั่นคงปลอดภัยโดยเลือกบทบาทเป็น **"เจ้าหน้าที่ธนารักษ์"** ผ่านแถบเมนูจำลองสิทธิ์ส่วนหัวของแอปพลิเคชันเพื่อปลดล็อกโมดูลคำนวณโครงการ
+            </p>
+            <div className="text-[9px] text-slate-500 pt-1 border-t border-[#1E2E4A] mt-1 flex justify-between font-mono">
+              <span>Error Code: TRD_ERR_ACL_FORBIDDEN</span>
+              <span>Ref: 0x7E3A9F</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-trd-bg text-trd-primary min-h-screen py-10">

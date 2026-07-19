@@ -207,3 +207,38 @@ class ListingService:
         )
         
         return ListingResponse.model_validate(updated_listing)
+
+    @staticmethod
+    async def get_my_listings(current_user: User) -> list[ListingResponse]:
+        listings = await db.listing.find_many(
+            where={
+                "sellerId": current_user.id
+            },
+            include={
+                "seller": True,
+                "contract": True
+            },
+            order={"createdAt": "desc"}
+        )
+        return [ListingResponse.model_validate(item) for item in listings]
+
+    @staticmethod
+    async def delete_listing(listing_id: str, current_user: User) -> None:
+        # Fetch listing
+        listing = await db.listing.find_unique(where={"id": listing_id})
+        
+        if not listing:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="ไม่พบประกาศที่ต้องการลบ"
+            )
+            
+        # Check ownership
+        if listing.sellerId != current_user.id and current_user.role != "ADMIN":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="คุณไม่มีสิทธิ์ในการลบประกาศนี้"
+            )
+            
+        # Perform delete
+        await db.listing.delete(where={"id": listing_id})

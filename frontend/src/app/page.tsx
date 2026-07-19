@@ -227,6 +227,7 @@ export default function HomePage() {
               zoning={listing.contract.zoning}
               locationLat={listing.contract.location_lat}
               locationLng={listing.contract.location_lng}
+              annualRent={listing.contract.annual_rent}
             />
           ))}
         </div>

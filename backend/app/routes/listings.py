@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Query
+from typing import List
+from fastapi import APIRouter, Depends, Query, HTTPException, status
 from app.schemas.listing import (
     CreateListingRequest,
     UpdateListingRequest,
@@ -30,6 +31,15 @@ async def get_listings(
         page=page,
         per_page=per_page
     )
+
+@router.get("/my", response_model=List[ListingResponse])
+async def get_my_listings(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    ดึงรายการประกาศของฉันทั้งหมด
+    """
+    return await ListingService.get_my_listings(current_user)
 
 @router.get("/{id}", response_model=ListingResponse)
 async def get_listing_by_id(id: str):
@@ -69,3 +79,14 @@ async def update_listing_status(
     อัปเดตสถานะของประกาศ (เช่น เปลี่ยนเป็น SOLD หรือ HIDDEN)
     """
     return await ListingService.update_listing_status(id, request, current_user)
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_listing(
+    id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    ลบประกาศเสนอขายสิทธิ์ (ผู้ลงประกาศเดิมเท่านั้น)
+    """
+    await ListingService.delete_listing(id, current_user)
+    return None

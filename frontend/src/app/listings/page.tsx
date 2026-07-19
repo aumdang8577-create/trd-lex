@@ -629,7 +629,7 @@ function ListingsContent() {
         }
         if (z) {
           const zoneKeyword = z.split(" ")[0];
-          listData = listData.filter((l) => l.contract.zoning.includes(zoneKeyword));
+          listData = listData.filter((l) => l.contract.zoning?.includes(zoneKeyword));
         }
         if (bt) {
           if (bt === "ที่ดินเปล่า") {
@@ -669,7 +669,7 @@ function ListingsContent() {
         }
         if (z) {
           const zoneKeyword = z.split(" ")[0];
-          listData = listData.filter((l) => l.contract.zoning.includes(zoneKeyword));
+          listData = listData.filter((l) => l.contract.zoning?.includes(zoneKeyword));
         }
         if (bt) {
           if (bt === "ที่ดินเปล่า") {
@@ -717,7 +717,7 @@ function ListingsContent() {
       }
       if (searchData.zoning) {
         const zoneKeyword = searchData.zoning.split(" ")[0]; // Get "พื้นที่สีแดง", "พื้นที่สีเขียว", etc.
-        filtered = filtered.filter((l) => l.contract.zoning.includes(zoneKeyword));
+        filtered = filtered.filter((l) => l.contract.zoning?.includes(zoneKeyword));
       }
       if (searchData.buildingType) {
         if (searchData.buildingType === "ที่ดินเปล่า") {
@@ -751,7 +751,7 @@ function ListingsContent() {
       }
       if (searchData.zoning) {
         const zoneKeyword = searchData.zoning.split(" ")[0];
-        filtered = filtered.filter((l) => l.contract.zoning.includes(zoneKeyword));
+        filtered = filtered.filter((l) => l.contract.zoning?.includes(zoneKeyword));
       }
       if (searchData.buildingType) {
         if (searchData.buildingType === "ที่ดินเปล่า") {
@@ -839,6 +839,7 @@ function ListingsContent() {
                   zoning={listing.contract.zoning}
                   locationLat={listing.contract.location_lat}
                   locationLng={listing.contract.location_lng}
+                  annualRent={listing.contract.annual_rent}
                 />
               ))}
             </div>
