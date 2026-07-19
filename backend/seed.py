@@ -27,21 +27,38 @@ district_coords = {
 }
 
 residential_images = [
-    "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+    "/images/images (1).jpg",
+    "/images/images (2).jpg",
+    "/images/images (3).jpg",
+    "/images/images (4).jpg",
+    "/images/images (5).jpg",
+    "/images/images (6).jpg"
 ]
 commercial_images = [
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"
+    "/images/images (7).jpg",
+    "/images/images (8).jpg",
+    "/images/images (9).jpg",
+    "/images/images (10).jpg",
+    "/images/images (11).jpg",
+    "/images/images (12).jpg"
 ]
 industrial_images = [
-    "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80"
+    "/images/images (13).jpg",
+    "/images/images (14).jpg",
+    "/images/images (15).jpg",
+    "/images/images (16).jpg",
+    "/images/images (17).jpg",
+    "/images/images (18).jpg"
 ]
 vacant_images = [
-    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"
+    "/images/images (19).jpg",
+    "/images/images (20).jpg",
+    "/images/images (21).jpg",
+    "/images/images (22).jpg",
+    "/images/images (23).jpg",
+    "/images/images.jpg",
+    "/images/dszfgdrhtrj.jpg",
+    "/images/esdgdxfh.jpg"
 ]
 
 def generate_thai_id(name: str) -> str:

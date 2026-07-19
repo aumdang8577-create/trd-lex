@@ -87,6 +87,7 @@ enum ListingStatus {
   ACTIVE
   SOLD
   HIDDEN
+  IN_NEGOTIATION
 }
 
 enum TransferType {

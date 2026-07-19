@@ -8,3 +8,4 @@ class ListingStatus(str, Enum):
     ACTIVE = "ACTIVE"
     SOLD = "SOLD"
     HIDDEN = "HIDDEN"
+    IN_NEGOTIATION = "IN_NEGOTIATION"
