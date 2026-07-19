@@ -133,10 +133,89 @@ async def main():
             "district": "เมืองหนองคาย",
             "sub_district": "ในเมือง",
             "land_area_sqw": area5 or 100.0,
-            "is_active": True
+            "is_active": True,
+            "building_type": "บ้านพักอาศัย",
+            "usable_area_sqm": 120.0,
+            "zoning": "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)"
         }
     )
     print(f"  Contract 5 (นค.1496): lat={lat5}, lng={lng5}, area={area5}")
+
+    # สัญญา 6: กาญจนบุรี
+    contract6 = await db.leasecontract.create(
+        data={
+            "contract_number": "TRD-66-006",
+            "lessee_thaid_id": "9123456789012",
+            "parcel_number": "กจ.2345",
+            "location_lat": 14.0227,
+            "location_lng": 99.5328,
+            "province": "กาญจนบุรี",
+            "district": "เมืองกาญจนบุรี",
+            "sub_district": "ปากแพรก",
+            "land_area_sqw": 150.0,
+            "is_active": True,
+            "building_type": "บ้านพักอาศัย",
+            "usable_area_sqm": 180.0,
+            "zoning": "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)"
+        }
+    )
+
+    # สัญญา 7: กาญจนบุรี
+    contract7 = await db.leasecontract.create(
+        data={
+            "contract_number": "TRD-66-007",
+            "lessee_thaid_id": "1123456789012",
+            "parcel_number": "กจ.2346",
+            "location_lat": 14.1167,
+            "location_lng": 99.1333,
+            "province": "กาญจนบุรี",
+            "district": "ไทรโยค",
+            "sub_district": "ไทรโยค",
+            "land_area_sqw": 2400.0,
+            "is_active": True,
+            "building_type": None,
+            "usable_area_sqm": 0.0,
+            "zoning": "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)"
+        }
+    )
+
+    # สัญญา 8: หนองบัวลำภู
+    contract8 = await db.leasecontract.create(
+        data={
+            "contract_number": "TRD-66-008",
+            "lessee_thaid_id": "2123456789012",
+            "parcel_number": "นภ.3456",
+            "location_lat": 17.2023,
+            "location_lng": 102.4411,
+            "province": "หนองบัวลำภู",
+            "district": "เมืองหนองบัวลำภู",
+            "sub_district": "ลำภู",
+            "land_area_sqw": 3200.0,
+            "is_active": True,
+            "building_type": None,
+            "usable_area_sqm": 0.0,
+            "zoning": "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)"
+        }
+    )
+
+    # สัญญา 9: หนองบัวลำภู
+    contract9 = await db.leasecontract.create(
+        data={
+            "contract_number": "TRD-66-009",
+            "lessee_thaid_id": "1123456789012",
+            "parcel_number": "นภ.3457",
+            "location_lat": 16.9634,
+            "location_lng": 102.2778,
+            "province": "หนองบัวลำภู",
+            "district": "ศรีบุญเรือง",
+            "sub_district": "ศรีบุญเรือง",
+            "land_area_sqw": 90.0,
+            "is_active": True,
+            "building_type": "อาคารพาณิชย์",
+            "usable_area_sqm": 160.0,
+            "zoning": "พื้นที่สีแดง (พาณิชยกรรม)"
+        }
+    )
     
     print("Seeding Listings...")
     # 3. Seed active Listings
@@ -196,6 +275,54 @@ async def main():
             "estimated_fee": 36000.0,
             "description": "ที่ดินราชพัสดุทำเลดี ใกล้ถนนสายหลัก เหมาะทำที่พักอาศัยหรือร้านค้าขนาดเล็ก สภาพแวดล้อมดี มีสาธารณูปโภคครบ",
             "image_urls": ["https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800"],
+            "status": ListingStatus.ACTIVE.value
+        }
+    )
+
+    await db.listing.create(
+        data={
+            "sellerId": user_somchai.id,
+            "contractId": contract6.id,
+            "asking_price": 1250000.0,
+            "estimated_fee": 37500.0,
+            "description": "สิทธิ์การเช่าที่ดินพร้อมสิ่งปลูกสร้างสไตล์บ้านพักอาศัย บรรยากาศร่มรื่นใกล้แม่น้ำแคว เดินทางเข้าเมืองกาญจนบุรีสะดวกมาก",
+            "image_urls": ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800"],
+            "status": ListingStatus.ACTIVE.value
+        }
+    )
+
+    await db.listing.create(
+        data={
+            "sellerId": user_somchai.id,
+            "contractId": contract7.id,
+            "asking_price": 450000.0,
+            "estimated_fee": 13500.0,
+            "description": "ที่ดินเปล่าผืนใหญ่ในอำเภอไทรโยค ทำเลติดธรรมชาติ เหมาะสำหรับการเกษตรกรรมท่องเที่ยวเชิงอนุรักษ์ โฮมสเตย์ หรือแคมป์ปิ้งพักผ่อน",
+            "image_urls": ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800"],
+            "status": ListingStatus.ACTIVE.value
+        }
+    )
+
+    await db.listing.create(
+        data={
+            "sellerId": user_somying.id,
+            "contractId": contract8.id,
+            "asking_price": 350000.0,
+            "estimated_fee": 10500.0,
+            "description": "แปลงที่ราชพัสดุแปลงว่างเปล่าในหนองบัวลำภู พื้นที่ดินดำอุดมสมบูรณ์ เหมาะสำหรับการทำเกษตรกรรมยั่งยืน หรือสร้างโซลาร์ฟาร์มชุมชน",
+            "image_urls": ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"],
+            "status": ListingStatus.ACTIVE.value
+        }
+    )
+
+    await db.listing.create(
+        data={
+            "sellerId": user_somchai.id,
+            "contractId": contract9.id,
+            "asking_price": 1100000.0,
+            "estimated_fee": 33000.0,
+            "description": "อาคารพาณิชย์สองชั้นใจกลางชุมชนอำเภอศรีบุญเรือง เหมาะทำเป็นหน้าร้านค้าขายปลีก ร้านกาแฟ หรือสำนักงานตัวแทนท้องถิ่น",
+            "image_urls": ["https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800"],
             "status": ListingStatus.ACTIVE.value
         }
     )

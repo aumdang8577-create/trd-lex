@@ -147,6 +147,118 @@ const initialListings: Listing[] = [
     status: "ACTIVE",
     createdAt: "2026-07-11T00:00:00Z",
     updatedAt: "2026-07-11T00:00:00Z",
+  },
+  {
+    id: "list-6",
+    sellerId: "seller-3",
+    seller: { id: "seller-3", thaid_id: "789", first_name: "ประยุทธ์", last_name: "มั่งมี", role: "USER" },
+    contractId: "contract-6",
+    contract: {
+      id: "contract-6",
+      contract_number: "TRD-66-006",
+      parcel_number: "กจ.2345",
+      location_lat: 14.0227,
+      location_lng: 99.5328,
+      province: "กาญจนบุรี",
+      district: "เมืองกาญจนบุรี",
+      sub_district: "ปากแพรก",
+      land_area_sqw: 150,
+      is_active: true,
+      building_type: "บ้านพักอาศัย",
+      usable_area_sqm: 180,
+      zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
+    },
+    asking_price: 1250000,
+    estimated_fee: 37500,
+    description: "สิทธิ์การเช่าที่ดินพร้อมสิ่งปลูกสร้างสไตล์บ้านพักอาศัย บรรยากาศร่มรื่นใกล้แม่น้ำแคว เดินทางเข้าเมืองกาญจนบุรีสะดวกมาก",
+    image_urls: ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-12T00:00:00Z",
+    updatedAt: "2026-07-12T00:00:00Z",
+  },
+  {
+    id: "list-7",
+    sellerId: "seller-1",
+    seller: { id: "seller-1", thaid_id: "123", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
+    contractId: "contract-7",
+    contract: {
+      id: "contract-7",
+      contract_number: "TRD-66-007",
+      parcel_number: "กจ.2346",
+      location_lat: 14.1167,
+      location_lng: 99.1333,
+      province: "กาญจนบุรี",
+      district: "ไทรโยค",
+      sub_district: "ไทรโยค",
+      land_area_sqw: 2400,
+      is_active: true,
+      building_type: null,
+      usable_area_sqm: 0,
+      zoning: "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)",
+    },
+    asking_price: 450000,
+    estimated_fee: 13500,
+    description: "ที่ดินเปล่าผืนใหญ่ในอำเภอไทรโยค ทำเลติดธรรมชาติ เหมาะสำหรับการเกษตรกรรมท่องเที่ยวเชิงอนุรักษ์ โฮมสเตย์ หรือแคมป์ปิ้งพักผ่อน",
+    image_urls: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-13T00:00:00Z",
+    updatedAt: "2026-07-13T00:00:00Z",
+  },
+  {
+    id: "list-8",
+    sellerId: "seller-2",
+    seller: { id: "seller-2", thaid_id: "456", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
+    contractId: "contract-8",
+    contract: {
+      id: "contract-8",
+      contract_number: "TRD-66-008",
+      parcel_number: "นภ.3456",
+      location_lat: 17.2023,
+      location_lng: 102.4411,
+      province: "หนองบัวลำภู",
+      district: "เมืองหนองบัวลำภู",
+      sub_district: "ลำภู",
+      land_area_sqw: 3200,
+      is_active: true,
+      building_type: null,
+      usable_area_sqm: 0,
+      zoning: "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)",
+    },
+    asking_price: 350000,
+    estimated_fee: 10500,
+    description: "แปลงที่ราชพัสดุแปลงว่างเปล่าในหนองบัวลำภู พื้นที่ดินดำอุดมสมบูรณ์ เหมาะสำหรับการทำเกษตรกรรมยั่งยืน หรือสร้างโซลาร์ฟาร์มชุมชน",
+    image_urls: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-14T00:00:00Z",
+    updatedAt: "2026-07-14T00:00:00Z",
+  },
+  {
+    id: "list-9",
+    sellerId: "seller-1",
+    seller: { id: "seller-1", thaid_id: "123", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
+    contractId: "contract-9",
+    contract: {
+      id: "contract-9",
+      contract_number: "TRD-66-009",
+      parcel_number: "นภ.3457",
+      location_lat: 16.9634,
+      location_lng: 102.2778,
+      province: "หนองบัวลำภู",
+      district: "ศรีบุญเรือง",
+      sub_district: "ศรีบุญเรือง",
+      land_area_sqw: 90,
+      is_active: true,
+      building_type: "อาคารพาณิชย์",
+      usable_area_sqm: 160,
+      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
+    },
+    asking_price: 1100000,
+    estimated_fee: 33000,
+    description: "อาคารพาณิชย์สองชั้นใจกลางชุมชนอำเภอศรีบุญเรือง เหมาะทำเป็นหน้าร้านค้าขายปลีก ร้านกาแฟ หรือสำนักงานตัวแทนท้องถิ่น",
+    image_urls: ["https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"],
+    status: "ACTIVE",
+    createdAt: "2026-07-15T00:00:00Z",
+    updatedAt: "2026-07-15T00:00:00Z",
   }
 ];
 
@@ -158,7 +270,6 @@ export default function ListingsPage() {
     const fetchListings = async () => {
       try {
         setLoading(true);
-        // Simulate a slight delay to let the user admire the skeleton animation (500ms)
         await new Promise((resolve) => setTimeout(resolve, 500));
         const res = await api.getListings();
         setListings(res.data);
@@ -197,10 +308,19 @@ export default function ListingsPage() {
         );
       }
       if (searchData.zoning) {
-        filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
+        const zoneKeyword = searchData.zoning.split(" ")[0]; // Get "พื้นที่สีแดง", "พื้นที่สีเขียว", etc.
+        filtered = filtered.filter((l) => l.contract.zoning.includes(zoneKeyword));
       }
       if (searchData.buildingType) {
-        filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+        if (searchData.buildingType === "ที่ดินเปล่า") {
+          filtered = filtered.filter((l) => 
+            l.contract.building_type === "ที่ดินเปล่า" || 
+            l.contract.building_type === null || 
+            l.contract.building_type === ""
+          );
+        } else {
+          filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+        }
       }
 
       setListings(filtered);
@@ -222,10 +342,19 @@ export default function ListingsPage() {
         filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
       }
       if (searchData.zoning) {
-        filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
+        const zoneKeyword = searchData.zoning.split(" ")[0];
+        filtered = filtered.filter((l) => l.contract.zoning.includes(zoneKeyword));
       }
       if (searchData.buildingType) {
-        filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+        if (searchData.buildingType === "ที่ดินเปล่า") {
+          filtered = filtered.filter((l) => 
+            l.contract.building_type === "ที่ดินเปล่า" || 
+            l.contract.building_type === null || 
+            l.contract.building_type === ""
+          );
+        } else {
+          filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+        }
       }
       setListings(filtered);
     } finally {
