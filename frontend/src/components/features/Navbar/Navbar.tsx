@@ -36,11 +36,13 @@ export default function Navbar() {
         return [
           { label: "จัดการประกาศของฉัน", href: "/my-listings" },
           { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
+          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "แดชบอร์ดรายได้", href: "/dashboard" },
         ];
       case "INVESTOR":
         return [
           { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "รายการที่บันทึกไว้ (Wishlist)", href: "/wishlist" },
           { label: "เปรียบเทียบค่าธรรมเนียม", href: "/dashboard" },
           { label: "ประวัติการติดต่อ", href: "/messages" },
@@ -49,6 +51,7 @@ export default function Navbar() {
       default:
         return [
           { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "วิธีการใช้งาน", href: "/#how-it-works" },
         ];
     }
