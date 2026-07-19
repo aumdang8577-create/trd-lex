@@ -171,8 +171,27 @@ function CreateListingModal({
   const [askingPrice, setAskingPrice] = useState("");
   const [description, setDescription] = useState("");
   const [selectedImg, setSelectedImg] = useState(PRESET_IMAGES[0].url);
+  const [uploadedImgName, setUploadedImgName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("ขนาดไฟล์ภาพถ่ายต้องไม่เกิน 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target?.result as string;
+      setSelectedImg(base64Url);
+      setUploadedImgName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handlePriceChange = (val: string) => {
     const numeric = val.replace(/\D/g, "");
@@ -300,19 +319,24 @@ function CreateListingModal({
             />
           </div>
 
-          {/* 3. Image Selection */}
-          <div className="space-y-2">
+          {/* 3. Image Selection & Custom Upload */}
+          <div className="space-y-3.5">
             <label className="block text-xs font-bold text-slate-300">
-              เลือกรูปภาพแสดงหน้าประกาศ
+              รูปภาพแสดงหน้าประกาศ (เลือกรูปต้นแบบ หรือ อัปโหลดรูปภาพใหม่)
             </label>
+
+            {/* Gallery picker */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {PRESET_IMAGES.map((img) => (
                 <button
                   key={img.url}
                   type="button"
-                  onClick={() => setSelectedImg(img.url)}
+                  onClick={() => {
+                    setSelectedImg(img.url);
+                    setUploadedImgName("");
+                  }}
                   className={`relative h-18 rounded-lg overflow-hidden border-2 transition-all cursor-pointer text-left ${
-                    selectedImg === img.url ? "border-trd-secondary ring-1 ring-trd-secondary/40" : "border-[#1E2E4A] hover:border-slate-500"
+                    selectedImg === img.url && !uploadedImgName ? "border-trd-secondary ring-1 ring-trd-secondary/40" : "border-[#1E2E4A] hover:border-slate-500"
                   }`}
                 >
                   <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
@@ -321,6 +345,49 @@ function CreateListingModal({
                   </div>
                 </button>
               ))}
+            </div>
+
+            {/* Custom file upload dropzone */}
+            <div className="border-2 border-dashed border-[#1E2E4A] hover:border-trd-secondary/60 rounded-xl p-4.5 text-center cursor-pointer relative bg-[#070D1A] transition-all">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+              />
+              {uploadedImgName ? (
+                <div className="space-y-1.5">
+                  <span className="text-xs text-emerald-400 font-mono font-black block">
+                    ✓ อัปโหลดสำเร็จ: {uploadedImgName}
+                  </span>
+                  <span className="text-[10px] text-slate-450 block">
+                    (คลิกหรือลากไฟล์ใหม่มาวางเพื่อทำการเปลี่ยนรูปถ่าย)
+                  </span>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <span className="text-2xl">📸</span>
+                  <span className="text-xs text-slate-300 font-bold block">
+                    คลิก หรือ ลากไฟล์รูปถ่ายอสังหาริมทรัพย์ของคุณมาวางที่นี่
+                  </span>
+                  <span className="text-[10px] text-slate-500 block">
+                    รองรับไฟล์ภาพ JPEG, PNG (ไม่เกิน 5MB)
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Preview of selected/uploaded image */}
+            <div className="flex items-center gap-3 bg-[#070D1A] p-2.5 rounded-xl border border-[#1E2E4A]">
+              <div className="w-14 h-14 rounded-lg overflow-hidden border border-[#1E2E4A] bg-[#0F1A30]">
+                <img src={selectedImg} alt="Preview" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 font-mono block uppercase">SELECTED IMAGE PREVIEW:</span>
+                <span className="text-xs text-white font-bold block line-clamp-1">
+                  {uploadedImgName ? `ไฟล์อัปโหลด: ${uploadedImgName}` : "ใช้รูปภาพต้นแบบระบบ"}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -358,13 +425,15 @@ function MyListingCard({
   onStatusChange,
 }: {
   listing: Listing;
-  onUpdate: (id: string, data: { asking_price: number; description: string }) => Promise<void>;
+  onUpdate: (id: string, data: { asking_price: number; description: string; image_urls?: string[] }) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onStatusChange: (id: string, status: "ACTIVE" | "HIDDEN" | "SOLD") => Promise<void>;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editPrice, setEditPrice] = useState(listing.asking_price.toString());
   const [editDesc, setEditDesc] = useState(listing.description || "");
+  const [editImg, setEditImg] = useState<string | null>(null);
+  const [editImgName, setEditImgName] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
@@ -373,12 +442,37 @@ function MyListingCard({
   const annualRent = listing.contract?.annual_rent || 0;
   const feeGeneral = Math.ceil((annualRent * 6) / 10) * 10;
 
+  const handleEditFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("ขนาดไฟล์ภาพต้องไม่เกิน 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target?.result as string;
+      setEditImg(base64Url);
+      setEditImgName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSave = async () => {
     const price = parseFloat(editPrice.replace(/,/g, ""));
     if (isNaN(price) || price <= 0) return;
     setIsSaving(true);
     try {
-      await onUpdate(listing.id, { asking_price: price, description: editDesc });
+      const data: { asking_price: number; description: string; image_urls?: string[] } = {
+        asking_price: price,
+        description: editDesc,
+      };
+      if (editImg) {
+        data.image_urls = [editImg];
+      }
+      await onUpdate(listing.id, data);
       setIsSaving(false);
       setIsEditing(false);
       setSavedFlash(true);
@@ -391,6 +485,8 @@ function MyListingCard({
   const handleCancel = () => {
     setEditPrice(listing.asking_price.toString());
     setEditDesc(listing.description || "");
+    setEditImg(null);
+    setEditImgName("");
     setIsEditing(false);
   };
 
@@ -491,6 +587,26 @@ function MyListingCard({
                   className="w-full bg-[#0F1A30] border border-[#2E4A6E] rounded-lg px-3 py-1.5 text-xs text-slate-350 focus:outline-none focus:border-trd-secondary resize-none font-sans"
                   placeholder="คำอธิบายเพิ่มเติม..."
                 />
+              </div>
+              <div>
+                <label className="block text-[10px] text-trd-secondary font-mono font-black uppercase tracking-widest mb-1">เปลี่ยนรูปภาพแสดงประกาศ</label>
+                <div className="relative border border-[#2E4A6E] bg-[#0F1A30] rounded-lg p-2.5 text-center cursor-pointer hover:border-trd-secondary/50 transition-all font-sans text-xs">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleEditFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  />
+                  {editImgName ? (
+                    <span className="text-[10px] text-emerald-400 font-mono font-black block">
+                      ✓ เลือกแล้ว: {editImgName}
+                    </span>
+                  ) : (
+                    <span className="text-[10.5px] text-slate-400 font-bold block">
+                      📸 คลิกเพื่ออัปโหลดไฟล์รูปภาพใหม่
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex gap-2 pt-1">
                 <button
@@ -628,7 +744,10 @@ export default function MyListingsPage() {
   };
 
   // 1. UPDATE Listing
-  const handleUpdate = async (id: string, data: { asking_price: number; description: string }) => {
+  const handleUpdate = async (
+    id: string,
+    data: { asking_price: number; description: string; image_urls?: string[] }
+  ) => {
     try {
       await api.updateListing(id, data);
       showToast("✓ แก้ไขรายละเอียดประกาศเรียบร้อยแล้ว");
