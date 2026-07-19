@@ -538,31 +538,31 @@ export default function BenefitsEvaluatorPage() {
               </p>
 
               {/* Simple Responsive SVG Chart */}
-              <div className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <div className="h-44 w-full flex items-end gap-10 justify-center font-mono text-[10px]">
+              <div className="w-full bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <div className="h-72 w-full flex items-end gap-12 justify-center font-mono text-[10px] pb-2">
                   
                   {/* Option A: Private Land */}
-                  <div className="flex flex-col items-center flex-grow max-w-[120px]">
-                    <span className="font-bold text-slate-700 mb-2 text-center leading-tight">
+                  <div className="flex flex-col items-center flex-grow max-w-[140px]">
+                    <span className="font-bold text-slate-700 mb-3 text-center leading-tight">
                       ฿{Math.round(privateLandPurchaseCost).toLocaleString()}<br/>
                       <span className="text-[8px] text-slate-400 font-normal">(ซื้อที่ดินขาด)</span>
                     </span>
                     <div 
-                      className="w-16 bg-slate-300 border-2 border-slate-400/80 rounded-t-lg transition-all duration-500"
-                      style={{ height: "120px" }}
+                      className="w-16 bg-slate-300 border-2 border-slate-400/80 rounded-t-lg transition-all duration-500 shadow-sm"
+                      style={{ height: "220px" }}
                     />
                     <span className="font-black text-slate-800 text-[9px] mt-2 uppercase tracking-wide text-center leading-tight">ที่ดินเอกชน</span>
                   </div>
 
                   {/* Option B: State Land Lease via TRD-LEX */}
-                  <div className="flex flex-col items-center flex-grow max-w-[120px]">
-                    <span className="font-black text-trd-secondary-dark mb-2 text-center leading-tight">
+                  <div className="flex flex-col items-center flex-grow max-w-[140px]">
+                    <span className="font-black text-trd-secondary-dark mb-3 text-center leading-tight">
                       ฿{Math.round(askingPrice + (newAnnualRent * 10)).toLocaleString()}<br/>
                       <span className="text-[8px] text-emerald-500 font-black">(ประหยัด {(100 - ((askingPrice + (newAnnualRent * 10)) / privateLandPurchaseCost * 100)).toFixed(0)}%)</span>
                     </span>
                     <div 
                       className="w-16 bg-gold-gradient border-2 border-trd-secondary-dark rounded-t-lg transition-all duration-500 shadow-md"
-                      style={{ height: `${Math.max(20, Math.round(((askingPrice + (newAnnualRent * 10)) / privateLandPurchaseCost) * 120))}px` }}
+                      style={{ height: `${Math.max(30, Math.round(((askingPrice + (newAnnualRent * 10)) / privateLandPurchaseCost) * 220))}px` }}
                     />
                     <span className="font-black text-trd-primary text-[9px] mt-2 uppercase tracking-wide text-center leading-tight">สิทธิเช่าราชพัสดุ</span>
                   </div>
