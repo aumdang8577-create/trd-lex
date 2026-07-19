@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/ui/Button";
 
 interface SearchBarProps {
@@ -55,6 +56,9 @@ const buildingTypes = [
 ];
 
 export default function SearchBar({ onSearch, className = "", layout = "horizontal" }: SearchBarProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [minPrice, setMinPrice] = useState("");
@@ -63,15 +67,47 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
   const [buildingType, setBuildingType] = useState("");
   const [activePreset, setActivePreset] = useState<string | null>(null);
 
-  // เคลียร์ค่าอำเภอเมื่อจังหวัดเปลี่ยนแปลง
+  // ตั้งค่าเริ่มต้นจาก URL parameters เมื่อเปิดหน้าเว็บครั้งแรก
   useEffect(() => {
-    setDistrict("");
+    if (searchParams) {
+      const p = searchParams.get("province") || "";
+      const d = searchParams.get("district") || "";
+      const min = searchParams.get("minPrice") || "";
+      const max = searchParams.get("maxPrice") || "";
+      const z = searchParams.get("zoning") || "";
+      const bt = searchParams.get("buildingType") || "";
+
+      if (p) setProvince(p);
+      if (d) setDistrict(d);
+      if (min) setMinPrice(min);
+      if (max) setMaxPrice(max);
+      if (z) setZoning(z);
+      if (bt) setBuildingType(bt);
+    }
+  }, [searchParams]);
+
+  // เคลียร์ค่าอำเภอเมื่อจังหวัดเปลี่ยนแปลง (เฉพาะตอนผู้ใช้เลือกเอง ไม่ใช่โหลดจาก URL)
+  useEffect(() => {
+    if (province && searchParams && searchParams.get("province") !== province) {
+      setDistrict("");
+    }
   }, [province]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (onSearch) {
       onSearch({ province, district, minPrice, maxPrice, zoning, buildingType });
+    } else {
+      // หากรันจากหน้าโฮมเพจ (ไม่มี prop onSearch) ให้ทำการเปลี่ยนเส้นทางไปยังหน้าประกาศ /listings พร้อมส่งตัวแปรค้นหาไปที่ URL
+      const q = new URLSearchParams();
+      if (province) q.set("province", province);
+      if (district) q.set("district", district);
+      if (minPrice) q.set("minPrice", minPrice);
+      if (maxPrice) q.set("maxPrice", maxPrice);
+      if (zoning) q.set("zoning", zoning);
+      if (buildingType) q.set("buildingType", buildingType);
+      
+      router.push(`/listings?${q.toString()}`);
     }
   };
 
@@ -90,7 +126,6 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
 
   const applyPricePreset = (presetName: string, min: string, max: string) => {
     if (activePreset === presetName) {
-      // ยกเลิกฟิลเตอร์ราคาเมื่อกดซ้ำ
       setMinPrice("");
       setMaxPrice("");
       setActivePreset(null);

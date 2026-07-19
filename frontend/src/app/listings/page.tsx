@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import SearchBar from "@/components/features/SearchBar/SearchBar";
 import PropertyCard from "@/components/features/PropertyCard";
 import LeaseMap from "@/components/features/Map/LeaseMap";
@@ -262,26 +263,105 @@ const initialListings: Listing[] = [
   }
 ];
 
-export default function ListingsPage() {
+function ListingsContent() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 500));
+        
+        // 1. Fetch initial data from API
         const res = await api.getListings();
-        setListings(res.data);
+        let listData = res.data;
+        
+        // 2. Read query parameters from URL
+        const p = searchParams.get("province");
+        const d = searchParams.get("district");
+        const min = searchParams.get("minPrice");
+        const max = searchParams.get("maxPrice");
+        const z = searchParams.get("zoning");
+        const bt = searchParams.get("buildingType");
+
+        // 3. Apply active filters from URL parameters if present
+        if (p) {
+          listData = listData.filter((l) => l.contract.province === p);
+        }
+        if (d) {
+          listData = listData.filter((l) => l.contract.district.toLowerCase().includes(d.toLowerCase()));
+        }
+        if (min) {
+          listData = listData.filter((l) => l.asking_price >= parseFloat(min));
+        }
+        if (max) {
+          listData = listData.filter((l) => l.asking_price <= parseFloat(max));
+        }
+        if (z) {
+          const zoneKeyword = z.split(" ")[0];
+          listData = listData.filter((l) => l.contract.zoning.includes(zoneKeyword));
+        }
+        if (bt) {
+          if (bt === "ที่ดินเปล่า") {
+            listData = listData.filter((l) => 
+              l.contract.building_type === "ที่ดินเปล่า" || 
+              l.contract.building_type === null || 
+              l.contract.building_type === ""
+            );
+          } else {
+            listData = listData.filter((l) => l.contract.building_type === bt);
+          }
+        }
+        
+        setListings(listData);
       } catch (err) {
         console.error("Error fetching listings, using initial mock:", err);
-        setListings(initialListings);
+        let listData = [...initialListings];
+        
+        const p = searchParams.get("province");
+        const d = searchParams.get("district");
+        const min = searchParams.get("minPrice");
+        const max = searchParams.get("maxPrice");
+        const z = searchParams.get("zoning");
+        const bt = searchParams.get("buildingType");
+
+        if (p) {
+          listData = listData.filter((l) => l.contract.province === p);
+        }
+        if (d) {
+          listData = listData.filter((l) => l.contract.district.toLowerCase().includes(d.toLowerCase()));
+        }
+        if (min) {
+          listData = listData.filter((l) => l.asking_price >= parseFloat(min));
+        }
+        if (max) {
+          listData = listData.filter((l) => l.asking_price <= parseFloat(max));
+        }
+        if (z) {
+          const zoneKeyword = z.split(" ")[0];
+          listData = listData.filter((l) => l.contract.zoning.includes(zoneKeyword));
+        }
+        if (bt) {
+          if (bt === "ที่ดินเปล่า") {
+            listData = listData.filter((l) => 
+              l.contract.building_type === "ที่ดินเปล่า" || 
+              l.contract.building_type === null || 
+              l.contract.building_type === ""
+            );
+          } else {
+            listData = listData.filter((l) => l.contract.building_type === bt);
+          }
+        }
+        
+        setListings(listData);
       } finally {
         setLoading(false);
       }
     };
     fetchListings();
-  }, []);
+  }, [searchParams]);
 
   const handleSearch = async (searchData: {
     province: string;
@@ -456,5 +536,17 @@ export default function ListingsPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function ListingsPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center font-mono text-xs text-slate-400">
+        [ กำลังประมวลผลข้อมูลสิทธิ์เชิงพื้นที่... ]
+      </div>
+    }>
+      <ListingsContent />
+    </Suspense>
   );
 }

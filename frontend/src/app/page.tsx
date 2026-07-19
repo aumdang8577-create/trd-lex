@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -146,7 +146,9 @@ export default function HomePage() {
 
           {/* SearchBar in Hero */}
           <div className="animate-slide-up">
-            <SearchBar />
+            <Suspense fallback={<div className="h-16 w-full bg-slate-900/60 rounded-2xl animate-pulse" />}>
+              <SearchBar />
+            </Suspense>
           </div>
         </div>
       </section>
