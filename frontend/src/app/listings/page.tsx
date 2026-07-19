@@ -172,7 +172,14 @@ export default function ListingsPage() {
     fetchListings();
   }, []);
 
-  const handleSearch = async (searchData: { province: string; district: string; minPrice: string; maxPrice: string; zoning: string }) => {
+  const handleSearch = async (searchData: {
+    province: string;
+    district: string;
+    minPrice: string;
+    maxPrice: string;
+    zoning: string;
+    buildingType?: string;
+  }) => {
     try {
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 400));
@@ -191,6 +198,9 @@ export default function ListingsPage() {
       }
       if (searchData.zoning) {
         filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
+      }
+      if (searchData.buildingType) {
+        filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
       }
 
       setListings(filtered);
@@ -214,6 +224,9 @@ export default function ListingsPage() {
       if (searchData.zoning) {
         filtered = filtered.filter((l) => l.contract.zoning === searchData.zoning);
       }
+      if (searchData.buildingType) {
+        filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+      }
       setListings(filtered);
     } finally {
       setLoading(false);
@@ -222,51 +235,48 @@ export default function ListingsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 font-sans text-trd-midnight">
-      <div className="mb-8">
+      {/* Title Header */}
+      <div className="mb-8 border-b-2 border-trd-border pb-4">
         <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
-          การสืบค้นข้อมูลสัญญาเช่าเชิงพื้นที่
+          ระบบสืบค้นข้อมูลประกาศสิทธิ์เชิงพื้นที่สำหรับประชาชนทั่วไป
         </span>
-        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">ค้นหาประกาศสิทธิการเช่า</h1>
-        <p className="text-xs text-trd-text-muted mt-2 leading-relaxed font-medium">
-          ค้นหา ตรวจสอบ และวิเคราะห์พิกัดสิทธิการเช่าที่ราชพัสดุผ่านแผนที่และระบบการค้นหาแบบกริดละเอียด
+        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">ค้นหาประกาศสิทธิการเช่าที่ราชพัสดุ</h1>
+        <p className="text-xs text-trd-text-muted mt-1 leading-relaxed font-medium">
+          สืบค้น ตรวจสอบตำแหน่งทางภูมิศาสตร์ และตรวจสอบความถูกต้องของสิทธิการเช่าเพื่อประกอบการตัดสินใจของประชาชนอย่างโปร่งใส
         </p>
       </div>
 
-      {/* Search Filter Bar */}
-      <div className="mb-10">
-        <SearchBar onSearch={handleSearch} />
-      </div>
-
-      {/* Main Grid: Listings + Map Split View */}
+      {/* Main Grid Layout: Sidebar Filter + Listings List + Map Split View */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Listings List */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="flex justify-between items-center pb-4 border-b-2 border-trd-border">
-            <h2 className="text-xs font-black text-trd-midnight font-mono uppercase tracking-widest">
-              จำนวนผลลัพธ์รายการตรวจสอบสิทธิ์ที่ค้นพบ ({listings.length} รายการ)
+        
+        {/* Left Side: Persistent Sidebar Filter (col-span-3) */}
+        <div className="lg:col-span-3 lg:sticky lg:top-24 z-10">
+          <SearchBar onSearch={handleSearch} layout="vertical" />
+        </div>
+
+        {/* Center: Listings List (col-span-5) */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="flex justify-between items-center pb-4 border-b border-trd-border/80">
+            <h2 className="text-[10px] font-black text-trd-midnight font-mono uppercase tracking-widest">
+              รายการประกาศเสนอโอนสิทธิ์ที่พบบนเงื่อนไขการค้นหา ({listings.length} รายการ)
             </h2>
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[1, 2, 3, 4].map((i) => (
+            <div className="space-y-6">
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="bg-[#0F1A30] border border-[#1E2E4A]/80 overflow-hidden animate-pulse rounded-2xl shadow-lg">
-                  {/* Image Skeleton */}
                   <div className="h-44 bg-slate-900/80" />
-                  {/* Content Skeleton */}
                   <div className="p-5 space-y-4">
                     <div className="flex justify-between items-center">
                       <div className="h-3 bg-slate-800 rounded w-1/3" />
                       <div className="h-4 bg-slate-800 rounded w-1/4" />
                     </div>
-                    
                     <div className="h-5 bg-slate-800 rounded w-3/4" />
-                    
                     <div className="space-y-2 pt-2">
                       <div className="h-2.5 bg-slate-800 rounded w-5/6" />
                       <div className="h-2.5 bg-slate-800 rounded w-4/5" />
                     </div>
-
                     <div className="flex gap-2 pt-3 border-t border-[#1E2E4A]/60">
                       <div className="h-3 bg-slate-800 rounded w-1/4" />
                       <div className="h-3 bg-slate-800 rounded w-1/4" />
@@ -276,7 +286,7 @@ export default function ListingsPage() {
               ))}
             </div>
           ) : listings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {listings.map((listing) => (
                 <PropertyCard
                   key={listing.id}
@@ -297,23 +307,24 @@ export default function ListingsPage() {
             </div>
           ) : (
             <div className="bg-[#0F1A30] border border-[#1E2E4A]/80 p-12 text-center text-slate-400 font-mono text-xs uppercase tracking-widest font-bold rounded-2xl shadow-lg">
-              [ ไม่พบข้อมูลทะเบียนสัญญาเช่าตามเงื่อนไขที่ระบุ ]
+              [ ไม่พบข้อมูลสัญญาเช่าที่ตรงตามตัวกรองปัจจุบัน ]
             </div>
           )}
         </div>
 
-        {/* Map View */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24">
+        {/* Right: Map View (col-span-4) */}
+        <div className="lg:col-span-4 lg:sticky lg:top-24">
           <div className="bg-[#0F1A30] border border-[#1E2E4A]/80 overflow-hidden shadow-[0_12px_35px_rgba(7,13,26,0.35)] rounded-2xl">
             <div className="p-4 bg-[#070D1A] text-white font-mono text-xs uppercase tracking-widest font-black flex items-center justify-between border-b border-[#1E2E4A]">
-              <span>แผนที่ระบบสารสนเทศภูมิศาสตร์แสดงพิกัดที่ดิน</span>
+              <span>พิกัดแผนที่ภูมิสารสนเทศ (GIS)</span>
               <span className="text-[8px] bg-gold-gradient border border-transparent text-[#0F1A30] px-2 py-0.5 font-extrabold font-mono rounded-lg shadow-neon-gold">
-                DARK MAP ACTIVE
+                MAP VIEW
               </span>
             </div>
             <LeaseMap listings={listings} className="!rounded-none !border-none !h-[450px]" />
           </div>
         </div>
+
       </div>
     </div>
   );
