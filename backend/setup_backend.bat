@@ -53,6 +53,7 @@ echo.
 :: 4. Prisma Setup
 echo [4/5] Setting up Prisma and syncing Database Schema...
 echo Database URL: postgresql://postgres:postgres@localhost:5432/trd_lex
+set "PATH=%~dp0.venv\Scripts;%PATH%"
 python -m prisma generate --schema=prisma/schema.prisma
 python -m prisma db push --schema=prisma/schema.prisma
 if !errorlevel! neq 0 (

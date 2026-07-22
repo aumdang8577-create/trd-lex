@@ -62,14 +62,14 @@ export default function EconomicDashboard() {
         
         {/* Card 1: Revived land */}
         <div className="bg-[#070D1A]/55 p-5 border border-[#1E2E4A]/60 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-trd-secondary/50 hover:shadow-[0_10px_20px_rgba(7,13,26,0.4)] rounded-xl">
-          <p className="text-[8px] font-black text-trd-secondary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๑ // พื้นที่ราชพัสดุที่ได้รับการฟื้นฟูพัฒนาธุรกิจ</p>
+          <p className="text-[8px] font-black text-trd-secondary mb-2 uppercase tracking-widest">ตัวชี้วัดที่ ๑ // พื้นที่ราชพัสดุที่ได้รับการจัดประโยชน์และพัฒนาเชิงเศรษฐกิจ</p>
           <div className="flex items-baseline gap-2">
             <h3 className="text-3xl font-black text-emerald-400">
               {data.revived_land_sqw.toLocaleString()}
             </h3>
             <span className="text-[9px] font-black text-slate-400 uppercase">ตารางวา</span>
           </div>
-          <span className="text-[9px] block text-slate-300 mt-2 font-sans font-bold">พื้นที่ที่เปลี่ยนเป็นธุรกิจใหม่</span>
+          <span className="text-[9px] block text-slate-300 mt-2 font-sans font-bold">พื้นที่ราชพัสดุที่นำมาจัดประโยชน์ทางเศรษฐกิจ</span>
         </div>
 
         {/* Card 2: State revenue */}

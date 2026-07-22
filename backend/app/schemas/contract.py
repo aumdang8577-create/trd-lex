@@ -31,6 +31,27 @@ class ContractDataResponse(BaseModel):
     calculated_annual_rent: Optional[float] = None
     calculated_arrange_fee: Optional[float] = None
 
+    # Additional CSV fields
+    primary_key: Optional[str] = None
+    reg_id: Optional[str] = None
+    rent_category: Optional[str] = None
+    rent_type: Optional[str] = None
+    vpn_code: Optional[str] = None
+    lessee_name: Optional[str] = None
+    area_rai: Optional[float] = None
+    area_ngan: Optional[float] = None
+    area_wa: Optional[float] = None
+    land_plan: Optional[str] = None
+    building_details: Optional[str] = None
+    build_year: Optional[int] = None
+    on_street: Optional[str] = None
+    street_type: Optional[str] = None
+    street_width: Optional[float] = None
+    street_access: Optional[float] = None
+    land_width: Optional[float] = None
+    land_ap: Optional[float] = None
+    build_ap: Optional[float] = None
+
     class Config:
         from_attributes = True
 

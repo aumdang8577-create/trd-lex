@@ -1,0 +1,32 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Amphoe",
+    "Carto",
+    "CARTO",
+    "dpage",
+    "errorlevel",
+    "Garuda",
+    "garuda",
+    "healthcheck",
+    "isready",
+    "modelcontextprotocol",
+    "Ngan",
+    "PGADMIN",
+    "pgadmin",
+    "Provice",
+    "PYTHONUTF",
+    "SETLOCAL",
+    "Tambon",
+    "thaid",
+    "Thaid",
+    "Uvicorn",
+    "uvicorn",
+    "venv"
+  ],
+  "ignoreRegExpList": [
+    "[\\u0E00-\\u0E7F]+",
+    "/[\u0E00-\u0E7F]+/g"
+  ]
+}

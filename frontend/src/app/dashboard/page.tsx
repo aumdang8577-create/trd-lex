@@ -112,7 +112,7 @@ export default function DashboardPage() {
               <Badge variant="gold">การเปลี่ยนมือสิทธิ์</Badge>
             </div>
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-              พื้นที่ราชพัสดุแปรรูปเป็นธุรกิจใหม่
+              พื้นที่ราชพัสดุที่ได้รับการจัดประโยชน์และพัฒนาเชิงเศรษฐกิจ
             </h3>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="text-3xl font-bold text-trd-primary">
@@ -121,7 +121,7 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500 font-medium">ตารางวา</span>
             </div>
             <p className="text-[10px] text-gray-400 mt-3">
-              สะท้อนการใช้ประโยชน์ที่ดินว่างเปล่าให้เกิดโครงสร้างพื้นฐานใหม่
+              สะท้อนการบริหารจัดการและส่งเสริมการใช้ประโยชน์ที่ดินราชพัสดุให้เกิดมูลค่าทางเศรษฐกิจเพิ่มขึ้น
             </p>
           </CardContent>
         </Card>

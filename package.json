@@ -1,0 +1,12 @@
+{
+  "name": "trd-lex",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start"
+  },
+  "prisma": {
+    "schema": "backend/prisma/schema.prisma"
+  }
+}

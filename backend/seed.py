@@ -10,13 +10,14 @@ ROLE_USER = "USER"
 ROLE_ADMIN = "ADMIN"
 STATUS_ACTIVE = "ACTIVE"
 
-# District coordinates mapping
+# District coordinates mapping fallback
 district_coords = {
     'กรุงเทพมหานคร_พระนคร': {'lat': 13.7563, 'lng': 100.5018},
     'ชลบุรี_บางละมุง': {'lat': 12.9236, 'lng': 100.8824},
     'ชลบุรี_ศรีราชา': {'lat': 13.1111, 'lng': 100.9999},
     'นครนายก_เมืองนครนายก': {'lat': 14.2069, 'lng': 101.1965},
     'อุดรธานี_กุมภวาปี': {'lat': 17.1147, 'lng': 103.0181},
+    'อุดรธานี_เมืองอุดรธานี': {'lat': 17.4037, 'lng': 102.7895},
     'ขอนแก่น_เมืองขอนแก่น': {'lat': 16.4322, 'lng': 102.8236},
     'สุโขทัย_เมืองสุโขทัย': {'lat': 17.0071, 'lng': 99.8262},
     'อุดรธานี_หนองวัวซอ': {'lat': 17.1654, 'lng': 102.5886},
@@ -69,6 +70,28 @@ def generate_thai_id(name: str) -> str:
 def get_random_offset(radius=0.02):
     return (random.random() - 0.5) * radius * 2
 
+def parse_float(val, default=0.0) -> float:
+    if val is None:
+        return default
+    s = str(val).replace('"', '').replace(',', '').strip()
+    if not s:
+        return default
+    try:
+        return float(s)
+    except ValueError:
+        return default
+
+def parse_int(val, default=None):
+    if val is None:
+        return default
+    s = str(val).replace('"', '').replace(',', '').strip()
+    if not s:
+        return default
+    try:
+        return int(float(s))
+    except ValueError:
+        return default
+
 def infer_building_details(lessee_name: str, land_area_sqw: float):
     name = lessee_name.lower()
     if any(x in name for x in ['โรงงาน', 'แปรรูป', 'อุตสาหกรรม']):
@@ -96,9 +119,6 @@ def infer_building_details(lessee_name: str, land_area_sqw: float):
             "zoning": "พื้นที่สีเขียว (เกษตรกรรม)"
         }
 
-def parse_area(area_str: str) -> float:
-    return float(area_str.replace('"', '').replace(',', '').strip())
-
 def get_asking_price(building_type: str, land_area: float) -> float:
     if building_type == "โรงงาน/คลังสินค้า":
         multiplier = 15000
@@ -108,7 +128,7 @@ def get_asking_price(building_type: str, land_area: float) -> float:
         multiplier = 8000
     else:
         multiplier = 2000
-    base = land_area * multiplier * random.uniform(0.95, 1.15)
+    base = max(land_area, 10.0) * multiplier * random.uniform(0.95, 1.15)
     return float(round(base / 10000) * 10000)
 
 def generate_description(province: str, district: str, sub_district: str, land_area: float, building_type: str) -> str:
@@ -131,7 +151,6 @@ async def main():
     await db.user.delete_many()
     
     print("Creating core default users...")
-    # Standard test users mapping
     default_users = [
         {"thaid_id": "1123456789012", "first_name": "สมชาย", "last_name": "ใจดี", "phone_number": "0812345678", "role": ROLE_USER},
         {"thaid_id": "2123456789012", "first_name": "สมหญิง", "last_name": "รักดี", "phone_number": "0898765432", "role": ROLE_USER},
@@ -144,8 +163,16 @@ async def main():
         user = await db.user.create(data=user_data)
         user_map[user_data["thaid_id"]] = user
 
-    # Locate CSV file
-    csv_paths = ["../datatest.csv", "datatest.csv", "backend/datatest.csv", "./datatest.csv"]
+    # Candidate CSV file paths
+    csv_paths = [
+        "data/data.csv",
+        "../data/data.csv",
+        "backend/data/data.csv",
+        "c:/TRD_lex/data/data.csv",
+        "./data.csv",
+        "datatest.csv",
+        "../datatest.csv"
+    ]
     csv_file = None
     for path in csv_paths:
         if os.path.exists(path):
@@ -153,42 +180,77 @@ async def main():
             break
             
     if not csv_file:
-        print("ERROR: datatest.csv not found!")
+        print("ERROR: data.csv not found!")
         await db.disconnect()
         return
         
     print(f"Reading data from: {csv_file}")
     
     listings_count = 0
+    contracts_count = 0
+    
     with open(csv_file, mode='r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         
         for row in reader:
-            if listings_count >= 20:
-                break
-                
-            status = row.get("สถานะ", "").strip()
-            # Only import active listings to get 20 declarations
-            if status != STATUS_ACTIVE:
+            primary_key = row.get("PrimaryKey", "").strip()
+            reg_id = row.get("REG_ID", "").strip()
+            parcel_num = row.get("Land_No", "").strip()
+            rent_cat = row.get("Rent", "").strip()
+            rent_type = row.get("Rent_Type", "").strip()
+            contract_num = row.get("Rent_Num", "").strip() or primary_key
+            vpn_code = row.get("VPN_Code", "").strip()
+            lessee_full = row.get("Rent_Name", "").strip() or row.get("ชื่อผู้เช่า/หน่วยงานครอบครอง", "").strip()
+            
+            if not contract_num and not primary_key:
                 continue
                 
-            lessee_full = row.get("ชื่อผู้เช่า/หน่วยงานครอบครอง", "").strip()
-            if not lessee_full:
-                continue
+            sub_district = row.get("Tambon", "").strip() or row.get("ตำบล", "").strip()
+            district = row.get("Amphoe", "").strip() or row.get("อำเภอ", "").strip()
+            province = row.get("Provice", "").strip() or row.get("Province", "").strip() or row.get("จังหวัด", "").strip()
+            
+            area_rai = parse_float(row.get("Area_Rai", "0"))
+            area_ngan = parse_float(row.get("Area_Ngan", "0"))
+            area_wa = parse_float(row.get("Area_Wa", "0"))
+            land_area = parse_float(row.get("เนื้อที่ (ตร.ว.)", "0"))
+            if land_area == 0:
+                land_area = area_rai * 400.0 + area_ngan * 100.0 + area_wa
                 
-            # Parse names
-            names = lessee_full.split(" ", 1)
+            lat = parse_float(row.get("Latitude", "0"))
+            lng = parse_float(row.get("Longitude", "0"))
+            
+            if lat == 0 or lng == 0:
+                loc_key = f"{province}_{district}"
+                coords = district_coords.get(loc_key, {'lat': 17.4037, 'lng': 102.7895})
+                lat = coords['lat'] + get_random_offset()
+                lng = coords['lng'] + get_random_offset()
+                
+            land_plan = row.get("Land_Plan", "").strip()
+            build_type = row.get("Build_Type", "").strip()
+            building = row.get("Building", "").strip()
+            build_area = parse_float(row.get("Build_Area", "0"))
+            build_year = parse_int(row.get("Build_Year"))
+            on_street = row.get("ON_Street", "").strip()
+            street_t = row.get("Street_T", "").strip()
+            street_w = parse_float(row.get("Street_W"))
+            street_a = parse_float(row.get("Street_A"))
+            land_w = parse_float(row.get("Land_Width"))
+            land_ap = parse_float(row.get("Land_AP"))
+            build_ap = parse_float(row.get("Build_AP"))
+            status = row.get("Status", "ACTIVE").strip().upper()
+            
+            names = lessee_full.split(" ", 1) if lessee_full else ["ผู้เช่า", "ราชพัสดุ"]
             first_name = names[0]
             last_name = names[1] if len(names) > 1 else ""
             
-            # Generate or find user
-            thaid_id = generate_thai_id(lessee_full)
-            # To ensure standard test credentials work, map first few to standard accounts
-            if listings_count == 0:
+            thaid_id = generate_thai_id(lessee_full) if lessee_full else f"3{random.randint(100000000000, 999999999999)}"
+            
+            # Map first 3 active contracts to core test accounts for easy testing
+            if contracts_count == 0:
                 thaid_id = "1123456789012"
-            elif listings_count == 1:
+            elif contracts_count == 1:
                 thaid_id = "2123456789012"
-            elif listings_count == 2:
+            elif contracts_count == 2:
                 thaid_id = "3123456789012"
                 
             if thaid_id in user_map:
@@ -205,27 +267,14 @@ async def main():
                 )
                 user_map[thaid_id] = seller
                 
-            # Contract attributes
-            contract_num = row.get("เลขที่สัญญา", "").strip()
-            parcel_num = row.get("เลขที่ราชพัสดุ", "").strip()
-            province = row.get("จังหวัด", "").strip()
-            district = row.get("อำเภอ", "").strip()
-            sub_district = row.get("ตำบล", "").strip()
-            land_area = parse_area(row.get("เนื้อที่ (ตร.ว.)", "0"))
-            
-            # Location Mapping
-            loc_key = f"{province}_{district}"
-            coords = district_coords.get(loc_key, {'lat': 13.7563, 'lng': 100.5018})
-            lat = coords['lat'] + get_random_offset()
-            lng = coords['lng'] + get_random_offset()
-            
-            # Building details mapping
             bld_info = infer_building_details(lessee_full, land_area)
-            building_type = bld_info["building_type"]
-            usable_area_sqm = bld_info["usable_area_sqm"]
-            zoning = bld_info["zoning"]
+            building_type = build_type if build_type else bld_info["building_type"]
+            usable_area_sqm = build_area if build_area > 0 else bld_info["usable_area_sqm"]
+            zoning = land_plan if land_plan else bld_info["zoning"]
             
-            # Create contract
+            contracts_count += 1
+            
+            # Create contract with all new columns
             contract = await db.leasecontract.create(
                 data={
                     "contract_number": contract_num,
@@ -237,50 +286,68 @@ async def main():
                     "district": district,
                     "sub_district": sub_district,
                     "land_area_sqw": land_area,
-                    "is_active": True,
+                    "is_active": (status != "HIDDEN"),
                     "building_type": building_type,
                     "usable_area_sqm": usable_area_sqm,
                     "zoning": zoning,
-                    "annual_rent": 12000.0
+                    "annual_rent": 12000.0 if land_ap == 0 else float(land_ap),
+                    
+                    # Additional CSV fields
+                    "primary_key": primary_key,
+                    "reg_id": reg_id,
+                    "rent_category": rent_cat,
+                    "rent_type": rent_type,
+                    "vpn_code": vpn_code,
+                    "lessee_name": lessee_full,
+                    "area_rai": area_rai,
+                    "area_ngan": area_ngan,
+                    "area_wa": area_wa,
+                    "land_plan": land_plan,
+                    "building_details": building,
+                    "build_year": build_year,
+                    "on_street": on_street,
+                    "street_type": street_t,
+                    "street_width": street_w,
+                    "street_access": street_a,
+                    "land_width": land_w,
+                    "land_ap": land_ap,
+                    "build_ap": build_ap
                 }
             )
             
-            # Generate pricing & description
-            asking_price = get_asking_price(building_type, land_area)
-            estimated_fee = asking_price * 0.03
-            description = generate_description(province, district, sub_district, land_area, building_type)
-            
-            # Image picker
-            if building_type == "อาคารพาณิชย์":
-                images = commercial_images
-            elif building_type == "โรงงาน/คลังสินค้า":
-                images = industrial_images
-            elif building_type == "บ้านพักอาศัย":
-                images = residential_images
-            else:
-                images = vacant_images
+            # Create active listing for first 50 contracts or all active ones
+            if status == STATUS_ACTIVE and listings_count < 60:
+                asking_price = get_asking_price(building_type, land_area)
+                estimated_fee = asking_price * 0.03
+                description = generate_description(province, district, sub_district, land_area, building_type)
                 
-            img_url = random.choice(images)
-            
-            # Create listing
-            listings_count += 1
-            await db.listing.create(
-                data={
-                    "id": f"list-{listings_count}",
-                    "sellerId": seller.id,
-                    "contractId": contract.id,
-                    "asking_price": asking_price,
-                    "estimated_fee": estimated_fee,
-                    "description": description,
-                    "image_urls": [img_url],
-                    "status": STATUS_ACTIVE
-                }
-            )
-            
-            print(f"Seeded #{listings_count}: {contract_num} in {district}, {province} for {lessee_full}")
-
-    print(f"Successfully seeded {listings_count} active listings from CSV!")
-    await db.disconnect()
+                if building_type == "อาคารพาณิชย์" or "ตึก" in building:
+                    images = commercial_images
+                elif "โรงงาน" in building_type or "คลัง" in building_type:
+                    images = industrial_images
+                elif "บ้าน" in building_type or "อาศัย" in building_type:
+                    images = residential_images
+                else:
+                    images = vacant_images
+                    
+                img_url = random.choice(images)
+                
+                listings_count += 1
+                await db.listing.create(
+                    data={
+                        "id": f"list-{listings_count}",
+                        "sellerId": seller.id,
+                        "contractId": contract.id,
+                        "asking_price": asking_price,
+                        "estimated_fee": estimated_fee,
+                        "description": description,
+                        "image_urls": [img_url],
+                        "status": STATUS_ACTIVE
+                    }
+                )
+                
+        print(f"Successfully seeded {contracts_count} contracts and {listings_count} active listings from CSV!")
+        await db.disconnect()
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -13,10 +13,15 @@ export default function Navbar() {
   const [role, setRole] = useState<UserRole>("GUEST");
 
   useEffect(() => {
-    const savedRole = localStorage.getItem("trd_user_role") as UserRole;
-    if (savedRole) {
-      setRole(savedRole);
-    }
+    const syncRole = () => {
+      const savedRole = localStorage.getItem("trd_user_role") as UserRole;
+      if (savedRole) {
+        setRole(savedRole);
+      }
+    };
+    syncRole();
+    window.addEventListener("trd-role-changed", syncRole);
+    return () => window.removeEventListener("trd-role-changed", syncRole);
   }, []);
 
   const handleRoleChange = (newRole: UserRole) => {

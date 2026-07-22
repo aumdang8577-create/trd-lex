@@ -363,11 +363,23 @@ async function main() {
 
 
   // Reading the CSV file
-  const csvPath = 'C:\\TRD_lex\\datatest.csv';
+  const csvCandidates = [
+    'C:\\TRD_lex\\data\\data.csv',
+    path.join(__dirname, '../../data/data.csv'),
+    path.join(__dirname, '../data/data.csv'),
+    'C:\\TRD_lex\\datatest.csv'
+  ];
+  let csvPath = '';
+  for (const candidate of csvCandidates) {
+    if (fs.existsSync(candidate)) {
+      csvPath = candidate;
+      break;
+    }
+  }
   console.log(`Reading CSV file from ${csvPath}...`);
 
-  if (!fs.existsSync(csvPath)) {
-    throw new Error(`CSV file not found at ${csvPath}`);
+  if (!csvPath) {
+    throw new Error(`CSV file not found in candidates: ${csvCandidates.join(', ')}`);
   }
 
   const fileContent = fs.readFileSync(csvPath, 'utf-8');

@@ -61,6 +61,27 @@ model LeaseContract {
   calculated_annual_rent Float?
   calculated_arrange_fee Float?
   next_rent_review_date DateTime?
+
+  // Additional CSV properties from data.csv
+  primary_key           String?
+  reg_id                String?
+  rent_category         String?
+  rent_type             String?
+  vpn_code              String?
+  lessee_name           String?
+  area_rai              Float?
+  area_ngan             Float?
+  area_wa               Float?
+  land_plan             String?
+  building_details      String?
+  build_year            Int?
+  on_street             String?
+  street_type           String?
+  street_width          Float?
+  street_access         Float?
+  land_width            Float?
+  land_ap               Float?
+  build_ap              Float?
   
   listings              Listing[] 
 }
