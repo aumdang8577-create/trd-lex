@@ -651,8 +651,8 @@ function ListingsContent() {
         await new Promise((resolve) => setTimeout(resolve, 500));
         
         // 1. Fetch initial data from API
-        const res = await api.getListings();
-        let listData = res.data;
+        const res: any = await api.getListings({ per_page: 50 });
+        let listData: Listing[] = Array.isArray(res) ? res : (res.items || res.data || initialListings);
         
         // 2. Read query parameters from URL
         const p = searchParams.get("province");
@@ -750,13 +750,14 @@ function ListingsContent() {
     try {
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 400));
-      const res = await api.getListings({
+      const res: any = await api.getListings({
         province: searchData.province || undefined,
         min_price: searchData.minPrice ? parseFloat(searchData.minPrice) : undefined,
         max_price: searchData.maxPrice ? parseFloat(searchData.maxPrice) : undefined,
+        per_page: 50,
       });
 
-      let filtered = res.data;
+      let filtered: Listing[] = Array.isArray(res) ? res : (res.items || res.data || initialListings);
 
       if (searchData.district) {
         filtered = filtered.filter((l) =>
@@ -823,9 +824,9 @@ function ListingsContent() {
       {/* Title Header */}
       <div className="mb-8 border-b-2 border-trd-border pb-4">
         <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
-          ระบบสืบค้นข้อมูลประกาศสิทธิ์เชิงพื้นที่สำหรับประชาชนทั่วไป
+          ระบบสืบค้นประกาศหาผู้รับโอนสิทธิการเช่าเชิงพื้นที่สำหรับประชาชนทั่วไป
         </span>
-        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">ค้นหาประกาศสิทธิการเช่าที่ราชพัสดุ</h1>
+        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">สืบค้นประกาศหาผู้รับโอนสิทธิการเช่าที่ราชพัสดุ</h1>
         <p className="text-xs text-trd-text-muted mt-1 leading-relaxed font-medium">
           สืบค้น ตรวจสอบตำแหน่งทางภูมิศาสตร์ และตรวจสอบความถูกต้องของสิทธิการเช่าเพื่อประกอบการตัดสินใจของประชาชนอย่างโปร่งใส
         </p>

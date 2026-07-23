@@ -131,7 +131,7 @@ export default function HomePage() {
                 className="font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150" 
                 onClick={() => router.push("/listings")}
               >
-                ค้นหาแปลงที่ดิน
+                สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า
               </Button>
               <Button 
                 variant="outline" 

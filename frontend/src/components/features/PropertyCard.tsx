@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, latLngToUTM } from "@/lib/utils";
 import FeeBreakdown from "@/components/features/FeeModal/FeeBreakdown";
 
 interface PropertyCardProps {
@@ -78,10 +78,10 @@ export default function PropertyCard({
             {district}, {province}
           </h3>
           
-          {/* Coordinates representation */}
+          {/* Coordinates representation in UTM System & Google Maps Lat, Long */}
           {locationLat && locationLng ? (
             <div className="text-[9px] font-mono text-slate-300 mt-1.5 uppercase tracking-wider bg-[#070D1A]/50 py-1 px-2.5 border border-[#1E2E4A] inline-block rounded-xl font-bold">
-              พิกัดภูมิศาสตร์ // {locationLat.toFixed(4)}° N, {locationLng.toFixed(4)}° E
+              พิกัดแผนที่ (Google Maps / UTM) // {latLngToUTM(locationLat, locationLng)}
             </div>
           ) : (
             <div className="text-[9px] font-mono text-slate-400 mt-1.5 uppercase tracking-wider bg-[#070D1A]/50 py-1 px-2.5 border border-[#1E2E4A] inline-block rounded-xl font-bold">

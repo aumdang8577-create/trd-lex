@@ -110,13 +110,8 @@ const mockListingsData: Listing[] = [
 
 class ApiClient {
   private token: string | null = null;
-  private activeBaseUrl: string = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8002";
+  private activeBaseUrl: string = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
   private candidateUrls: string[] = [
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8002",
-    "http://localhost:8002",
-    "http://127.0.0.1:8002",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
   ];

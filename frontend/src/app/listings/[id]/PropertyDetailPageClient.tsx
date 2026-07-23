@@ -9,7 +9,7 @@ import LeaseMap from "@/components/features/Map/LeaseMap";
 import Breadcrumb from "@/components/features/Breadcrumb";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, latLngToUTM } from "@/lib/utils";
 import type { Listing } from "@/types";
 import api from "@/lib/api";
 import TransferGuideModal from "@/components/features/TransferGuideModal";
@@ -945,7 +945,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               { label: "ประเภทอาคาร", val: listing.contract.building_type || "ที่ดินเปล่า", icon: "🏢" },
               { label: "พื้นที่ใช้สอย", val: listing.contract.usable_area_sqm && listing.contract.usable_area_sqm > 0 ? `${listing.contract.usable_area_sqm} ตร.ม.` : "ไม่มี (ที่ดินเปล่า)", icon: "🏗️" },
               { label: "ผังเมือง (Zoning)", val: listing.contract.zoning || "ไม่ระบุ", icon: "🎨" },
-              { label: "จังหวัด", val: listing.contract.province, icon: "📍" },
+              { label: "พิกัด UTM (WGS84)", val: latLngToUTM(listing.contract.location_lat, listing.contract.location_lng), icon: "🌐" },
               { label: "ที่ราชพัสดุแปลงหมายเลขทะเบียนที่", val: listing.contract.parcel_number, icon: "🗺️" },
               { label: "สถานะสัญญา", val: "ปกติ (Active)", icon: "🛡️" },
             ].map((spec) => (

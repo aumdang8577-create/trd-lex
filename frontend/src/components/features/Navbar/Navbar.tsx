@@ -46,7 +46,7 @@ export default function Navbar() {
         ];
       case "INVESTOR":
         return [
-          { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
           { label: "รายการที่บันทึกไว้ (Wishlist)", href: "/wishlist" },
           { label: "ประวัติการติดต่อ", href: "/messages" },
         ];
@@ -54,13 +54,13 @@ export default function Navbar() {
         return [
           { label: "แดชบอร์ดรายได้รัฐ", href: "/dashboard" },
           { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
-          { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
           { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
         ];
       case "GUEST":
       default:
         return [
-          { label: "ค้นหาทำเลศักยภาพ", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
           { label: "วิธีการใช้งาน", href: "/#how-it-works" },
         ];
     }

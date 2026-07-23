@@ -408,7 +408,7 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
           variant="primary"
           className="w-full py-2 flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-mono font-black border border-transparent bg-trd-secondary text-midnight rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.25)] hover:shadow-[0_0_20px_rgba(212,175,55,0.45)] hover:opacity-90 transition-all duration-200"
         >
-          สืบค้นข้อมูลสัญญาเช่า
+          สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า
         </Button>
       </div>
     </form>
