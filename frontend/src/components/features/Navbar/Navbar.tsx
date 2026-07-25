@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
@@ -9,8 +9,13 @@ type UserRole = "GUEST" | "SELLER" | "INVESTOR" | "OFFICER";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [role, setRole] = useState<UserRole>("GUEST");
+
+  if (pathname === "/") {
+    return null;
+  }
 
   useEffect(() => {
     const syncRole = () => {
@@ -42,11 +47,11 @@ export default function Navbar() {
       case "SELLER":
         return [
           { label: "จัดการประกาศของฉัน", href: "/my-listings" },
-          { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/contract-check" },
         ];
       case "INVESTOR":
         return [
-          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/listings", hasMega: true },
           { label: "รายการที่บันทึกไว้ (Wishlist)", href: "/wishlist" },
           { label: "ประวัติการติดต่อ", href: "/messages" },
         ];
@@ -54,13 +59,13 @@ export default function Navbar() {
         return [
           { label: "แดชบอร์ดรายได้รัฐ", href: "/dashboard" },
           { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
-          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
-          { label: "ตรวจสอบสถานะสัญญาเช่า", href: "/contract-check" },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/contract-check" },
         ];
       case "GUEST":
       default:
         return [
-          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า", href: "/listings", hasMega: true },
+          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/listings", hasMega: true },
           { label: "วิธีการใช้งาน", href: "/#how-it-works" },
         ];
     }

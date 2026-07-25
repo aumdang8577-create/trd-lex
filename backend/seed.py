@@ -4,6 +4,17 @@ import os
 import random
 import hashlib
 from prisma import Prisma
+import sys
+# Make sure the backend folder is in path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from app.core.calculations import (
+    calculate_annual_rent,
+    calculate_arrangement_fee,
+    LeasePurpose,
+    RegionType,
+    LocationClass
+)
 
 # Enums
 ROLE_USER = "USER"
@@ -272,6 +283,55 @@ async def main():
             usable_area_sqm = build_area if build_area > 0 else bld_info["usable_area_sqm"]
             zoning = land_plan if land_plan else bld_info["zoning"]
             
+            # Calculate pricing parameters
+            region_type = "BKK" if province == "กรุงเทพมหานคร" else "PROVINCIAL"
+            
+            # Map location class based on street width or land area
+            if street_w and street_w >= 6.0:
+                location_class = "CLASS_1"
+            elif street_w and street_w >= 4.0:
+                location_class = "CLASS_2"
+            else:
+                if land_area > 150.0:
+                    location_class = "CLASS_1"
+                elif land_area > 60.0:
+                    location_class = "CLASS_2"
+                else:
+                    location_class = "CLASS_3"
+                    
+            purpose = "RESIDENTIAL"
+            if building_type == "โรงงาน/คลังสินค้า" or building_type == "อาคารพาณิชย์":
+                purpose = "COMMERCIAL"
+            elif building_type == "ที่ดินเปล่า" and land_area > 300:
+                purpose = "AGRICULTURE"
+                
+            appraisal_land_sqw = land_ap if land_ap > 0 else (35000.0 if region_type == "BKK" else 4000.0)
+            appraisal_bld_sqm = build_ap if build_ap > 0 else (8000.0 if building_type != "ที่ดินเปล่า" else None)
+            
+            if building_type != "ที่ดินเปล่า":
+                building_depreciation = min(80.0, max(0.0, float(2026 - build_year) * 2.0)) if build_year else 10.0
+            else:
+                building_depreciation = None
+                
+            calculated_rent, detail = calculate_annual_rent(
+                purpose=LeasePurpose(purpose),
+                region=RegionType(region_type),
+                location_class=LocationClass(location_class),
+                land_area_sqw=land_area,
+                appraisal_land_sqw=appraisal_land_sqw,
+                building_type=building_type,
+                usable_area_sqm=usable_area_sqm,
+                appraisal_bld_sqm=appraisal_bld_sqm,
+                building_depreciation=building_depreciation
+            )
+            
+            calculated_arrange_fee = calculate_arrangement_fee(
+                annual_rent=calculated_rent,
+                purpose=LeasePurpose(purpose),
+                total_asset_value=detail.get("total_asset_value", 0.0),
+                lease_years=3
+            )
+            
             contracts_count += 1
             
             # Create contract with all new columns
@@ -290,7 +350,19 @@ async def main():
                     "building_type": building_type,
                     "usable_area_sqm": usable_area_sqm,
                     "zoning": zoning,
-                    "annual_rent": 12000.0 if land_ap == 0 else float(land_ap),
+                    "annual_rent": calculated_rent,
+                    
+                    # Pricing calculations
+                    "region_type": region_type,
+                    "location_class": location_class,
+                    "purpose": purpose,
+                    "tenant_category": "NEW_TENANT",
+                    "appraisal_land_sqw": appraisal_land_sqw,
+                    "appraisal_bld_sqm": appraisal_bld_sqm,
+                    "building_depreciation": building_depreciation,
+                    "calculated_annual_rent": calculated_rent,
+                    "calculated_arrange_fee": calculated_arrange_fee,
+                    "lease_years": 3,
                     
                     # Additional CSV fields
                     "primary_key": primary_key,

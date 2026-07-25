@@ -148,7 +148,7 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
         {/* Title */}
         <div className="border-b border-trd-border/80 pb-3 flex items-center justify-between">
           <h3 className="text-xs font-black uppercase tracking-widest text-trd-secondary-dark font-mono flex items-center gap-1.5">
-            <span>⚙️</span> ตัวกรองสืบค้นละเอียด
+            <span>⚙️</span> ตัวกรองค้นหาประกาศ
           </h3>
           <button 
             type="button" 
@@ -285,7 +285,7 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
             variant="primary"
             className="w-full py-2.5 flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-mono font-black border border-transparent bg-trd-primary text-white rounded-xl shadow-neon-gold"
           >
-            🔍 สืบค้นผลการกรอง
+            🔍 ค้นหาประกาศ
           </Button>
         </div>
 
@@ -331,27 +331,21 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
         <label className="block text-[9px] font-bold text-slate-300 mb-1 uppercase tracking-widest font-mono">
           อำเภอ / เขต
         </label>
-        {province ? (
-          <select
-            value={district}
-            onChange={(e) => setDistrict(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white focus:outline-none focus:border-trd-secondary/50 focus:bg-slate-950 transition-all font-mono rounded-xl"
-          >
-            <option value="" className="bg-slate-900 text-white">ทุกอำเภอ</option>
-            {districts.map((dist) => (
-              <option key={dist} value={dist} className="bg-slate-900 text-white">
-                {dist}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type="text"
-            placeholder="กรุณาเลือกจังหวัด"
-            disabled
-            className="w-full px-3 py-2 border border-slate-800 bg-slate-950/20 text-xs text-slate-500 placeholder:text-slate-650 focus:outline-none font-mono rounded-xl"
-          />
-        )}
+        <select
+          value={district}
+          onChange={(e) => setDistrict(e.target.value)}
+          disabled={!province}
+          className="w-full px-3 py-2 border border-slate-800 bg-slate-950/60 text-xs text-white focus:outline-none focus:border-trd-secondary/50 focus:bg-slate-950 disabled:bg-slate-950/20 disabled:text-slate-500 transition-all font-mono rounded-xl"
+        >
+          <option value="" className="bg-slate-900 text-white">
+            {province ? "ทุกอำเภอ" : "กรุณาเลือกจังหวัด"}
+          </option>
+          {districts.map((dist) => (
+            <option key={dist} value={dist} className="bg-slate-900 text-white">
+              {dist}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Min Price */}
@@ -408,7 +402,7 @@ export default function SearchBar({ onSearch, className = "", layout = "horizont
           variant="primary"
           className="w-full py-2 flex items-center justify-center gap-2 text-xs uppercase tracking-wider font-mono font-black border border-transparent bg-trd-secondary text-midnight rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.25)] hover:shadow-[0_0_20px_rgba(212,175,55,0.45)] hover:opacity-90 transition-all duration-200"
         >
-          สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า
+          ค้นหาประกาศ
         </Button>
       </div>
     </form>

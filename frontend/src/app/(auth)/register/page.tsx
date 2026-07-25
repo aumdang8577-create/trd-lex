@@ -63,7 +63,7 @@ export default function RegisterPage() {
         setError(response.message || "สัญญาเช่านี้ไม่ผ่านการตรวจสอบ");
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการตรวจสอบสัญญาเช่า");
+      setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการสืบค้นประกาศหาผู้รับโอนสิทธิ");
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function RegisterPage() {
           <div className="w-12 h-12 bg-trd-secondary rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
             <span className="text-trd-primary-dark font-bold text-xl">📄</span>
           </div>
-          <h2 className="text-xl font-bold">ตรวจสอบสัญญาเช่าที่ราชพัสดุ</h2>
+          <h2 className="text-xl font-bold">สืบค้นประกาศหาผู้รับโอนสิทธิที่ราชพัสดุ</h2>
           <p className="text-xs text-white/80 mt-1">
             ลงทะเบียนยืนยันสัญญากับฐานข้อมูลของกรมธนารักษ์ (Smart Validation)
           </p>

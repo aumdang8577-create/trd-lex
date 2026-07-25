@@ -8,6 +8,7 @@ import SearchBar from "@/components/features/SearchBar/SearchBar";
 import PropertyCard from "@/components/features/PropertyCard";
 import CreateListingModal from "@/components/features/CreateListingModal";
 import EconomicDashboard from "@/components/features/EconomicDashboard";
+import HeroSection from "@/components/features/HeroSection/HeroSection";
 import type { Listing } from "@/types";
 
 const mockListings: Listing[] = [
@@ -104,57 +105,19 @@ export default function HomePage() {
   return (
     <div className="bg-trd-bg text-trd-primary min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-hero-gradient text-white overflow-hidden pb-28 pt-20 border-b border-[#1E2E4A]">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl animate-fade-in mb-12">
-            {/* Verified badge */}
-            <div className="inline-flex items-center gap-2 bg-[#070D1A]/60 border border-[#1E2E4A] px-3.5 py-1.5 mb-6 font-mono text-xs text-trd-secondary uppercase tracking-widest font-bold rounded-full shadow-neon-gold">
-              <span className="w-2 h-2 bg-trd-secondary rounded-full animate-pulse" />
-              สถานะระบบ // เปิดการใช้งานปกติ
-            </div>
+      <HeroSection />
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 uppercase tracking-tight font-sans text-white" style={{ lineHeight: '1.6' }}>
-              ตลาดรองสิทธิการเช่า
-              <br />
-              <span className="text-trd-secondary">ที่ราชพัสดุ</span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-slate-300 mb-8 max-w-2xl leading-relaxed font-medium">
-              แพลตฟอร์มการซื้อขายและโอนสิทธิการเช่าที่ราชพัสดุเพื่อความโปร่งใส 
-              ตรวจสอบสัญญาเช่าผ่านระบบ Smart Validation และบริการยืนยันตัวตนดิจิทัลผ่านระบบ ThaID ของกรมธนารักษ์
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 font-mono text-xs uppercase tracking-widest">
-              <Button 
-                variant="primary" 
-                size="lg" 
-                className="font-black border border-transparent bg-gold-gradient text-[#0F1A30] rounded-xl shadow-neon-gold hover:opacity-90 transition-all duration-150" 
-                onClick={() => router.push("/listings")}
-              >
-                สืบค้นประกาศหาผู้รับโอนสิทธิการเช่า
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="font-black border border-[#1E2E4A] text-white bg-[#070D1A]/40 rounded-xl hover:bg-[#1E2E4A]/40 transition-all duration-150" 
-                onClick={() => setIsCreateOpen(true)}
-              >
-                ลงทะเบียนประกาศโอนสิทธิ์
-              </Button>
-            </div>
-          </div>
-
-          {/* SearchBar in Hero */}
-          <div className="animate-slide-up">
-            <Suspense fallback={<div className="h-16 w-full bg-slate-900/60 rounded-2xl animate-pulse" />}>
-              <SearchBar />
-            </Suspense>
-          </div>
+      {/* SearchBar Container */}
+      <section id="stats-section" className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 md:-mt-16 mb-12">
+        <div className="bg-[#0F1A30]/90 backdrop-blur-xl border border-[#1E2E4A] p-4 md:p-6 rounded-2xl shadow-2xl">
+          <Suspense fallback={<div className="h-16 w-full bg-slate-900/60 rounded-2xl animate-pulse" />}>
+            <SearchBar />
+          </Suspense>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
           {[
             { label: "ประกาศเปิดขาย", value: "128", code: "สถิติจำนวนสัญญาเช่าที่ประกาศโอน" },
@@ -260,8 +223,8 @@ export default function HomePage() {
                 badge: "ระบบความมั่นคงปลอดภัยในการยืนยันตัวตน",
               },
               {
-                title: "ตรวจสอบสัญญาเช่า",
-                desc: "ตรวจสอบสถานะสัญญาเช่าที่ราชพัสดุแบบอัตโนมัติ ลดเวลาดำเนินการด้วยมือ",
+                title: "สืบค้นประกาศหาผู้รับโอนสิทธิ",
+                desc: "สืบค้นและตรวจสอบสถานะประกาศโอนสิทธิเช่าที่ราชพัสดุแบบอัตโนมัติ ลดเวลาดำเนินการด้วยมือ",
                 badge: "ระบบตรวจสอบความถูกต้องสัญญา",
               },
               {

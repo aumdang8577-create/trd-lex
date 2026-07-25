@@ -1,8 +1,4 @@
 generator client {
-  provider = "prisma-client-py"
-}
-
-generator client_js {
   provider = "prisma-client-js"
 }
 
@@ -12,20 +8,36 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  thaid_id      String    @unique
-  first_name    String
-  last_name     String
-  phone_number  String?
-  role          Role      @default(USER)
-  listings      Listing[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id              String           @id @default(uuid())
+  thaid_id        String           @unique
+  first_name      String
+  last_name       String
+  phone_number    String?
+  role            Role             @default(USER)
+  listings        Listing[]
+  investorProfile InvestorProfile?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 enum Role {
   USER
   ADMIN
+  SELLER
+  INVESTOR
+  OFFICER
+}
+
+model InvestorProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interests    String[] @default([])
+  budget_min   Float?
+  budget_max   Float?
+  note         String?
+  registeredAt DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model LeaseContract {
@@ -186,14 +198,35 @@ model MiscellaneousFeeConfig {
 model TreasuryParcel {
   id               String   @id @default(uuid())
   parcel_number    String   @unique
-  province         String   @default("หนองคาย")
-  district         String   @default("เมืองหนองคาย")
-  sub_district     String   @default("ในเมือง")
-  geometry_geojson String   @db.Text // JSON representation of the polygon geometry
+  primary_key      String?
+  reg_id           String?
+  rent_name        String?
+  province         String   @default("อุดรธานี")
+  district         String   @default("เมืองอุดรธานี")
+  sub_district     String   @default("หมากแข้ง")
+  geometry_geojson String   @db.Text // JSON representation of the polygon geometry in WGS84
   centroid_lat     Float
   centroid_lng     Float
   land_area_sqw    Float
+  land_plan        String?
+  building_details String?
+  status           String?  @default("ACTIVE")
+  area_rai         Float?   @default(0.0)
+  area_ngan        Float?   @default(0.0)
+  area_wa          Float?   @default(0.0)
   createdAt        DateTime @default(now())
 }
+
+model PlacePOI {
+  id               String   @id @default(uuid())
+  fid              Int?
+  place_type       String
+  name             String
+  latitude         Float
+  longitude        Float
+  geometry_geojson String?  @db.Text
+  createdAt        DateTime @default(now())
+}
+
 
 

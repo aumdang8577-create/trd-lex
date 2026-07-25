@@ -51,6 +51,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: docker.io/pangtt2454/ai_coding:latest
     container_name: trd_lex_backend
     restart: always
     environment:

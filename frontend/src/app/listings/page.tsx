@@ -824,11 +824,11 @@ function ListingsContent() {
       {/* Title Header */}
       <div className="mb-8 border-b-2 border-trd-border pb-4">
         <span className="text-[9px] font-mono text-trd-primary uppercase tracking-widest font-black">
-          ระบบสืบค้นประกาศหาผู้รับโอนสิทธิการเช่าเชิงพื้นที่สำหรับประชาชนทั่วไป
+          ระบบค้นหาประกาศหาผู้รับโอนสิทธิการเช่าเชิงพื้นที่สำหรับประชาชนทั่วไป
         </span>
-        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">สืบค้นประกาศหาผู้รับโอนสิทธิการเช่าที่ราชพัสดุ</h1>
+        <h1 className="text-2xl font-black text-trd-midnight uppercase mt-1 font-sans tracking-wide">ค้นหาประกาศโอนสิทธิการเช่าที่ราชพัสดุ</h1>
         <p className="text-xs text-trd-text-muted mt-1 leading-relaxed font-medium">
-          สืบค้น ตรวจสอบตำแหน่งทางภูมิศาสตร์ และตรวจสอบความถูกต้องของสิทธิการเช่าเพื่อประกอบการตัดสินใจของประชาชนอย่างโปร่งใส
+          ค้นหา ตรวจสอบตำแหน่งทางภูมิศาสตร์ และตรวจสอบความถูกต้องของสิทธิการเช่าเพื่อประกอบการตัดสินใจของประชาชนอย่างโปร่งใส
         </p>
       </div>
 

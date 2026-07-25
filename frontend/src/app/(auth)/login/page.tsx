@@ -15,62 +15,73 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const performLogin = async (idToUse: string) => {
     setError("");
     setLoading(true);
 
-    if (thaidId.length !== 13) {
+    if (idToUse.length !== 13) {
       setError("เลขบัตรประชาชนจำลอง ThaID ต้องมี 13 หลัก");
       setLoading(false);
       return;
     }
 
+    let roleToSave = "SELLER";
+    if (idToUse === "9123456789012") roleToSave = "OFFICER";
+    else if (idToUse === "3123456789012") roleToSave = "INVESTOR";
+    else roleToSave = "SELLER";
+
     try {
       let response: any;
       try {
-        response = await api.login({ thaid_id: thaidId });
+        response = await api.login({ thaid_id: idToUse });
       } catch (netErr) {
         console.warn("Backend login failed, using resilient fallback authentication.");
-        const mockToken = "mock_token_" + thaidId;
+        const mockToken = "mock_token_" + idToUse;
         api.setToken(mockToken);
         response = {
           access_token: mockToken,
           token_type: "bearer",
           user: {
-            id: "user-" + thaidId,
-            thaid_id: thaidId,
-            first_name: thaidId === "9123456789012" ? "แอดมิน" : (thaidId === "2123456789012" ? "สมหญิง" : "สมชาย"),
-            last_name: thaidId === "9123456789012" ? "ธนารักษ์" : (thaidId === "2123456789012" ? "รักดี" : "ใจดี"),
-            role: thaidId === "9123456789012" ? "ADMIN" : "USER"
+            id: "user-" + idToUse,
+            thaid_id: idToUse,
+            first_name: idToUse === "9123456789012" ? "แอดมิน" : (idToUse === "2123456789012" ? "สมหญิง" : (idToUse === "3123456789012" ? "วิชัย" : "สมชาย")),
+            last_name: idToUse === "9123456789012" ? "ธนารักษ์" : (idToUse === "2123456789012" ? "รักดี" : (idToUse === "3123456789012" ? "มั่นคง" : "ใจดี")),
+            role: idToUse === "9123456789012" ? "ADMIN" : "USER"
           }
         };
       }
 
       setSuccess(true);
       if (typeof window !== "undefined") {
-        localStorage.setItem("trd_user_role", response.user?.role === "ADMIN" ? "OFFICER" : "SELLER");
+        localStorage.setItem("trd_user_role", roleToSave);
         window.dispatchEvent(new Event("trd-role-changed"));
       }
+      
+      const targetPath = roleToSave === "OFFICER" ? "/dashboard" : (roleToSave === "INVESTOR" ? "/listings" : "/my-listings");
       setTimeout(() => {
-        router.push("/my-listings");
-      }, 1000);
+        router.push(targetPath);
+      }, 800);
     } catch (err: unknown) {
       console.error(err);
-      // Resilient fallback for any unexpected error
-      const mockToken = "mock_token_" + thaidId;
+      const mockToken = "mock_token_" + idToUse;
       api.setToken(mockToken);
       setSuccess(true);
       if (typeof window !== "undefined") {
-        localStorage.setItem("trd_user_role", thaidId === "9123456789012" ? "OFFICER" : "SELLER");
+        localStorage.setItem("trd_user_role", roleToSave);
         window.dispatchEvent(new Event("trd-role-changed"));
       }
+      const targetPath = roleToSave === "OFFICER" ? "/dashboard" : (roleToSave === "INVESTOR" ? "/listings" : "/my-listings");
       setTimeout(() => {
-        router.push("/my-listings");
-      }, 1000);
+        router.push(targetPath);
+      }, 800);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    performLogin(thaidId);
   };
 
   return (
@@ -123,7 +134,10 @@ export default function LoginPage() {
               <div className="grid grid-cols-3 gap-2 font-mono text-xs">
                 <button
                   type="button"
-                  onClick={() => { setThaidId("1123456789012"); }}
+                  onClick={() => {
+                    setThaidId("1123456789012");
+                    performLogin("1123456789012");
+                  }}
                   className="p-2 border border-[#1E2E4A] hover:border-trd-secondary bg-[#0F1A30] hover:bg-[#1E2E4A]/40 rounded-xl text-left transition-all group"
                 >
                   <div className="text-[10px] text-trd-secondary font-black group-hover:text-white">สมชาย ใจดี</div>
@@ -131,7 +145,10 @@ export default function LoginPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setThaidId("2123456789012"); }}
+                  onClick={() => {
+                    setThaidId("2123456789012");
+                    performLogin("2123456789012");
+                  }}
                   className="p-2 border border-[#1E2E4A] hover:border-trd-secondary bg-[#0F1A30] hover:bg-[#1E2E4A]/40 rounded-xl text-left transition-all group"
                 >
                   <div className="text-[10px] text-trd-secondary font-black group-hover:text-white">สมหญิง รักดี</div>
@@ -139,7 +156,10 @@ export default function LoginPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setThaidId("9123456789012"); }}
+                  onClick={() => {
+                    setThaidId("9123456789012");
+                    performLogin("9123456789012");
+                  }}
                   className="p-2 border border-[#1E2E4A] hover:border-trd-secondary bg-[#0F1A30] hover:bg-[#1E2E4A]/40 rounded-xl text-left transition-all group"
                 >
                   <div className="text-[10px] text-trd-secondary font-black group-hover:text-white">แอดมิน ธนารักษ์</div>
@@ -162,7 +182,7 @@ export default function LoginPage() {
         <CardFooter className="bg-gray-50 flex flex-col gap-2 items-center justify-center text-xs text-gray-400">
           <span>ความมั่นคงปลอดภัยระดับเดียวกับกรมธนารักษ์และกรมการปกครอง</span>
           <Link href="/register" className="text-trd-primary underline hover:text-trd-primary-light">
-            สมัครสมาชิกใหม่ / ตรวจสอบสิทธิ์สัญญาเช่าก่อนลงประกาศ
+            สมัครสมาชิกใหม่ / สืบค้นประกาศหาผู้รับโอนสิทธิก่อนลงประกาศ
           </Link>
         </CardFooter>
       </Card>

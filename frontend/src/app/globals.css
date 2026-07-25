@@ -1,20 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* =======================================
-   TRD-LEX Design System
-   "Thesis 2: Cyber-Dark Tech Startup"
-   ======================================= */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* =======================================
    TRD-LEX Design System
    "Thesis 2.1: Royal Navy & Gold Hybrid"
    ======================================= */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -105,6 +96,7 @@
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -112,6 +104,7 @@
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -145,9 +138,61 @@
   .shadow-neon-red {
     @apply shadow-[0_0_15px_rgba(239,68,68,0.12)];
   }
+
+  /* Liquid Glass Style */
+  .liquid-glass {
+    background: rgba(0, 0, 0, 0.4);
+    background-blend-mode: luminosity;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(212, 175, 55, 0.4) 0%, rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%,
+      rgba(255, 255, 255, 0.2) 80%, rgba(212, 175, 55, 0.4) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Hero Gradient */
+  .bg-hero-gradient {
+    background: linear-gradient(135deg, #0F1A30 0%, #1A2744 50%, #0F1A30 100%);
+  }
 }
 
-/* Leaflet dark popups override */
+/* Google Maps & Leaflet dark popups override */
+.gm-style .gm-style-iw-c {
+  background-color: #0F1A30 !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 14px !important;
+  padding: 0 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8) !important;
+}
+.gm-style .gm-style-iw-d {
+  overflow: hidden !important;
+}
+.gm-style .gm-style-iw-tc::after {
+  background-color: #0F1A30 !important;
+  border-left: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.4) !important;
+}
+.gm-ui-hover-effect {
+  filter: invert(1) brightness(1.5) !important;
+}
+
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
   background: #0F1A30 !important;
   color: #FFFFFF !important;
@@ -158,3 +203,4 @@
 .leaflet-popup-close-button {
   color: #94A3B8 !important;
 }
+

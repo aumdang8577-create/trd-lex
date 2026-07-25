@@ -135,7 +135,7 @@ export default function CreateListingModal({
       case STEPS.VALIDATE:
         return (
           <div className="space-y-4">
-            <h4 className="font-black text-trd-primary uppercase tracking-wider font-mono text-sm">ขั้นตอนที่ 1: ตรวจสอบสัญญาเช่าที่ราชพัสดุ</h4>
+            <h4 className="font-black text-trd-primary uppercase tracking-wider font-mono text-sm">ขั้นตอนที่ 1: สืบค้นประกาศหาผู้รับโอนสิทธิที่ราชพัสดุ</h4>
             <p className="text-xs text-trd-text-muted font-bold">กรุณากรอกรหัสเลขสัญญาของคุณเพื่อยืนยันตัวตนและความถูกต้องของแปลงที่ดินกับฐานข้อมูลกรมธนารักษ์</p>
             <Input
               id="listing-contract-number"

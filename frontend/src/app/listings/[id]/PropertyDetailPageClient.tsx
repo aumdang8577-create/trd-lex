@@ -1264,16 +1264,17 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
 
               {/* Action Buttons */}
               <div className="space-y-3 pt-2">
-                {showContact && (
-                  <div className="bg-status-valid/10 border border-status-valid/20 text-status-valid text-xs rounded-lg p-3 text-center space-y-1">
-                    <p className="font-semibold text-gray-700">ข้อมูลติดต่อผู้เช่าเดิม:</p>
-                    <p className="font-bold text-base text-trd-primary">📞 {listing.seller.phone_number || "081-234-5678"}</p>
-                    <p className="text-[10px] text-gray-500">โปรดโทรติดต่อเพื่อทำการเจรจาโอนสิทธิ์นอกระบบ</p>
+                {showContact && userRole !== "GUEST" && (
+                  <div className="bg-status-valid/10 border border-status-valid/20 text-status-valid text-xs rounded-lg p-3 text-center space-y-1 animate-fade-in">
+                    <p className="font-semibold text-gray-700">ข้อมูลติดต่อผู้เช่าเดิม (ยืนยันผ่าน ThaID แล้ว):</p>
+                    <p className="font-bold text-base text-trd-primary font-mono">📞 {listing.seller.phone_number || "081-234-5678"}</p>
+                    <p className="text-[10px] text-gray-500">โปรดโทรติดต่อเพื่อทำการเจรจาโอนสิทธิ์ตามระเบียบกรมธนารักษ์</p>
                   </div>
                 )}
+
                 <Button
                   variant="primary"
-                  className="w-full py-3 text-sm font-semibold animate-pulse hover:animate-none"
+                  className={`w-full py-3 text-sm font-semibold ${userRole === "GUEST" ? "bg-amber-600 hover:bg-amber-700 text-white" : "animate-pulse hover:animate-none"}`}
                   onClick={() => {
                     if (userRole === "GUEST") {
                       setIsAuthModalOpen(true);
@@ -1282,8 +1283,13 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
                     }
                   }}
                 >
-                  {showContact ? "ซ่อนข้อมูลติดต่อ" : "แสดงความสนใจ (Contact Lessee)"}
+                  {userRole === "GUEST"
+                    ? "🔒 ยืนยันตัวตนผ่าน ThaID เพื่อดูข้อมูลผู้ติดต่อ"
+                    : showContact
+                    ? "ซ่อนข้อมูลติดต่อ"
+                    : "แสดงข้อมูลผู้ติดต่อ (Contact Lessee)"}
                 </Button>
+
                 <Button variant="ghost" className="w-full py-2.5 text-xs text-gray-500 font-bold hover:text-trd-primary" onClick={() => setIsGuideOpen(true)}>
                   📘 เปิดคู่มือและขั้นตอนการโอนสิทธิ์
                 </Button>
@@ -1292,8 +1298,21 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               {/* Seller details */}
               <div className="border-t border-trd-border/30 pt-4 text-center">
                 <p className="text-[10px] text-gray-400">ผู้ถือสิทธิ์คนปัจจุบัน</p>
-                <p className="text-xs font-semibold text-gray-700 mt-1">คุณ{listing.seller.first_name} {listing.seller.last_name}</p>
-                <p className="text-[10px] text-status-valid mt-1">✓ ยืนยันตัวตนผ่าน ThaID เรียบร้อย</p>
+                {userRole === "GUEST" ? (
+                  <div className="mt-1 space-y-1">
+                    <p className="text-xs font-semibold text-gray-500 font-mono">
+                      คุณ{listing.seller.first_name} {listing.seller.last_name ? listing.seller.last_name.slice(0, 1) + "***" : "***"}
+                    </p>
+                    <p className="text-[9.5px] text-amber-700 bg-amber-50 border border-amber-200/80 px-2 py-1 rounded-md font-medium">
+                      🔒 สงวนสิทธิ์ข้อมูลผู้ติดต่อเฉพาะผู้ยืนยันตัวตนผ่าน ThaID
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs font-semibold text-gray-700 mt-1">คุณ{listing.seller.first_name} {listing.seller.last_name}</p>
+                    <p className="text-[10px] text-status-valid mt-1">✓ ยืนยันตัวตนผ่าน ThaID เรียบร้อย (เบอร์โทรศัพท์: {listing.seller.phone_number || "081-234-5678"})</p>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>

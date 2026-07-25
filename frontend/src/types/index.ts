@@ -30,6 +30,17 @@ export interface LeaseContract {
   usable_area_sqm?: number | null;
   zoning?: string | null;
   annual_rent?: number;
+
+  // Extended Treasury Valuation Attributes
+  region_type?: string | null;
+  location_class?: string | null;
+  purpose?: string | null;
+  tenant_category?: string | null;
+  appraisal_land_sqw?: number | null;
+  appraisal_bld_sqm?: number | null;
+  building_depreciation?: number | null;
+  calculated_annual_rent?: number | null;
+  calculated_arrange_fee?: number | null;
 }
 
 export interface Listing {
@@ -132,3 +143,40 @@ export interface FeeCalculationResponse {
     exceeding_value?: number;
   };
 }
+
+export interface GeoJSONGeometry {
+  type: string;
+  coordinates: [number, number][] | [number, number][][];
+}
+
+export interface TreasuryParcelData {
+  id: string;
+  parcel_number: string;
+  primary_key?: string | null;
+  reg_id?: string | null;
+  rent_name?: string | null;
+  province: string;
+  district: string;
+  sub_district: string;
+  geometry?: GeoJSONGeometry;
+  centroid_lat: number;
+  centroid_lng: number;
+  land_area_sqw: number;
+  land_plan?: string | null;
+  building_details?: string | null;
+  status?: string | null;
+  area_rai?: number | null;
+  area_ngan?: number | null;
+  area_wa?: number | null;
+}
+
+export interface PlacePOIData {
+  id: string;
+  fid?: number | null;
+  place_type: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  geometry?: GeoJSONGeometry;
+}
+
