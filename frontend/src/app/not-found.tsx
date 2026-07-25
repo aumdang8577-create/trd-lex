@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Navbar from "@/components/features/Navbar/Navbar";
 
 export default function NotFound() {
   return (

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/features/Navbar/Navbar";
+
+export const dynamic = 'force-dynamic';
 
 // ตั้งค่าฟอนต์ Sarabun สำหรับความน่าเชื่อถือและอ่านง่าย
-const sarabun = Sarabun({ 
+const sarabun = Sarabun({
   subsets: ["thai", "latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: '--font-sarabun',
@@ -24,11 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th" className={sarabun.variable}>
-      <body className="font-sans antialiased min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow flex flex-col">
-          {children}
-        </main>
+      <body className="font-sans antialiased min-h-screen flex flex-col bg-[#070D1A] text-white">
+        {children}
       </body>
     </html>
   );
