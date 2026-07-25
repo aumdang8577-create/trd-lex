@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/features/Navbar/Navbar";
 
 export const dynamic = 'force-dynamic';
 
@@ -26,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="th" className={sarabun.variable}>
       <body className="font-sans antialiased min-h-screen flex flex-col bg-[#070D1A] text-white">
-        {children}
+        <Navbar />
+        <main className="flex-grow flex flex-col">
+          {children}
+        </main>
       </body>
     </html>
   );
