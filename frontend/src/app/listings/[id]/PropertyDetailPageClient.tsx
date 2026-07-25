@@ -8,11 +8,13 @@ import Card, { CardContent } from "@/components/ui/Card";
 import LeaseMap from "@/components/features/Map/LeaseMap";
 import Breadcrumb from "@/components/features/Breadcrumb";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, notFound } from "next/navigation";
 import { formatCurrency, latLngToUTM } from "@/lib/utils";
-import type { Listing } from "@/types";
+import type { Listing, FeeCalculationResponse, FeeCalculationRequest } from "@/types";
 import api from "@/lib/api";
 import TransferGuideModal from "@/components/features/TransferGuideModal";
+import FetchErrorAlert from "@/components/ui/FetchErrorAlert";
+import { useListingById } from "@/lib/hooks/useListings";
 
 const mockListings: Record<string, Listing> = {
   "list-1": {
@@ -622,27 +624,45 @@ const localImageFiles = [
   "images (21).jpg",
   "images (22).jpg",
   "images (23).jpg",
+  // cspell:disable-next-line
   "dszfgdrhtrj.jpg",
+  // cspell:disable-next-line
   "esdgdxfh.jpg"
 ];
 
-const replaceWithLocalImage = (imgUrl: string, id: string): string => {
-  if (imgUrl.includes("unsplash.com") || !imgUrl.startsWith("/images/")) {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) {
-      hash = id.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const idx = Math.abs(hash) % localImageFiles.length;
-    return `/images/${localImageFiles[idx]}`;
+const IMAGE_LABELS = [
+  "ด้านหน้าอาคาร/ที่ดิน",
+  "มุมสูง Aerial GIS",
+  "ทางเข้าติดถนนใหญ่",
+  "ภายใน/พื้นที่ใช้สอย",
+  "แปลงข้างเคียง",
+  "ผังแสดงตำแหน่ง",
+];
+
+const replaceWith6LocalImages = (id: string, existingUrls: string[]): string[] => {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return imgUrl;
+  const baseIdx = Math.abs(hash) % localImageFiles.length;
+
+  const results: string[] = [];
+  for (let j = 0; j < 6; j++) {
+    if (existingUrls[j] && existingUrls[j].startsWith("/images/")) {
+      results.push(existingUrls[j]);
+    } else {
+      const idx = (baseIdx + j * 3) % localImageFiles.length;
+      results.push(`/images/${localImageFiles[idx]}`);
+    }
+  }
+  return results;
 };
 
 const mapListingWithLocalImages = (item: Listing): Listing => {
   if (!item) return item;
   return {
     ...item,
-    image_urls: item.image_urls.map((url) => replaceWithLocalImage(url, item.id))
+    image_urls: replaceWith6LocalImages(item.id, item.image_urls)
   };
 };
 
@@ -653,8 +673,21 @@ interface PropertyDetailPageProps {
 export default function PropertyDetailPage({ params }: PropertyDetailPageProps) {
   const router = useRouter();
   const { id } = use(params);
-  const [listing, setListing] = useState<Listing>(mapListingWithLocalImages(mockListings[id] || mockListings["list-1"]));
-  const [loadingListing, setLoadingListing] = useState<boolean>(true);
+
+  // 1. Fetch listing data using SWR
+  const { listing: swrListing, isLoading: loadingListing, error: listingError, mutate } = useListingById(id);
+
+  // Fallback to local mock array if offline or SWR data not ready
+  // If SWR has resolved (not loading, no error) but returned nothing and there's no mock fallback -> 404
+  const hasMockFallback = id in mockListings;
+  if (!loadingListing && !listingError && !swrListing && !hasMockFallback) {
+    notFound();
+  }
+
+  const fallbackListing = mockListings[id] || mockListings["list-1"];
+  const rawActiveListing = swrListing || fallbackListing;
+  const listing = mapListingWithLocalImages(rawActiveListing);
+
   const [userRole, setUserRole] = useState<string>("GUEST");
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
@@ -672,37 +705,14 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
     };
   }, []);
 
-  useEffect(() => {
-    let active = true;
-    const fetchListing = async () => {
-      try {
-        setLoadingListing(true);
-        const data = await api.getListingById(id);
-        if (active && data) {
-          setListing(mapListingWithLocalImages(data));
-        }
-      } catch (err) {
-        console.error("Error fetching listing from DB, using fallback mock:", err);
-      } finally {
-        if (active) {
-          setLoadingListing(false);
-        }
-      }
-    };
-    fetchListing();
-    return () => {
-      active = false;
-    };
-  }, [id]);
-
   const [requestSuccess, setRequestSuccess] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [calcType, setCalcType] = useState<"GENERAL" | "FAMILY" | "CO_LESSEE">("GENERAL");
   const [calcShare, setCalcShare] = useState<number>(100);
-  const [calcResult, setCalcResult] = useState<any>(null);
+  const [calcResult, setCalcResult] = useState<FeeCalculationResponse | null>(null);
 
-  // Advanced calculator states
+  const [activeModalImgIdx, setActiveModalImgIdx] = useState<number | null>(null);
   const [isDetailedCalc, setIsDetailedCalc] = useState(false);
   const [calcPurpose, setCalcPurpose] = useState<"RESIDENTIAL" | "AGRICULTURE" | "COMMERCIAL">("RESIDENTIAL");
   const [calcRegion, setCalcRegion] = useState<"BKK" | "PROVINCIAL">("PROVINCIAL");
@@ -726,7 +736,7 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
   useEffect(() => {
     const calculateOfficialFee = async () => {
       try {
-        let reqData: any = {
+        let reqData: FeeCalculationRequest = {
           transfer_type: calcType,
           transfer_share: calcType === "CO_LESSEE" ? calcShare : 100,
           contract_number: listing.contract.contract_number
@@ -853,37 +863,144 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           ← ย้อนกลับไปหน้าค้นหา
         </Link>
 
-      {/* Main Image Banner Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 h-[350px] md:h-[450px]">
-        <div className="md:col-span-2 relative h-full w-full rounded-2xl overflow-hidden shadow-sm">
-          <Image
-            src={listing.image_urls[0]}
-            alt={`ภาพแปลงที่ดิน ${listing.contract.parcel_number}`}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 100vw, 66vw"
-          />
-        </div>
-        <div className="hidden md:flex flex-col gap-4 h-full">
-          {listing.image_urls[1] ? (
-            <div className="relative flex-1 w-full rounded-2xl overflow-hidden shadow-sm">
-              <Image
-                src={listing.image_urls[1]}
-                alt="ภาพแปลงที่ดินเพิ่มเติม"
-                fill
-                className="object-cover"
-                sizes="33vw"
-              />
-            </div>
-          ) : (
-            <div className="relative flex-1 w-full rounded-2xl overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center text-gray-300 border border-trd-border">
-              <span>ไม่มีรูปภาพเพิ่มเติม</span>
-            </div>
-          )}
-          <div className="relative flex-1 w-full rounded-2xl overflow-hidden shadow-sm">
-            <LeaseMap listings={[listing]} center={[listing.contract.location_lat, listing.contract.location_lng]} zoom={14} className="!h-full !rounded-none !border-none" />
+        {listingError && (
+          <div className="mb-6">
+            <FetchErrorAlert
+              title="เกิดข้อผิดพลาดในการโหลดรายละเอียดสัญญาเช่า"
+              message="ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์เพื่อดึงข้อมูลรายละเอียดสัญญาล่าสุดได้ ระบบได้สลับมาแสดงข้อมูลสำรองแบบออฟไลน์แทน"
+              onRetry={() => mutate()}
+            />
           </div>
+        )}
+
+      {/* 6-Image Master Gallery Grid */}
+      <div className="space-y-3 mb-8">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-mono font-black text-[#0F1A30] dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <span>📷 คลังรูปภาพและผังแสดงตำแหน่งประกาศ</span>
+            <span className="bg-trd-secondary text-[#0F1A30] px-2 py-0.5 rounded-full text-[10px] font-bold">
+              6 มุมมอง
+            </span>
+          </h3>
+          <span className="text-[10px] font-mono text-slate-400">
+            [ คลิกที่รูปภาพเพื่อเปิดดูขนาดใหญ่ ]
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-auto md:h-[420px]">
+          {/* Main Primary Image (Col-span-2) */}
+          <div
+            onClick={() => setActiveModalImgIdx(0)}
+            className="md:col-span-2 relative h-[250px] md:h-full w-full rounded-2xl overflow-hidden shadow-lg border border-[#1E2E4A] group cursor-pointer"
+          >
+            <Image
+              src={listing.image_urls[0]}
+              alt={IMAGE_LABELS[0]}
+              fill
+              className="object-cover transform transition-transform duration-500 group-hover:scale-105"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white font-mono text-xs">
+              <span className="bg-[#070D1A]/90 border border-[#1E2E4A] font-bold px-3 py-1 rounded-lg">
+                1. {IMAGE_LABELS[0]}
+              </span>
+              <span className="text-[10px] text-trd-secondary bg-[#0F1A30]/80 px-2 py-0.5 rounded-md font-bold">
+                🔍 ขยายรูป
+              </span>
+            </div>
+          </div>
+
+          {/* 4 Secondary Thumbnail Images Grid (2x2) */}
+          <div className="md:col-span-2 grid grid-cols-2 gap-3 h-full">
+            {[1, 2, 3, 4, 5].map((idx) => {
+              const src = listing.image_urls[idx] || listing.image_urls[0];
+              const label = IMAGE_LABELS[idx];
+
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setActiveModalImgIdx(idx)}
+                  className={`relative ${
+                    idx === 5 ? "col-span-2 md:col-span-1" : "col-span-1"
+                  } h-[130px] md:h-auto rounded-xl overflow-hidden shadow-md border border-[#1E2E4A] group cursor-pointer`}
+                >
+                  <Image
+                    src={src}
+                    alt={label}
+                    fill
+                    className="object-cover transform transition-transform duration-500 group-hover:scale-105"
+                    sizes="25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-white font-mono text-[10px]">
+                    <span className="bg-[#070D1A]/90 border border-[#1E2E4A] font-bold px-2 py-0.5 rounded-md truncate max-w-[120px]">
+                      {idx + 1}. {label}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Lightbox Image Modal */}
+      {activeModalImgIdx !== null && (
+        <div
+          onClick={() => setActiveModalImgIdx(null)}
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4"
+        >
+          <div className="relative max-w-4xl w-full h-[70vh] rounded-2xl overflow-hidden border border-[#1E2E4A] shadow-2xl">
+            <Image
+              src={listing.image_urls[activeModalImgIdx]}
+              alt={IMAGE_LABELS[activeModalImgIdx]}
+              fill
+              className="object-contain"
+            />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-[#0F1A30]/90 backdrop-blur-md p-3 rounded-xl border border-[#1E2E4A] text-white font-mono text-xs">
+              <span className="font-black text-trd-secondary">
+                📷 {activeModalImgIdx + 1}. {IMAGE_LABELS[activeModalImgIdx]}
+              </span>
+              <span className="text-slate-400">
+                {activeModalImgIdx + 1} / 6
+              </span>
+            </div>
+            <button
+              onClick={() => setActiveModalImgIdx(null)}
+              className="absolute top-4 right-4 bg-red-600/80 hover:bg-red-600 text-white w-9 h-9 rounded-full font-bold flex items-center justify-center shadow-lg"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Location & GIS Spatial Map Section */}
+      <div className="my-8 bg-[#0F1A30] border border-[#1E2E4A] rounded-2xl overflow-hidden shadow-xl">
+        <div className="p-4 bg-[#070D1A] border-b border-[#1E2E4A] flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-trd-secondary animate-pulse" />
+            <h3 className="text-xs font-mono font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <span>🗺️ แผนที่พิกัดที่ดินราชพัสดุและรูปแปลง GIS (GIS Interactive Map)</span>
+            </h3>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] font-mono">
+            <span className="text-slate-400">ทะเบียนที่ดิน: <strong>{listing.contract.parcel_number ?? "ไม่ระบุ"}</strong></span>
+            <span className="text-trd-secondary border border-[#1E2E4A] bg-[#0F1A30] px-3 py-1 rounded-full font-bold">
+              📍 พิกัด: {listing.contract.location_lat.toFixed(5)}, {listing.contract.location_lng.toFixed(5)}
+            </span>
+          </div>
+        </div>
+
+        <div className="h-[420px] w-full relative">
+          <LeaseMap
+            listings={[listing]}
+            center={[listing.contract.location_lat, listing.contract.location_lng]}
+            zoom={15}
+            className="!h-full !w-full !rounded-none !border-none"
+          />
         </div>
       </div>
 
@@ -931,10 +1048,10 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               )}
             </div>
             <h1 className="text-3xl font-bold text-trd-primary leading-tight">
-              สิทธิ์การเช่าที่ดินราชพัสดุ อำเภอ{listing.contract.district}, จังหวัด{listing.contract.province}
+              สิทธิ์การเช่าที่ดินราชพัสดุ อำเภอ{listing.contract.district ?? "ไม่ระบุ"}, จังหวัด{listing.contract.province ?? "ไม่ระบุ"}
             </h1>
             <p className="text-gray-500 mt-2">
-              เลขที่สัญญาเช่า: {listing.contract.contract_number} • หมายเลขทะเบียนที่ราชพัสดุ: {listing.contract.parcel_number}
+              เลขที่สัญญาเช่า: {listing.contract.contract_number ?? "ไม่ระบุ"} • หมายเลขทะเบียนที่ราชพัสดุ: {listing.contract.parcel_number ?? "ไม่ระบุ"}
             </p>
           </div>
 
@@ -945,8 +1062,8 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
               { label: "ประเภทอาคาร", val: listing.contract.building_type || "ที่ดินเปล่า", icon: "🏢" },
               { label: "พื้นที่ใช้สอย", val: listing.contract.usable_area_sqm && listing.contract.usable_area_sqm > 0 ? `${listing.contract.usable_area_sqm} ตร.ม.` : "ไม่มี (ที่ดินเปล่า)", icon: "🏗️" },
               { label: "ผังเมือง (Zoning)", val: listing.contract.zoning || "ไม่ระบุ", icon: "🎨" },
-              { label: "พิกัด UTM (WGS84)", val: latLngToUTM(listing.contract.location_lat, listing.contract.location_lng), icon: "🌐" },
-              { label: "ที่ราชพัสดุแปลงหมายเลขทะเบียนที่", val: listing.contract.parcel_number, icon: "🗺️" },
+              { label: "พิกัด UTM (WGS84)", val: (listing.contract.location_lat && listing.contract.location_lng) ? latLngToUTM(listing.contract.location_lat, listing.contract.location_lng) : "ไม่ระบุพิกัด", icon: "🌐" },
+              { label: "ที่ราชพัสดุแปลงหมายเลขทะเบียนที่", val: listing.contract.parcel_number ?? "ไม่ระบุ", icon: "🗺️" },
               { label: "สถานะสัญญา", val: "ปกติ (Active)", icon: "🛡️" },
             ].map((spec) => (
               <div key={spec.label} className="bg-gray-50/80 border border-trd-border/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
@@ -960,9 +1077,15 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           {/* Description */}
           <div className="border-t border-trd-border/50 pt-6">
             <h3 className="text-lg font-semibold text-trd-primary mb-3">รายละเอียดคำอธิบาย</h3>
-            <p className="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
-              {listing.description}
-            </p>
+            {listing.description ? (
+              <p className="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
+                {listing.description}
+              </p>
+            ) : (
+              <div className="bg-gray-50/60 border border-trd-border/40 rounded-xl p-4 text-center">
+                <span className="text-slate-400 text-xs font-mono uppercase tracking-widest">[ ไม่มีคำอธิบายประกาศ — ผู้ประกาศยังไม่ได้เพิ่มรายละเอียด ]</span>
+              </div>
+            )}
           </div>
 
           {/* Facilities / Infrastructure */}

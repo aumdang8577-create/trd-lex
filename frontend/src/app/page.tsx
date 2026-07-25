@@ -3,38 +3,41 @@
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
 import SearchBar from "@/components/features/SearchBar/SearchBar";
 import PropertyCard from "@/components/features/PropertyCard";
 import CreateListingModal from "@/components/features/CreateListingModal";
 import EconomicDashboard from "@/components/features/EconomicDashboard";
 import HeroSection from "@/components/features/HeroSection/HeroSection";
+import PropertyCardSkeleton from "@/components/ui/PropertyCardSkeleton";
+import FetchErrorAlert from "@/components/ui/FetchErrorAlert";
+import { useFeaturedListings } from "@/lib/hooks/useListings";
 import type { Listing } from "@/types";
 
-const mockListings: Listing[] = [
+const defaultMockListings: Listing[] = [
   {
     id: "list-1",
     sellerId: "seller-1",
-    seller: { id: "seller-1", thaid_id: "123", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
+    seller: { id: "seller-1", thaid_id: "1123456789012", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
     contractId: "contract-1",
     contract: {
       id: "contract-1",
       contract_number: "TRD-66-001",
-      parcel_number: "1024/65",
-      location_lat: 13.7712,
-      location_lng: 100.5401,
-      province: "กรุงเทพมหานคร",
-      district: "พญาไท",
-      sub_district: "สามเสนใน",
-      land_area_sqw: 120,
+      parcel_number: "อด.1234",
+      location_lat: 17.4138,
+      location_lng: 102.7872,
+      province: "อุดรธานี",
+      district: "เมืองอุดรธานี",
+      sub_district: "หมากแข้ง",
+      land_area_sqw: 120.0,
       is_active: true,
       building_type: "อาคารพาณิชย์",
-      usable_area_sqm: 250,
+      usable_area_sqm: 250.0,
       zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
+      annual_rent: 12000.0,
     },
-    asking_price: 1500000,
-    estimated_fee: 45000,
-    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองพญาไท ใกล้รถไฟฟ้า เหมาะทำร้านกาแฟหรือโชว์รูมสินค้าขนาดเล็ก",
+    asking_price: 1500000.0,
+    estimated_fee: 45000.0,
+    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองเมืองอุดรธานี ใกล้เซ็นทรัลอุดรธานี เหมาะทำร้านค้าหรือสำนักงานขนาดเล็ก เดินทางสะดวกติดถนนใหญ่สภาพแวดล้อมดีเยี่ยม",
     image_urls: ["/images/images (7).jpg"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -43,26 +46,27 @@ const mockListings: Listing[] = [
   {
     id: "list-2",
     sellerId: "seller-2",
-    seller: { id: "seller-2", thaid_id: "456", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
+    seller: { id: "seller-2", thaid_id: "2123456789012", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
     contractId: "contract-2",
     contract: {
       id: "contract-2",
       contract_number: "TRD-66-002",
-      parcel_number: "589/12",
-      location_lat: 12.9235,
-      location_lng: 100.8824,
-      province: "ชลบุรี",
-      district: "บางละมุง",
-      sub_district: "หนองปรือ",
-      land_area_sqw: 80,
+      parcel_number: "ขก.5678",
+      location_lat: 16.4322,
+      location_lng: 102.8236,
+      province: "ขอนแก่น",
+      district: "เมืองขอนแก่น",
+      sub_district: "ในเมือง",
+      land_area_sqw: 80.0,
       is_active: true,
       building_type: "บ้านพักอาศัย",
-      usable_area_sqm: 140,
+      usable_area_sqm: 140.0,
       zoning: "พื้นที่สีเหลือง (ที่อยู่อาศัยหนาแน่นน้อย)",
+      annual_rent: 12000.0,
     },
-    asking_price: 980000,
-    estimated_fee: 29400,
-    description: "แปลงที่ดินราชพัสดุพัทยาใต้ ทำเลพักอาศัย เงียบสงบ ใกล้สิ่งอำนวยความสะดวกมากมาย",
+    asking_price: 980000.0,
+    estimated_fee: 29400.0,
+    description: "แปลงที่ดินราชพัสดุในเมืองขอนแก่น ทำเลพักอาศัย เงียบสงบ ใกล้วัดหนองแวงและบึงแก่นนคร เดินทางสะดวกมีสาธารณูปโภคครบครัน เหมาะสำหรับสร้างบ้านเดี่ยวหรือบ้านพักตากอากาศส่วนตัว",
     image_urls: ["/images/images (1).jpg"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -71,26 +75,27 @@ const mockListings: Listing[] = [
   {
     id: "list-3",
     sellerId: "seller-3",
-    seller: { id: "seller-3", thaid_id: "789", first_name: "ประยุทธ์", last_name: "มั่งมี", role: "USER" },
+    seller: { id: "seller-3", thaid_id: "3123456789012", first_name: "ประยุทธ์", last_name: "มั่งมี", role: "USER" },
     contractId: "contract-3",
     contract: {
       id: "contract-3",
       contract_number: "TRD-66-003",
-      parcel_number: "220/8",
-      location_lat: 18.7883,
-      location_lng: 98.9853,
-      province: "เชียงใหม่",
-      district: "เมืองเชียงใหม่",
-      sub_district: "ศรีภูมิ",
-      land_area_sqw: 150,
+      parcel_number: "นค.1507",
+      location_lat: 17.8776,
+      location_lng: 102.7435,
+      province: "หนองคาย",
+      district: "เมืองหนองคาย",
+      sub_district: "ในเมือง",
+      land_area_sqw: 3677.44,
       is_active: true,
       building_type: "อาคารพาณิชย์",
-      usable_area_sqm: 350,
+      usable_area_sqm: 350.0,
       zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
+      annual_rent: 12000.0,
     },
-    asking_price: 2400000,
-    estimated_fee: 72000,
-    description: "สิทธิ์การเช่าระยะยาวสำหรับทำธุรกิจเกสท์เฮ้าส์หรือร้านอาหารในเขตคูเมืองเก่าเชียงใหม่ ดึงดูดนักท่องเที่ยวได้ดีเยี่ยม",
+    asking_price: 2400000.0,
+    estimated_fee: 72000.0,
+    description: "สิทธิ์การเช่าระยะยาวใกล้ริมแม่น้ำโขง เมืองหนองคาย เหมาะสำหรับทำร้านอาหารหรือโฮมสเตย์รองรับนักท่องเที่ยวริมโขงและตลาดท่าเสด็จ แปลงมุมหน้ากว้างสวยงาม",
     image_urls: ["/images/images (8).jpg"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -101,6 +106,10 @@ const mockListings: Listing[] = [
 export default function HomePage() {
   const router = useRouter();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  
+  // Use SWR hook for featured listings
+  const { listings, isLoading, error, mutate } = useFeaturedListings(3);
+  const displayListings = listings.length > 0 ? listings : defaultMockListings;
 
   return (
     <div className="bg-trd-bg text-trd-primary min-h-screen">
@@ -174,26 +183,38 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {mockListings.map((listing) => (
-            <PropertyCard
-              key={listing.id}
-              id={listing.id}
-              price={listing.asking_price}
-              province={listing.contract.province}
-              district={listing.contract.district}
-              landArea={listing.contract.land_area_sqw}
-              imageUrl={listing.image_urls[0] || ""}
-              isVerified={listing.status === "ACTIVE"}
-              buildingType={listing.contract.building_type}
-              usableAreaSqm={listing.contract.usable_area_sqm}
-              zoning={listing.contract.zoning}
-              locationLat={listing.contract.location_lat}
-              locationLng={listing.contract.location_lng}
-              annualRent={listing.contract.annual_rent}
-            />
-          ))}
-        </div>
+        {error && (
+          <div className="mb-8">
+            <FetchErrorAlert onRetry={() => mutate()} />
+          </div>
+        )}
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <PropertyCardSkeleton count={3} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayListings.map((listing) => (
+              <PropertyCard
+                key={listing.id}
+                id={listing.id}
+                price={listing.asking_price}
+                province={listing.contract.province}
+                district={listing.contract.district}
+                landArea={listing.contract.land_area_sqw}
+                imageUrl={listing.image_urls[0] || ""}
+                isVerified={listing.status === "ACTIVE"}
+                buildingType={listing.contract.building_type}
+                usableAreaSqm={listing.contract.usable_area_sqm}
+                zoning={listing.contract.zoning}
+                locationLat={listing.contract.location_lat}
+                locationLng={listing.contract.location_lng}
+                annualRent={listing.contract.annual_rent}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Economic Impact Dashboard Section */}
@@ -292,4 +313,3 @@ export default function HomePage() {
     </div>
   );
 }
-

@@ -25,11 +25,6 @@ export default function LoginPage() {
       return;
     }
 
-    let roleToSave = "SELLER";
-    if (idToUse === "9123456789012") roleToSave = "OFFICER";
-    else if (idToUse === "3123456789012") roleToSave = "INVESTOR";
-    else roleToSave = "SELLER";
-
     try {
       let response: any;
       try {
@@ -38,39 +33,48 @@ export default function LoginPage() {
         console.warn("Backend login failed, using resilient fallback authentication.");
         const mockToken = "mock_token_" + idToUse;
         api.setToken(mockToken);
+        const fallbackRole = idToUse === "9123456789012" ? "ADMIN" : (idToUse === "3123456789012" ? "INVESTOR" : "SELLER");
         response = {
           access_token: mockToken,
           token_type: "bearer",
           user: {
             id: "user-" + idToUse,
             thaid_id: idToUse,
-            first_name: idToUse === "9123456789012" ? "แอดมิน" : (idToUse === "2123456789012" ? "สมหญิง" : (idToUse === "3123456789012" ? "วิชัย" : "สมชาย")),
-            last_name: idToUse === "9123456789012" ? "ธนารักษ์" : (idToUse === "2123456789012" ? "รักดี" : (idToUse === "3123456789012" ? "มั่นคง" : "ใจดี")),
-            role: idToUse === "9123456789012" ? "ADMIN" : "USER"
+            first_name: idToUse === "9123456789012" ? "แอดมิน" : (idToUse === "3123456789012" ? "วิชัย" : "สมชาย"),
+            last_name: idToUse === "9123456789012" ? "ธนารักษ์" : (idToUse === "3123456789012" ? "มั่นคง" : "ใจดี"),
+            role: fallbackRole
           }
         };
       }
 
+      const roleToSave = response.user?.role || "INVESTOR";
       setSuccess(true);
       if (typeof window !== "undefined") {
         localStorage.setItem("trd_user_role", roleToSave);
         window.dispatchEvent(new Event("trd-role-changed"));
       }
       
-      const targetPath = roleToSave === "OFFICER" ? "/dashboard" : (roleToSave === "INVESTOR" ? "/listings" : "/my-listings");
+      const targetPath = (roleToSave === "OFFICER" || (roleToSave as string) === "ADMIN")
+        ? "/dashboard"
+        : (roleToSave === "SELLER" ? "/my-listings" : "/listings");
+
       setTimeout(() => {
         router.push(targetPath);
       }, 800);
     } catch (err: unknown) {
       console.error(err);
+      const fallbackRole = idToUse === "9123456789012" ? "ADMIN" : (idToUse === "3123456789012" ? "INVESTOR" : "SELLER");
       const mockToken = "mock_token_" + idToUse;
       api.setToken(mockToken);
       setSuccess(true);
       if (typeof window !== "undefined") {
-        localStorage.setItem("trd_user_role", roleToSave);
+        localStorage.setItem("trd_user_role", fallbackRole);
         window.dispatchEvent(new Event("trd-role-changed"));
       }
-      const targetPath = roleToSave === "OFFICER" ? "/dashboard" : (roleToSave === "INVESTOR" ? "/listings" : "/my-listings");
+      const targetPath = ((fallbackRole as string) === "OFFICER" || fallbackRole === "ADMIN")
+        ? "/dashboard"
+        : (fallbackRole === "SELLER" ? "/my-listings" : "/listings");
+
       setTimeout(() => {
         router.push(targetPath);
       }, 800);

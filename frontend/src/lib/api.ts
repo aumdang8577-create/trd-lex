@@ -16,7 +16,10 @@ import type {
   UpdateListingStatusRequest,
   FeeCalculationRequest,
   FeeCalculationResponse,
+  TreasuryParcelData,
+  PlacePOIData,
 } from "@/types";
+import { safeParseListings, safeParseListing } from "@/lib/schemas";
 
 const mockListingsData: Listing[] = [
   {
@@ -670,8 +673,9 @@ class ApiClient {
         // Lock active URL to working port
         this.activeBaseUrl = baseUrl;
         return await response.json();
-      } catch (err: any) {
-        if (err.message && err.message.startsWith("HTTP Error:")) {
+      } catch (err: unknown) {
+        const errorObj = err as { message?: string };
+        if (errorObj.message && errorObj.message.startsWith("HTTP Error:")) {
           throw err;
         }
         // Try next candidate URL
@@ -682,11 +686,11 @@ class ApiClient {
     const cleanEndpoint = endpoint.split("?")[0];
 
     if (cleanEndpoint === "/auth/login") {
-      let bodyData: any = {};
+      let bodyData: Record<string, unknown> = {};
       try {
         bodyData = JSON.parse((options.body as string) || "{}");
       } catch (e) {}
-      const thaid_id = bodyData.thaid_id || "1123456789012";
+      const thaid_id = String(bodyData.thaid_id || "1123456789012");
       const mockToken = "mock_token_" + thaid_id;
       this.setToken(mockToken);
       return {
@@ -703,7 +707,7 @@ class ApiClient {
     }
 
     if (cleanEndpoint === "/contracts/validate") {
-      let bodyData: any = {};
+      let bodyData: Record<string, unknown> = {};
       try {
         bodyData = JSON.parse((options.body as string) || "{}");
       } catch (e) {}
@@ -835,13 +839,23 @@ class ApiClient {
       });
     }
     const query = searchParams.toString();
-    return this.request<ListingListResponse>(
+    const response = await this.request<ListingListResponse>(
       `/listings${query ? `?${query}` : ""}`
     );
+    if (response && Array.isArray(response.data)) {
+      const parsed = safeParseListings(response.data);
+      // Only include listings that have parcel shape / image data
+      response.data = parsed.filter(
+        (l) => l.image_urls && l.image_urls.length > 0 && l.image_urls[0] && l.image_urls[0].trim() !== ""
+      );
+    }
+    return response;
   }
 
   async getListingById(id: string): Promise<Listing> {
-    return this.request<Listing>(`/listings/${id}`);
+    const raw = await this.request<Listing>(`/listings/${id}`);
+    const parsed = safeParseListing(raw);
+    return parsed || raw;
   }
 
   async getMyListings(): Promise<Listing[]> {
@@ -901,8 +915,24 @@ class ApiClient {
       body: JSON.stringify(data),
     });
   }
+
+  async getParcels(params?: { province?: string; district?: string }): Promise<TreasuryParcelData[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.province) searchParams.set("province", params.province);
+    if (params?.district) searchParams.set("district", params.district);
+    const query = searchParams.toString();
+    return this.request<TreasuryParcelData[]>(`/parcels${query ? `?${query}` : ""}`);
+  }
+
+  async getPlaces(params?: { place_type?: string }): Promise<PlacePOIData[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.place_type) searchParams.set("place_type", params.place_type);
+    const query = searchParams.toString();
+    return this.request<PlacePOIData[]>(`/places${query ? `?${query}` : ""}`);
+  }
 }
 
 // Singleton instance
 const api = new ApiClient();
 export default api;
+

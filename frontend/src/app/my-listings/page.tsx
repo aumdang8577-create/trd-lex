@@ -14,18 +14,18 @@ const mockContracts: LeaseContract[] = [
   {
     id: "contract-1",
     contract_number: "TRD-66-001",
-    parcel_number: "1024/65",
-    location_lat: 13.7712,
-    location_lng: 100.5401,
-    province: "กรุงเทพมหานคร",
-    district: "พญาไท",
-    sub_district: "สามเสนใน",
+    parcel_number: "อด.1234",
+    location_lat: 17.4138,
+    location_lng: 102.7872,
+    province: "อุดรธานี",
+    district: "เมืองอุดรธานี",
+    sub_district: "หมากแข้ง",
     land_area_sqw: 120,
     is_active: true,
     building_type: "อาคารพาณิชย์",
     usable_area_sqm: 250,
     zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
-    annual_rent: 72000,
+    annual_rent: 12000,
   },
   {
     id: "contract-3",
@@ -70,7 +70,7 @@ const initialMyListings: Listing[] = [
     contract: mockContracts[0],
     asking_price: 1500000,
     estimated_fee: 45000,
-    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองพญาไท ใกล้รถไฟฟ้า เหมาะทำร้านกาแฟหรือโชว์รูมสินค้าขนาดเล็ก",
+    description: "สิทธิ์การเช่าที่ดินเพื่อการพาณิชย์ ทำเลทองเมืองอุดรธานี ใกล้เซ็นทรัลอุดรธานี เหมาะทำร้านค้าหรือสำนักงานขนาดเล็ก เดินทางสะดวกติดถนนใหญ่สภาพแวดล้อมดีเยี่ยม",
     image_urls: ["/images/images (7).jpg"],
     status: "ACTIVE",
     createdAt: "2026-07-09T00:00:00Z",
@@ -1064,7 +1064,7 @@ export default function MyListingsPage() {
   // 3. CHANGE Listing Status
   const handleStatusChange = async (id: string, status: "ACTIVE" | "HIDDEN" | "SOLD" | "IN_NEGOTIATION") => {
     try {
-      await api.updateListingStatus(id, { status: status as any });
+      await api.updateListingStatus(id, { status });
       showToast(`สถานะเปลี่ยนเป็น: ${STATUS_CONFIG[status].label}`);
       loadData();
     } catch (err) {

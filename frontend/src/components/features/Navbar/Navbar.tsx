@@ -12,10 +12,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [role, setRole] = useState<UserRole>("GUEST");
-
-  if (pathname === "/") {
-    return null;
-  }
+  const [isMegaOpen, setIsMegaOpen] = useState(false);
 
   useEffect(() => {
     const syncRole = () => {
@@ -28,6 +25,16 @@ export default function Navbar() {
     window.addEventListener("trd-role-changed", syncRole);
     return () => window.removeEventListener("trd-role-changed", syncRole);
   }, []);
+
+  // Auto-close dropdowns when navigating to a new route
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setIsMegaOpen(false);
+  }, [pathname]);
+
+  if (pathname === "/") {
+    return null;
+  }
 
   const handleRoleChange = (newRole: UserRole) => {
     setRole(newRole);
@@ -47,7 +54,7 @@ export default function Navbar() {
       case "SELLER":
         return [
           { label: "จัดการประกาศของฉัน", href: "/my-listings" },
-          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/contract-check" },
+          { label: "ตรวจสอบสัญญา", href: "/contract-check" },
         ];
       case "INVESTOR":
         return [
@@ -60,7 +67,7 @@ export default function Navbar() {
           { label: "แดชบอร์ดรายได้รัฐ", href: "/dashboard" },
           { label: "ประเมินความคุ้มค่า", href: "/benefits-evaluator" },
           { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/listings", hasMega: true },
-          { label: "สืบค้นประกาศหาผู้รับโอนสิทธิ", href: "/contract-check" },
+          { label: "ตรวจสอบสัญญา", href: "/contract-check" },
         ];
       case "GUEST":
       default:
@@ -72,7 +79,6 @@ export default function Navbar() {
   };
 
   const navLinks = getNavLinks();
-  const [isMegaOpen, setIsMegaOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-40 backdrop-blur-lg bg-[#0F1A30]/95 border-b-2 border-trd-secondary shadow-[0_4px_20px_rgba(15,26,48,0.25)]">
@@ -229,7 +235,11 @@ export default function Navbar() {
                   { name: "ภาคตะวันออก (ชลบุรี & ระยอง)", query: "province=ชลบุรี" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
+                    <Link
+                      href={`/listings?${item.query}`}
+                      onClick={() => setIsMegaOpen(false)}
+                      className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold"
+                    >
                       {item.name}
                     </Link>
                   </li>
@@ -249,7 +259,11 @@ export default function Navbar() {
                   { name: "พื้นที่เชื่อมต่อฉะเชิงเทรา", query: "query=ฉะเชิงเทรา" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 flex items-center gap-1.5 font-bold">
+                    <Link
+                      href={`/listings?${item.query}`}
+                      onClick={() => setIsMegaOpen(false)}
+                      className="text-slate-300 hover:text-white hover:underline block py-0.5 flex items-center gap-1.5 font-bold"
+                    >
                       <span>{item.name}</span>
                       <span className="text-[8px] bg-trd-secondary/15 text-trd-secondary border border-trd-secondary/30 px-1 py-0.5 font-mono font-black rounded">EEC</span>
                     </Link>
@@ -270,7 +284,11 @@ export default function Navbar() {
                   { name: "พื้นที่ขนส่งสินค้าหนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
+                    <Link
+                      href={`/listings?${item.query}`}
+                      onClick={() => setIsMegaOpen(false)}
+                      className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold"
+                    >
                       {item.name}
                     </Link>
                   </li>
@@ -290,7 +308,11 @@ export default function Navbar() {
                   { name: "ในเมือง, หนองคาย", query: "query=หนองคาย" },
                 ].map((item) => (
                   <li key={item.name}>
-                    <Link href={`/listings?${item.query}`} className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold">
+                    <Link
+                      href={`/listings?${item.query}`}
+                      onClick={() => setIsMegaOpen(false)}
+                      className="text-slate-300 hover:text-white hover:underline block py-0.5 font-bold"
+                    >
                       {item.name}
                     </Link>
                   </li>
@@ -306,12 +328,13 @@ export default function Navbar() {
         <div className="md:hidden border-t border-[#1E2E4A] bg-[#0F1A30]/95 backdrop-blur-lg animate-fade-in">
           <div className="px-4 py-4 space-y-3">
             {/* Mobile test role pills */}
-            <div className="bg-[#1E2E4A]/30 p-2 border border-[#1E2E4A]/60 flex items-center justify-around text-[9px] font-mono mb-2 rounded-xl">
-              <span className="text-slate-400 font-bold">ระบบจำลองบทบาท:</span>
+            <div className="bg-[#1E2E4A]/30 p-2 border border-[#1E2E4A]/60 flex flex-wrap items-center justify-around gap-1 text-[9px] font-mono mb-2 rounded-xl">
+              <span className="text-slate-400 font-bold w-full text-center sm:w-auto">ระบบจำลองบทบาท:</span>
               {[
-                { id: "GUEST", label: "ผู้เข้าชมทั่วไป" },
-                { id: "SELLER", label: "ผู้โอนสิทธิ์ (ผู้เช่าเดิม)" },
-                { id: "INVESTOR", label: "ผู้รับโอนสิทธิ์ (ผู้ลงทุน)" },
+                { id: "GUEST", label: "ผู้เข้าชม" },
+                { id: "SELLER", label: "ผู้โอนสิทธิ์" },
+                { id: "INVESTOR", label: "ผู้ลงทุน" },
+                { id: "OFFICER", label: "เจ้าหน้าที่" },
               ].map((r) => (
                 <button
                   key={r.id}
@@ -329,6 +352,7 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block text-xs font-black uppercase tracking-wider text-slate-300 py-2.5 border-b border-[#1E2E4A]/40 hover:text-white font-mono"
               >
                 {link.label}
@@ -341,7 +365,10 @@ export default function Navbar() {
                   variant="primary"
                   size="sm"
                   className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-transparent text-xs py-2 shadow-neon-gold bg-gold-gradient text-[#0F1A30] font-mono font-black"
-                  onClick={() => router.push("/login")}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    router.push("/login");
+                  }}
                 >
                   ลงชื่อเข้าใช้ด้วย ThaID
                 </Button>
@@ -356,7 +383,10 @@ export default function Navbar() {
                     </span>
                   </div>
                   <button
-                    onClick={handleLogout}
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="text-xs font-black text-red-400 hover:underline font-mono border border-[#1E2E4A] bg-[#1E2E4A]/30 rounded-lg px-2 py-0.5"
                   >
                     ออกจากระบบ

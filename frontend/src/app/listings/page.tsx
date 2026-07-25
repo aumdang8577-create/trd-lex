@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import SearchBar from "@/components/features/SearchBar/SearchBar";
 import PropertyCard from "@/components/features/PropertyCard";
 import LeaseMap from "@/components/features/Map/LeaseMap";
+import PropertyCardSkeleton from "@/components/ui/PropertyCardSkeleton";
+import FetchErrorAlert from "@/components/ui/FetchErrorAlert";
+import { useListings, useListingsPaginated } from "@/lib/hooks/useListings";
 import type { Listing } from "@/types";
 import api from "@/lib/api";
 
@@ -473,122 +476,6 @@ const initialListings: Listing[] = [
     createdAt: "2026-07-09T00:00:00Z",
     updatedAt: "2026-07-09T00:00:00Z",
   },
-  {
-    id: "list-17",
-    sellerId: "seller-1",
-    seller: { id: "seller-1", thaid_id: "1123456789012", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
-    contractId: "contract-17",
-    contract: {
-      id: "contract-17",
-      contract_number: "TRD-66-017",
-      parcel_number: "นภ.3466",
-      location_lat: 16.8667,
-      location_lng: 102.5667,
-      province: "หนองบัวลำภู",
-      district: "โนนสัง",
-      sub_district: "โนนสัง",
-      land_area_sqw: 1500.0,
-      is_active: true,
-      building_type: null,
-      usable_area_sqm: 0.0,
-      zoning: "พื้นที่สีเขียว (ชนบทและเกษตรกรรม)",
-      annual_rent: 12000.0,
-    },
-    asking_price: 400000.0,
-    estimated_fee: 12000.0,
-    description: "ที่ดินราชพัสดุเพื่อการเกษตรกรรมใกล้เขื่อนอุบลรัตน์ อำเภอโนนสัง บรรยากาศดี ดินอุดมสมบูรณ์ เหมาะสำหรับทำการเกษตรประยุกต์ หรือพัฒนาโครงการรีสอร์ทบ้านสวน",
-    image_urls: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"],
-    status: "ACTIVE",
-    createdAt: "2026-07-09T00:00:00Z",
-    updatedAt: "2026-07-09T00:00:00Z",
-  },
-  {
-    id: "list-18",
-    sellerId: "seller-2",
-    seller: { id: "seller-2", thaid_id: "2123456789012", first_name: "สมหญิง", last_name: "รักดี", role: "USER" },
-    contractId: "contract-18",
-    contract: {
-      id: "contract-18",
-      contract_number: "TRD-66-018",
-      parcel_number: "ขก.5791",
-      location_lat: 16.5444,
-      location_lng: 102.1333,
-      province: "ขอนแก่น",
-      district: "ชุมแพ",
-      sub_district: "ชุมแพ",
-      land_area_sqw: 850.0,
-      is_active: true,
-      building_type: "คลังสินค้า",
-      usable_area_sqm: 600.0,
-      zoning: "พื้นที่สีม่วง (อุตสาหกรรม)",
-      annual_rent: 12000.0,
-    },
-    asking_price: 4200000.0,
-    estimated_fee: 126000.0,
-    description: "สิทธิ์การเช่าคลังสินค้าและอาคารสำนักงานอุตสาหกรรมในอำเภอชุมแพ ขอนแก่น รองรับการขนส่งกระจายสินค้าไปยังภาคอีสานตอนบนและตอนกลาง มีลานจอดรถบรรทุกกว้างขวาง",
-    image_urls: ["https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80"],
-    status: "ACTIVE",
-    createdAt: "2026-07-09T00:00:00Z",
-    updatedAt: "2026-07-09T00:00:00Z",
-  },
-  {
-    id: "list-19",
-    sellerId: "seller-3",
-    seller: { id: "seller-3", thaid_id: "3123456789012", first_name: "ประยุทธ์", last_name: "มั่งมี", role: "USER" },
-    contractId: "contract-19",
-    contract: {
-      id: "contract-19",
-      contract_number: "TRD-66-019",
-      parcel_number: "ชบ.9102",
-      location_lat: 13.1733,
-      location_lng: 100.9333,
-      province: "ชลบุรี",
-      district: "ศรีราชา",
-      sub_district: "ทุ่งสุขลา",
-      land_area_sqw: 1200.0,
-      is_active: true,
-      building_type: "คลังสินค้า",
-      usable_area_sqm: 950.0,
-      zoning: "พื้นที่สีม่วง (อุตสาหกรรม)",
-      annual_rent: 12000.0,
-    },
-    asking_price: 5500000.0,
-    estimated_fee: 165000.0,
-    description: "โกดังโรงงานและคลังสินค้าให้เช่าทำเลเขตเศรษฐกิจพิเศษ EEC ศรีราชา ชลบุรี ใกล้ท่าเรือแหลมฉบัง เหมาะสำหรับงานโลจิสติกส์ จัดเก็บ หรือแปรรูปอุตสาหกรรมขั้นกลาง",
-    image_urls: ["https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80"],
-    status: "ACTIVE",
-    createdAt: "2026-07-09T00:00:00Z",
-    updatedAt: "2026-07-09T00:00:00Z",
-  },
-  {
-    id: "list-20",
-    sellerId: "seller-1",
-    seller: { id: "seller-1", thaid_id: "1123456789012", first_name: "สมชาย", last_name: "ใจดี", role: "USER" },
-    contractId: "contract-20",
-    contract: {
-      id: "contract-20",
-      contract_number: "TRD-66-020",
-      parcel_number: "กท.1001",
-      location_lat: 13.78,
-      location_lng: 100.54,
-      province: "กรุงเทพมหานคร",
-      district: "พญาไท",
-      sub_district: "สามเสนใน",
-      land_area_sqw: 65.0,
-      is_active: true,
-      building_type: "อาคารพาณิชย์",
-      usable_area_sqm: 220.0,
-      zoning: "พื้นที่สีแดง (พาณิชยกรรม)",
-      annual_rent: 12000.0,
-    },
-    asking_price: 8500000.0,
-    estimated_fee: 255000.0,
-    description: "สิทธิ์การเช่าอาคารพาณิชย์ 4 ชั้น ทำเลทองพญาไท กรุงเทพฯ เหมาะทำคลินิกเสริมความงาม สปา สำนักงานใหญ่ขนาดย่อม หรือร้านอาหารพรีเมียม ใกล้สถานีรถไฟฟ้า BTS",
-    image_urls: ["https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"],
-    status: "ACTIVE",
-    createdAt: "2026-07-09T00:00:00Z",
-    updatedAt: "2026-07-09T00:00:00Z",
-  },
 ];
 
 const localImageFiles = [
@@ -616,128 +503,121 @@ const localImageFiles = [
   "images (21).jpg",
   "images (22).jpg",
   "images (23).jpg",
+  // cspell:disable-next-line
   "dszfgdrhtrj.jpg",
+  // cspell:disable-next-line
   "esdgdxfh.jpg"
 ];
 
-const replaceWithLocalImage = (imgUrl: string, id: string): string => {
-  if (imgUrl.includes("unsplash.com") || !imgUrl.startsWith("/images/")) {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) {
-      hash = id.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const idx = Math.abs(hash) % localImageFiles.length;
-    return `/images/${localImageFiles[idx]}`;
+const replaceWith6LocalImages = (id: string, existingUrls: string[]): string[] => {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return imgUrl;
+  const baseIdx = Math.abs(hash) % localImageFiles.length;
+
+  const results: string[] = [];
+  for (let j = 0; j < 6; j++) {
+    if (existingUrls[j] && existingUrls[j].startsWith("/images/")) {
+      results.push(existingUrls[j]);
+    } else {
+      const idx = (baseIdx + j * 3) % localImageFiles.length;
+      results.push(`/images/${localImageFiles[idx]}`);
+    }
+  }
+  return results;
 };
 
 const mapListingsWithLocalImages = (data: Listing[]) => {
   return data.map((l) => ({
     ...l,
-    image_urls: l.image_urls.map((url) => replaceWithLocalImage(url, l.id))
+    image_urls: replaceWith6LocalImages(l.id, l.image_urls)
   }));
 };
 
 function ListingsContent() {
-  const [listings, setListings] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const [filteredListingsOverride, setFilteredListingsOverride] = useState<Listing[] | null>(null);
 
+  const urlPage = parseInt(searchParams.get("page") || "1", 10);
+  const initialPage = isNaN(urlPage) || urlPage < 1 ? 1 : urlPage;
+
+  // 1. Fetch paginated data with SWR Infinite (6 items per page)
+  const {
+    listings: rawSwrListings,
+    totalCount,
+    isLoadingInitialData,
+    isLoadingMore,
+    isPageError,
+    isReachingEnd,
+    page,
+    loadMore,
+    retryLoadMore,
+    error,
+    mutate,
+  } = useListingsPaginated(undefined, 6, initialPage);
+
+  // Sync URL query param `?page=X` when page changes
   useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        
-        // 1. Fetch initial data from API
-        const res: any = await api.getListings({ per_page: 50 });
-        let listData: Listing[] = Array.isArray(res) ? res : (res.items || res.data || initialListings);
-        
-        // 2. Read query parameters from URL
-        const p = searchParams.get("province");
-        const d = searchParams.get("district");
-        const min = searchParams.get("minPrice");
-        const max = searchParams.get("maxPrice");
-        const z = searchParams.get("zoning");
-        const bt = searchParams.get("buildingType");
-
-        // 3. Apply active filters from URL parameters if present
-        if (p) {
-          listData = listData.filter((l) => l.contract.province === p);
-        }
-        if (d) {
-          listData = listData.filter((l) => l.contract.district.toLowerCase().includes(d.toLowerCase()));
-        }
-        if (min) {
-          listData = listData.filter((l) => l.asking_price >= parseFloat(min));
-        }
-        if (max) {
-          listData = listData.filter((l) => l.asking_price <= parseFloat(max));
-        }
-        if (z) {
-          const zoneKeyword = z.split(" ")[0];
-          listData = listData.filter((l) => l.contract.zoning?.includes(zoneKeyword));
-        }
-        if (bt) {
-          if (bt === "ที่ดินเปล่า") {
-            listData = listData.filter((l) => 
-              l.contract.building_type === "ที่ดินเปล่า" || 
-              l.contract.building_type === null || 
-              l.contract.building_type === ""
-            );
-          } else {
-            listData = listData.filter((l) => l.contract.building_type === bt);
-          }
-        }
-        
-        setListings(mapListingsWithLocalImages(listData));
-      } catch (err) {
-        console.error("Error fetching listings, using initial mock:", err);
-        let listData = [...initialListings];
-        
-        const p = searchParams.get("province");
-        const d = searchParams.get("district");
-        const min = searchParams.get("minPrice");
-        const max = searchParams.get("maxPrice");
-        const z = searchParams.get("zoning");
-        const bt = searchParams.get("buildingType");
-
-        if (p) {
-          listData = listData.filter((l) => l.contract.province === p);
-        }
-        if (d) {
-          listData = listData.filter((l) => l.contract.district.toLowerCase().includes(d.toLowerCase()));
-        }
-        if (min) {
-          listData = listData.filter((l) => l.asking_price >= parseFloat(min));
-        }
-        if (max) {
-          listData = listData.filter((l) => l.asking_price <= parseFloat(max));
-        }
-        if (z) {
-          const zoneKeyword = z.split(" ")[0];
-          listData = listData.filter((l) => l.contract.zoning?.includes(zoneKeyword));
-        }
-        if (bt) {
-          if (bt === "ที่ดินเปล่า") {
-            listData = listData.filter((l) => 
-              l.contract.building_type === "ที่ดินเปล่า" || 
-              l.contract.building_type === null || 
-              l.contract.building_type === ""
-            );
-          } else {
-            listData = listData.filter((l) => l.contract.building_type === bt);
-          }
-        }
-        
-        setListings(mapListingsWithLocalImages(listData));
-      } finally {
-        setLoading(false);
+    if (page > 1) {
+      const currentUrlPage = parseInt(searchParams.get("page") || "1", 10);
+      if (currentUrlPage !== page) {
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.set("page", String(page));
+        router.replace(`/listings?${newParams.toString()}`, { scroll: false });
       }
-    };
-    fetchListings();
-  }, [searchParams]);
+    }
+  }, [page, searchParams, router]);
+
+  const activeSourceListings = rawSwrListings.length > 0 ? rawSwrListings : initialListings;
+
+  // 2. Filter listings based on URL query parameters or search override
+  const listings = useMemo(() => {
+    let listData = filteredListingsOverride !== null ? filteredListingsOverride : [...activeSourceListings];
+    
+    // Only include properties that have valid parcel shape / image data
+    listData = listData.filter(
+      (l) => l.image_urls && l.image_urls.length > 0 && l.image_urls[0] && l.image_urls[0].trim() !== ""
+    );
+    
+    const p = searchParams.get("province");
+    const d = searchParams.get("district");
+    const min = searchParams.get("minPrice");
+    const max = searchParams.get("maxPrice");
+    const z = searchParams.get("zoning");
+    const bt = searchParams.get("buildingType");
+
+    if (p) {
+      listData = listData.filter((l) => l.contract.province === p);
+    }
+    if (d) {
+      listData = listData.filter((l) => l.contract.district.toLowerCase().includes(d.toLowerCase()));
+    }
+    if (min) {
+      listData = listData.filter((l) => l.asking_price >= parseFloat(min));
+    }
+    if (max) {
+      listData = listData.filter((l) => l.asking_price <= parseFloat(max));
+    }
+    if (z) {
+      const zoneKeyword = z.split(" ")[0];
+      listData = listData.filter((l) => l.contract.zoning?.includes(zoneKeyword));
+    }
+    if (bt) {
+      if (bt === "ที่ดินเปล่า") {
+        listData = listData.filter((l) => 
+          l.contract.building_type === "ที่ดินเปล่า" || 
+          l.contract.building_type === null || 
+          l.contract.building_type === ""
+        );
+      } else {
+        listData = listData.filter((l) => l.contract.building_type === bt);
+      }
+    }
+
+    return mapListingsWithLocalImages(listData);
+  }, [searchParams, activeSourceListings, filteredListingsOverride]);
 
   const handleSearch = async (searchData: {
     province: string;
@@ -747,76 +627,37 @@ function ListingsContent() {
     zoning: string;
     buildingType?: string;
   }) => {
-    try {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      const res: any = await api.getListings({
-        province: searchData.province || undefined,
-        min_price: searchData.minPrice ? parseFloat(searchData.minPrice) : undefined,
-        max_price: searchData.maxPrice ? parseFloat(searchData.maxPrice) : undefined,
-        per_page: 50,
-      });
-
-      let filtered: Listing[] = Array.isArray(res) ? res : (res.items || res.data || initialListings);
-
-      if (searchData.district) {
-        filtered = filtered.filter((l) =>
-          l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
-        );
-      }
-      if (searchData.zoning) {
-        const zoneKeyword = searchData.zoning.split(" ")[0]; // Get "พื้นที่สีแดง", "พื้นที่สีเขียว", etc.
-        filtered = filtered.filter((l) => l.contract.zoning?.includes(zoneKeyword));
-      }
-      if (searchData.buildingType) {
-        if (searchData.buildingType === "ที่ดินเปล่า") {
-          filtered = filtered.filter((l) => 
-            l.contract.building_type === "ที่ดินเปล่า" || 
-            l.contract.building_type === null || 
-            l.contract.building_type === ""
-          );
-        } else {
-          filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
-        }
-      }
-
-      setListings(mapListingsWithLocalImages(filtered));
-    } catch (err) {
-      console.error("Search fetch failed, using local filter on initial mock:", err);
-      let filtered = [...initialListings];
-      if (searchData.province) {
-        filtered = filtered.filter((l) => l.contract.province === searchData.province);
-      }
-      if (searchData.district) {
-        filtered = filtered.filter((l) =>
-          l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
-        );
-      }
-      if (searchData.minPrice) {
-        filtered = filtered.filter((l) => l.asking_price >= parseFloat(searchData.minPrice));
-      }
-      if (searchData.maxPrice) {
-        filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
-      }
-      if (searchData.zoning) {
-        const zoneKeyword = searchData.zoning.split(" ")[0];
-        filtered = filtered.filter((l) => l.contract.zoning?.includes(zoneKeyword));
-      }
-      if (searchData.buildingType) {
-        if (searchData.buildingType === "ที่ดินเปล่า") {
-          filtered = filtered.filter((l) => 
-            l.contract.building_type === "ที่ดินเปล่า" || 
-            l.contract.building_type === null || 
-            l.contract.building_type === ""
-          );
-        } else {
-          filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
-        }
-      }
-      setListings(mapListingsWithLocalImages(filtered));
-    } finally {
-      setLoading(false);
+    let filtered = [...activeSourceListings];
+    if (searchData.province) {
+      filtered = filtered.filter((l) => l.contract.province === searchData.province);
     }
+    if (searchData.district) {
+      filtered = filtered.filter((l) =>
+        l.contract.district.toLowerCase().includes(searchData.district.toLowerCase())
+      );
+    }
+    if (searchData.minPrice) {
+      filtered = filtered.filter((l) => l.asking_price >= parseFloat(searchData.minPrice));
+    }
+    if (searchData.maxPrice) {
+      filtered = filtered.filter((l) => l.asking_price <= parseFloat(searchData.maxPrice));
+    }
+    if (searchData.zoning) {
+      const zoneKeyword = searchData.zoning.split(" ")[0];
+      filtered = filtered.filter((l) => l.contract.zoning?.includes(zoneKeyword));
+    }
+    if (searchData.buildingType) {
+      if (searchData.buildingType === "ที่ดินเปล่า") {
+        filtered = filtered.filter((l) => 
+          l.contract.building_type === "ที่ดินเปล่า" || 
+          l.contract.building_type === null || 
+          l.contract.building_type === ""
+        );
+      } else {
+        filtered = filtered.filter((l) => l.contract.building_type === searchData.buildingType);
+      }
+    }
+    setFilteredListingsOverride(filtered);
   };
 
   return (
@@ -844,33 +685,16 @@ function ListingsContent() {
         <div className="lg:col-span-5 space-y-6">
           <div className="flex justify-between items-center pb-4 border-b border-trd-border/80">
             <h2 className="text-[10px] font-black text-trd-midnight font-mono uppercase tracking-widest">
-              รายการประกาศเสนอโอนสิทธิ์ที่พบบนเงื่อนไขการค้นหา ({listings.length} รายการ)
+              รายการประกาศเสนอโอนสิทธิ์ที่พบบนเงื่อนไขการค้นหา ({listings.length} จาก {totalCount > 0 ? totalCount : listings.length} รายการ)
             </h2>
           </div>
 
-          {loading ? (
-            <div className="space-y-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-[#0F1A30] border border-[#1E2E4A]/80 overflow-hidden animate-pulse rounded-2xl shadow-lg">
-                  <div className="h-44 bg-slate-900/80" />
-                  <div className="p-5 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <div className="h-3 bg-slate-800 rounded w-1/3" />
-                      <div className="h-4 bg-slate-800 rounded w-1/4" />
-                    </div>
-                    <div className="h-5 bg-slate-800 rounded w-3/4" />
-                    <div className="space-y-2 pt-2">
-                      <div className="h-2.5 bg-slate-800 rounded w-5/6" />
-                      <div className="h-2.5 bg-slate-800 rounded w-4/5" />
-                    </div>
-                    <div className="flex gap-2 pt-3 border-t border-[#1E2E4A]/60">
-                      <div className="h-3 bg-slate-800 rounded w-1/4" />
-                      <div className="h-3 bg-slate-800 rounded w-1/4" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {error && (
+            <FetchErrorAlert onRetry={() => mutate()} />
+          )}
+
+          {isLoadingInitialData ? (
+            <PropertyCardSkeleton count={3} />
           ) : listings.length > 0 ? (
             <div className="space-y-6">
               {listings.map((listing) => (
@@ -882,6 +706,7 @@ function ListingsContent() {
                   district={listing.contract.district}
                   landArea={listing.contract.land_area_sqw}
                   imageUrl={listing.image_urls[0] || ""}
+                  imageUrls={listing.image_urls}
                   isVerified={listing.status === "ACTIVE"}
                   buildingType={listing.contract.building_type}
                   usableAreaSqm={listing.contract.usable_area_sqm}
@@ -891,6 +716,53 @@ function ListingsContent() {
                   annualRent={listing.contract.annual_rent}
                 />
               ))}
+
+              {/* Load More Pagination Controls & Retry Error Handling */}
+              {!isReachingEnd && (
+                <div className="pt-4 text-center">
+                  {isPageError ? (
+                    <div className="bg-red-950/30 border border-red-800/40 p-4 rounded-xl space-y-3 max-w-md mx-auto">
+                      <div className="flex items-center justify-center gap-2 text-red-400 font-mono text-xs font-bold">
+                        <svg className="w-4 h-4 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>เกิดข้อผิดพลาดในการโหลดข้อมูลประกาศหน้าถัดไป</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={retryLoadMore}
+                        className="inline-flex items-center gap-2 bg-red-700/30 hover:bg-red-700/50 border border-red-600/40 text-red-200 font-mono text-xs uppercase tracking-widest font-black py-2.5 px-5 rounded-xl transition-all duration-200 shadow-md active:scale-95"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        ลองใหม่อีกครั้ง (Retry)
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={loadMore}
+                      disabled={isLoadingMore}
+                      className="inline-flex items-center gap-2 bg-[#0F1A30] hover:bg-[#1E2E4A] border border-trd-secondary/40 text-trd-secondary hover:text-white font-mono text-xs uppercase tracking-widest font-black py-3 px-6 rounded-xl transition-all duration-200 shadow-lg disabled:opacity-50 active:scale-95"
+                    >
+                      {isLoadingMore ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-trd-secondary border-t-transparent rounded-full animate-spin" />
+                          <span>กำลังโหลดข้อมูลเพิ่ม...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>โหลดประกาศเพิ่มอีก ({listings.length}/{totalCount})</span>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-[#0F1A30] border border-[#1E2E4A]/80 p-12 text-center text-slate-400 font-mono text-xs uppercase tracking-widest font-bold rounded-2xl shadow-lg">
