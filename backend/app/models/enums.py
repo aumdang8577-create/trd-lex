@@ -3,6 +3,9 @@ from enum import Enum
 class Role(str, Enum):
     USER = "USER"
     ADMIN = "ADMIN"
+    SELLER = "SELLER"
+    INVESTOR = "INVESTOR"
+    OFFICER = "OFFICER"
 
 class ListingStatus(str, Enum):
     ACTIVE = "ACTIVE"

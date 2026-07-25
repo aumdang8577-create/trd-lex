@@ -1,3 +1,4 @@
+/* cspell:disable */
 import { PrismaClient, Role, ListingStatus } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';

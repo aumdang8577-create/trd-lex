@@ -32,23 +32,25 @@ class ListingService:
                 "province": province
             }
             
-        # Count total items
-        total_items = await db.listing.count(where=where_clause)
-        
-        # Query listings
-        listings = await db.listing.find_many(
+        # Query active listings
+        all_listings = await db.listing.find_many(
             where=where_clause,
             include={
                 "seller": True,
                 "contract": True
             },
-            order={"createdAt": "desc"},
-            skip=(page - 1) * per_page,
-            take=per_page
+            order={"createdAt": "desc"}
         )
         
-        # Parse items to ListingResponse
-        data = [ListingResponse.model_validate(item) for item in listings]
+        # Only publish listings that have parcel shape / image data
+        valid_listings = [
+            item for item in all_listings 
+            if item.image_urls and len(item.image_urls) > 0 and any(str(url).strip() for url in item.image_urls)
+        ]
+        
+        total_items = len(valid_listings)
+        paginated_listings = valid_listings[(page - 1) * per_page : page * per_page]
+        data = [ListingResponse.model_validate(item) for item in paginated_listings]
         
         meta = ListingMeta(
             total_items=total_items,
@@ -79,6 +81,7 @@ class ListingService:
     @staticmethod
     async def create_listing(listing_data: CreateListingRequest, current_user: User) -> ListingResponse:
         # Check if contract exists and belongs to user
+        # cspell:disable-next-line
         contract = await db.leasecontract.find_unique(
             where={"id": listing_data.contractId}
         )
